@@ -142,3 +142,53 @@ The difference wasn't the AI. It was the quality of the input I gave it.
 
 That refined output, along with my own improvements on top of it, is what you'll 
 see in the next two sections.
+
+---
+
+## My Critical Evaluation
+
+The structured prompt produced a noticeably better first draft — but "better" still 
+wasn't "done." This is the part of the AI workflow that I think gets undervalued: 
+the human review pass.
+
+Here's exactly what I flagged before touching the query:
+
+**1. No ranking column**
+The output sorts by revenue descending, but there's no explicit rank number. In a 
+report, a reader should be able to instantly see "USA is #1, Canada is #2" without 
+having to count rows manually. I needed to add ROW_NUMBER() OVER (ORDER BY revenue DESC).
+
+**2. No percentage of total revenue**
+The raw revenue numbers tell me who's biggest, but not how concentrated the business 
+is. If the USA represents 22% of total revenue, that's a very different strategic 
+conversation than if it represents 60%. The AI didn't calculate this because I didn't 
+explicitly ask for it — a reminder that AI answers the question you ask, not the 
+question you should have asked.
+
+**3. Floating point noise in the output**
+Values like `523.0600000000003` are a SQLite artifact of floating point arithmetic. 
+PRINTF('$%.2f') fixes the display, but the AI only partially applied this — it 
+formatted some columns and missed others.
+
+**4. No CTEs — just a flat query**
+The AI returned a single SELECT statement. That works for a simple query, but as 
+soon as I need to reference the global total for percentage calculations, a flat 
+query becomes a nested subquery mess. CTEs make the logic readable and maintainable. 
+This was my addition, not the AI's.
+
+**5. The alias `avg` is a reserved word**
+Small issue, but the kind of thing that causes subtle bugs in more complex queries 
+or when porting to other SQL dialects. I renamed it to `avg_revenue_per_customer` — 
+descriptive and safe.
+
+**6. No comment header or inline comments**
+Nothing in the AI's output explained *why* decisions were made. A query without 
+comments is a liability — it works today, but the next person (or future me) has 
+to reverse-engineer the logic. I added a full header block and inline comments 
+throughout.
+
+**The bottom line:** The AI got me to a working 60% in a fraction of the time it 
+would have taken me to write from scratch. The remaining 40% — the ranking, the 
+percentage of total, the CTE structure, the business framing — that's the human layer. 
+That's where domain expertise and analytical judgment live, and no prompt engineering 
+replaces it.
