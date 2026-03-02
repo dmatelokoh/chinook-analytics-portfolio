@@ -192,3 +192,73 @@ would have taken me to write from scratch. The remaining 40% — the ranking, th
 percentage of total, the CTE structure, the business framing — that's the human layer. 
 That's where domain expertise and analytical judgment live, and no prompt engineering 
 replaces it.
+
+---
+
+## My Refined Query
+
+Taking the AI's first draft as a starting point, here is the production-grade version 
+I built after my evaluation pass. This is also saved in full in 
+[`queries/01_geographic_revenue.sql`](../queries/01_geographic_revenue.sql).
+```sql
+-- ============================================
+-- Case Study 1: Geographic Revenue Analysis
+-- Business Question: Which geographic markets 
+-- should Chinook prioritize for growth and 
+-- customer acquisition?
+-- Skills: CTEs, ROW_NUMBER(), PRINTF, GROUP BY,
+--         INNER JOIN, ROUND
+-- Author: Daniel Matel-Okoh
+-- AI Partner: Claude / Gemini
+-- ============================================
+
+
+-- CTE 1: Calculate the global revenue total.
+-- We'll use this to compute each country's share.
+WITH global_totals AS (
+    SELECT SUM(Total) AS grand_total_revenue
+    FROM Invoice
+),
+
+-- CTE 2: Aggregate revenue metrics by country.
+-- We join Invoice to Customer to get accurate 
+-- customer counts (not just invoice counts).
+country_metrics AS (
+    SELECT
+        i.BillingCountry                          AS country,
+        COUNT(DISTINCT i.CustomerId)              AS total_customers,
+        COUNT(i.InvoiceId)                        AS total_orders,
+        SUM(i.Total)                              AS raw_revenue,
+        SUM(i.Total) / COUNT(DISTINCT i.CustomerId) AS raw_revenue_per_customer
+    FROM Invoice i
+    INNER JOIN Customer c ON i.CustomerId = c.CustomerId
+    GROUP BY i.BillingCountry
+)
+
+-- Final SELECT: Add ranking, formatting, and 
+-- percentage of total. This is what goes in the report.
+SELECT
+    ROW_NUMBER() OVER (ORDER BY cm.raw_revenue DESC) AS revenue_rank,
+    cm.country,
+    cm.total_customers,
+    cm.total_orders,
+    PRINTF('$%.2f', cm.raw_revenue)               AS total_revenue,
+    PRINTF('$%.2f', cm.raw_revenue_per_customer)  AS avg_revenue_per_customer,
+    ROUND(cm.raw_revenue / gt.grand_total_revenue * 100, 2) AS pct_of_total_revenue
+FROM country_metrics cm
+CROSS JOIN global_totals gt
+ORDER BY cm.raw_revenue DESC;
+```
+
+**What I added beyond the AI's first draft:**
+
+- **CTE 1** captures the global revenue total once — so the percentage calculation 
+  doesn't require a correlated subquery recalculating on every row
+- **CTE 2** isolates the per-country aggregation cleanly, making the final SELECT 
+  easy to read at a glance
+- **ROW_NUMBER()** adds an explicit rank so the report is instantly scannable
+- **PRINTF('$%.2f')** applied consistently across all currency columns — no raw decimals
+- **pct_of_total_revenue** answers the concentration question the flat query couldn't
+- **CROSS JOIN** on global_totals is the clean SQLite pattern for referencing a 
+  single-row aggregate across all result rows
+- **Full comment header** and inline comments throughout for maintainability
