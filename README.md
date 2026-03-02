@@ -66,4 +66,3 @@ Full breakdown: [`ai-collaboration/ai_collaboration_log.md`](ai-collaboration/ai
 | Genre | GenreId, Name | Genre categorization |
 
 *All queries are SQLite-compatible and tested against the Chinook database.*
-```
