@@ -1,4 +1,5 @@
-markdown# Case Study 1: Where Is the Revenue Coming From?
+markdown
+# Case Study 1: Where Is the Revenue Coming From?
 ## Geographic Revenue Analysis
 
 ---
