@@ -24,8 +24,6 @@ This is not just a ranking exercise. The goal is to understand:
 
 ---
 
----
-
 ## The Prompt I Gave the AI
 
 Using the structured prompt framework established in Case Study 1, here is the 
@@ -85,7 +83,7 @@ The context prime is essentially a reusable session configuration — it takes
 > You are a senior data analyst working inside Chinook Digital Media. You write 
 > clean, well-commented SQLite-compatible SQL for a marketing team. You follow 
 > these standards in every query you write:
-
+>
 > - Always use CTEs (WITH ... AS) instead of nested subqueries
 > - Always format currency with PRINTF('$%.2f', ...)
 > - Always use COALESCE() to handle potential NULLs in formatted columns
@@ -93,7 +91,7 @@ The context prime is essentially a reusable session configuration — it takes
 > - Always add a formal comment header block at the top of every query
 > - Never use reserved words as aliases (avg, total, count, etc.)
 > - Never use SQLite-incompatible functions (no FORMAT(), TOP, ISNULL())
-
+>
 > These are non-negotiable standards. Apply them to every query in this session 
 > without being reminded.
 
@@ -240,7 +238,7 @@ on the actual distribution:
 
 | Tier | New Threshold | Rationale |
 |------|--------------|-----------|
-| Platinum | ≥ $45.00 | Top 4 customers — clearly separated |
+| Platinum | ≥ $45.00 | Top 5 customers — clearly separated |
 | Gold | ≥ $40.00 | Above the main cluster |
 | Silver | ≥ $37.62 | Mid cluster |
 | Bronze | < $37.62 | Below cluster |
@@ -375,6 +373,129 @@ and fed them back to the AI.
 > comments, and header block — exactly as it is."*
 
 ---
+
+**The V2 Query — AI Output After Prompt Chaining:**
+```sql
+-- ============================================================
+-- Query    : Customer Lifetime Value & Segmentation — V2
+-- Database : Chinook (SQLite)
+-- Author   : Senior Data Analyst, Chinook Digital Media
+-- Purpose  : Calculate total lifetime spend, purchase count,
+--            and average order value per customer, then assign
+--            each customer to a value tier (Platinum / Gold /
+--            Silver / Bronze) based on explicit spend thresholds.
+--            Includes each customer's % contribution to total
+--            company revenue and a global rank by lifetime spend.
+-- Audience : Marketing team — segment-specific retention campaigns
+-- Changes  : V2 — Added ROW_NUMBER() rank, recalibrated tier
+--            thresholds, added pct_of_total_revenue via CROSS JOIN
+--            against a global revenue CTE, title-cased all aliases,
+--            and appended a standalone tier summary query.
+-- Notes    : Spend is aggregated at the customer level by summing
+--            InvoiceLine unit prices × quantities. Tier thresholds
+--            are business-defined, not mathematical quartiles.
+-- ============================================================
+
+WITH customer_metrics AS (
+    SELECT
+        c.CustomerId,
+        c.FirstName,
+        c.LastName,
+        c.Country,
+        SUM(il.UnitPrice * il.Quantity)                             AS lifetime_spend,
+        COUNT(DISTINCT i.InvoiceId)                                 AS purchase_count,
+        SUM(il.UnitPrice * il.Quantity) / NULLIF(COUNT(DISTINCT i.InvoiceId), 0)
+                                                                    AS avg_order_value
+    FROM       Customer     c
+    INNER JOIN Invoice      i   ON i.CustomerId   = c.CustomerId
+    INNER JOIN InvoiceLine  il  ON il.InvoiceId   = i.InvoiceId
+    GROUP BY
+        c.CustomerId,
+        c.FirstName,
+        c.LastName,
+        c.Country
+),
+customer_segments AS (
+    SELECT
+        CustomerId,
+        FirstName,
+        LastName,
+        Country,
+        lifetime_spend,
+        purchase_count,
+        avg_order_value,
+        CASE
+            WHEN lifetime_spend >= 45.00 THEN 'Platinum'
+            WHEN lifetime_spend >= 40.00 THEN 'Gold'
+            WHEN lifetime_spend >= 37.62 THEN 'Silver'
+            ELSE                              'Bronze'
+        END AS value_tier
+    FROM customer_metrics
+),
+global_revenue AS (
+    SELECT
+        SUM(lifetime_spend) AS total_revenue
+    FROM customer_metrics
+)
+SELECT
+    ROW_NUMBER() OVER (ORDER BY cs.lifetime_spend DESC)             AS "Rank",
+    cs.FirstName || ' ' || cs.LastName                             AS "Customer Name",
+    cs.Country                                                      AS "Country",
+    COALESCE(PRINTF('$%.2f', cs.lifetime_spend),  'N/A')           AS "Total Lifetime Spend",
+    cs.purchase_count                                               AS "Number of Purchases",
+    COALESCE(PRINTF('$%.2f', cs.avg_order_value), 'N/A')           AS "Avg Order Value",
+    ROUND(
+        cs.lifetime_spend / NULLIF(gr.total_revenue, 0) * 100,
+        2
+    )                                                               AS "Pct of Total Revenue",
+    cs.value_tier                                                   AS "Value Tier"
+FROM       customer_segments cs
+CROSS JOIN global_revenue    gr
+ORDER BY cs.lifetime_spend DESC;
+
+
+-- ============================================================
+-- Tier Summary Query (Standalone)
+-- ============================================================
+WITH customer_metrics AS (
+    SELECT
+        c.CustomerId,
+        SUM(il.UnitPrice * il.Quantity) AS lifetime_spend
+    FROM       Customer     c
+    INNER JOIN Invoice      i   ON i.CustomerId   = c.CustomerId
+    INNER JOIN InvoiceLine  il  ON il.InvoiceId   = i.InvoiceId
+    GROUP BY c.CustomerId
+),
+customer_segments AS (
+    SELECT
+        CustomerId,
+        lifetime_spend,
+        CASE
+            WHEN lifetime_spend >= 45.00 THEN 'Platinum'
+            WHEN lifetime_spend >= 40.00 THEN 'Gold'
+            WHEN lifetime_spend >= 37.62 THEN 'Silver'
+            ELSE                              'Bronze'
+        END AS value_tier
+    FROM customer_metrics
+),
+global_revenue AS (
+    SELECT SUM(lifetime_spend) AS total_revenue
+    FROM customer_metrics
+)
+SELECT
+    cs.value_tier                                                   AS "Value Tier",
+    COUNT(cs.CustomerId)                                            AS "Number of Customers",
+    COALESCE(PRINTF('$%.2f', SUM(cs.lifetime_spend)), 'N/A')       AS "Total Tier Revenue",
+    ROUND(
+        SUM(cs.lifetime_spend) / NULLIF(gr.total_revenue, 0) * 100,
+        2
+    )                                                               AS "Pct of Total Revenue"
+FROM       customer_segments cs
+CROSS JOIN global_revenue    gr
+GROUP BY cs.value_tier, gr.total_revenue
+ORDER BY SUM(cs.lifetime_spend) DESC;
+```
+
 ---
 
 **What the prompt chaining achieved:**
@@ -469,10 +590,128 @@ value of strong context priming carrying through the session.
 
 | Value Tier | Number of Customers | Total Tier Revenue | % of Total Revenue |
 |------------|--------------------|--------------------|-------------------|
-| Silver | 44 | $1,677.28 | 72.03% |
-| Gold | 9 | $379.58 | 16.30% |
 | Platinum | 5 | $235.10 | 10.10% |
+| Gold | 9 | $379.58 | 16.30% |
+| Silver | 44 | $1,677.28 | 72.03% |
 | Bronze | 1 | $36.64 | 1.57% |
+| **TOTAL** | **59** | **$2,328.60** | **100.00%** |
+
+---
+
+## Verification Pass — AI Self-Check + Meta-Prompting
+
+Following the same verification approach established in Case Study 1, I ran a 
+structured AI self-verification pass before accepting these results as final.
+
+**The verification prompt I sent:**
+
+> *"Please verify the V2 query output is mathematically correct. Run the following checks:*
+>
+> *1. **Spot-check the % of Total Revenue column** — Sum all 59 customer percentages 
+> and confirm they add up to approximately 100%.*
+>
+> *2. **Verify the global revenue total** — Use Helena Holý's figures ($49.62 at 2.13%) 
+> to back-calculate the implied global total. Show your work.*
+>
+> *3. **Check the AOV calculation for one customer** — For Helena Holý: divide Total 
+> Lifetime Spend ($49.62) by Number of Purchases (7). Does that match the Avg Order 
+> Value shown?*
+>
+> *4. **Confirm the tier summary adds up** — Do the four tier revenue figures sum to 
+> the same global total implied in Check 2?*
+>
+> *5. **Flag any anomalies** — Are there any customers where the AOV, purchase count, 
+> or tier assignment looks inconsistent with their spend?*
+>
+> *6. **Meta-check** — Beyond these five checks, what other verification methods would 
+> you recommend for a customer segmentation query specifically?"*
+
+---
+
+**Verification Results:**
+
+**✅ Check 1 — Pct of Total Revenue sums to ~100%**
+The 59 percentage values sum to 100.11% — a delta of +0.11 percentage points. 
+This is expected and correct. ROUND(..., 2) is applied to each individual row 
+before summing, so small rounding residuals accumulate across 59 rows. The delta 
+is slightly larger than Case Study 1's 0.03% because we have 59 rows here vs. 24 
+— more rows means more rounding residuals accumulating. Fully expected behavior.
+
+**✅ Check 2 — Global revenue back-calculation**
+
+| Method | Value |
+|--------|-------|
+| Helena back-calc ($49.62 ÷ 2.13%) | $2,329.58 |
+| Direct sum of all 59 spend values | $2,328.60 |
+| Delta | $0.98 |
+
+The $0.98 gap is a rounding artifact — Helena's true percentage is 
+49.62 / 2328.60 × 100 = 2.1309%, which rounds to 2.13%. Back-calculating 
+from the rounded figure slightly inflates the implied total. Expected behavior, 
+not a query bug.
+
+**✅ Check 3 — AOV spot-check (Helena Holý)**
+$49.62 ÷ 7 = $7.0886 → rounds to $7.09. Matches the output exactly. 
+PRINTF rounding is operating on the raw float, not a pre-rounded intermediate.
+
+**✅ Check 3b — AOV × Purchases reconciliation (all 59 rows)**
+Every single row reconciles within $0.05. No inconsistencies between spend, 
+purchase count, and AOV anywhere in the dataset.
+
+**✅ Check 4 — Tier summary cross-check**
+
+| Value Tier | Customers | Total Tier Revenue | % of Total |
+|------------|-----------|-------------------|------------|
+| Platinum | 5 | $235.10 | 10.10% |
+| Gold | 9 | $379.58 | 16.30% |
+| Silver | 44 | $1,677.28 | 72.03% |
+| Bronze | 1 | $36.64 | 1.57% |
+| **TOTAL** | **59** | **$2,328.60** | **100.00%** |
+
+Grand total of $2,328.60 matches the direct sum from Check 2 exactly. 
+No customers dropped or double-counted.
+
+---
+
+**🔬 Check 6 — Meta-Verification: What Else Should We Check?**
+
+The AI surfaced three additional checks specific to customer segmentation queries:
+
+**Duplicate customer guard:**
+> Run `SELECT CustomerId, COUNT(*) FROM Customer GROUP BY CustomerId HAVING COUNT(*) > 1`
+>
+> If any CustomerId appears more than once in the Customer table, the JOIN will 
+> create duplicate rows — inflating lifetime spend and purchase counts silently.
+
+**Orphaned invoice check:**
+> Run `SELECT COUNT(*) FROM Invoice WHERE CustomerId NOT IN (SELECT CustomerId FROM Customer)`
+>
+> Any invoices without a matching customer record would be excluded by the INNER JOIN 
+> — meaning their revenue is silently dropped from the global total, causing the 
+> tier summary to understate total revenue.
+
+**Tier boundary edge case:**
+> Confirm that customers sitting exactly on a threshold ($45.00, $40.00, $37.62) 
+> are assigned to the correct tier. CASE WHEN evaluates top-to-bottom and stops 
+> at the first TRUE condition — so a customer at exactly $40.00 should be Gold, 
+> not Silver. Spot-check confirmed this is correct.
+
+I ran all three checks against the Chinook database. No duplicate customers. 
+No orphaned invoices. Tier boundary assignments confirmed correct.
+
+---
+
+**Overall Verdict: Numbers are mathematically consistent and defendable.**
+
+The tier summary and customer detail query reconcile exactly to $2,328.60 — 
+matching the direct sum of all 59 customer spend values. All percentage 
+calculations are consistent with known rounding behavior. The AOV reconciliation 
+across all 59 rows confirms the NULLIF guard and PRINTF formatting are operating 
+correctly throughout.
+
+The orphaned invoice check is worth highlighting as a silent failure mode — 
+it's the kind of defensive check that belongs in any production customer 
+analytics workflow, and it would never be caught by just looking at the output.
 
 ---
 
@@ -602,123 +841,3 @@ is to find more customers like Helena Holý.
 The strategic implication: country-level revenue analysis and customer-level value 
 analysis tell different stories and should inform different decisions. One is a 
 media buying conversation. The other is a CRM conversation.
-
----
-
----
-
-## Verification Pass — AI Self-Check + Meta-Prompting
-
-Following the same verification approach established in Case Study 1, I ran a 
-structured AI self-verification pass before accepting these results as final.
-
-**The verification prompt I sent:**
-
-> *"Please verify the V2 query output is mathematically correct. Run the following checks:*
->
-> *1. **Spot-check the % of Total Revenue column** — Sum all 59 customer percentages 
-> and confirm they add up to approximately 100%.*
->
-> *2. **Verify the global revenue total** — Use Helena Holý's figures ($49.62 at 2.13%) 
-> to back-calculate the implied global total. Show your work.*
->
-> *3. **Check the AOV calculation for one customer** — For Helena Holý: divide Total 
-> Lifetime Spend ($49.62) by Number of Purchases (7). Does that match the Avg Order 
-> Value shown?*
->
-> *4. **Confirm the tier summary adds up** — Do the four tier revenue figures sum to 
-> the same global total implied in Check 2?*
->
-> *5. **Flag any anomalies** — Are there any customers where the AOV, purchase count, 
-> or tier assignment looks inconsistent with their spend?*
->
-> *6. **Meta-check** — Beyond these five checks, what other verification methods would 
-> you recommend for a customer segmentation query specifically?"*
-
----
-
-**Verification Results:**
-
-**✅ Check 1 — Pct of Total Revenue sums to ~100%**
-The 59 percentage values sum to 100.11% — a delta of +0.11 percentage points. 
-This is expected and correct. ROUND(..., 2) is applied to each individual row 
-before summing, so small rounding residuals accumulate across 59 rows. The query 
-logic is sound. Note: the delta is slightly larger than Case Study 1's 0.03% 
-because we have 59 rows here vs. 24 — more rows means more rounding residuals 
-accumulating. Fully expected behavior.
-
-**✅ Check 2 — Global revenue back-calculation**
-
-| Method | Value |
-|--------|-------|
-| Helena back-calc ($49.62 ÷ 2.13%) | $2,329.58 |
-| Direct sum of all 59 spend values | $2,328.60 |
-| Delta | $0.98 |
-
-The $0.98 gap is a rounding artifact — Helena's true percentage is 
-49.62 / 2328.60 × 100 = 2.1309%, which rounds to 2.13%. Back-calculating 
-from the rounded figure slightly inflates the implied total. Expected behavior, 
-not a query bug.
-
-**✅ Check 3 — AOV spot-check (Helena Holý)**
-$49.62 ÷ 7 = $7.0886 → rounds to $7.09. Matches the output exactly. 
-PRINTF rounding is operating on the raw float, not a pre-rounded intermediate.
-
-**✅ Check 3b — AOV × Purchases reconciliation (all 59 rows)**
-Every single row reconciles within $0.05. No inconsistencies between spend, 
-purchase count, and AOV anywhere in the dataset.
-
-**✅ Check 4 — Tier summary cross-check**
-
-| Value Tier | Customers | Total Tier Revenue | % of Total |
-|------------|-----------|-------------------|------------|
-| Platinum | 5 | $235.10 | 10.10% |
-| Gold | 9 | $379.58 | 16.30% |
-| Silver | 44 | $1,677.28 | 72.03% |
-| Bronze | 1 | $36.64 | 1.57% |
-| **TOTAL** | **59** | **$2,328.60** | **100.00%** |
-
-Grand total of $2,328.60 matches the direct sum from Check 2 exactly. 
-No customers dropped or double-counted.
-
----
-
-**🔬 Check 6 — Meta-Verification: What Else Should We Check?**
-
-The AI surfaced three additional checks specific to customer segmentation queries:
-
-**Duplicate customer guard:**
-> Run `SELECT CustomerId, COUNT(*) FROM Customer GROUP BY CustomerId HAVING COUNT(*) > 1`
->
-> If any CustomerId appears more than once in the Customer table, the JOIN will 
-> create duplicate rows — inflating lifetime spend and purchase counts silently.
-
-**Orphaned invoice check:**
-> Run `SELECT COUNT(*) FROM Invoice WHERE CustomerId NOT IN (SELECT CustomerId FROM Customer)`
->
-> Any invoices without a matching customer record would be excluded by the INNER JOIN 
-> — meaning their revenue is silently dropped from the global total, causing the 
-> tier summary to understate total revenue.
-
-**Tier boundary edge case:**
-> Confirm that customers sitting exactly on a threshold ($45.00, $40.00, $37.62) 
-> are assigned to the correct tier. CASE WHEN evaluates top-to-bottom and stops 
-> at the first TRUE condition — so a customer at exactly $40.00 should be Gold, 
-> not Silver. Spot-check confirmed this is correct.
-
-I ran all three checks against the Chinook database. No duplicate customers. 
-No orphaned invoices. Tier boundary assignments confirmed correct.
-
----
-
-**Overall Verdict: Numbers are mathematically consistent and defendable.**
-
-The tier summary and customer detail query reconcile exactly to $2,328.60 — 
-matching the direct sum of all 59 customer spend values. All percentage 
-calculations are consistent with known rounding behavior. The AOV reconciliation 
-across all 59 rows confirms the NULLIF guard and PRINTF formatting are operating 
-correctly throughout.
-
-The orphaned invoice check is worth highlighting as a silent failure mode — 
-it's the kind of defensive check that belongs in any production customer 
-analytics workflow, and it would never be caught by just looking at the output.
