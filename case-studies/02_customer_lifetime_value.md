@@ -602,3 +602,123 @@ is to find more customers like Helena Holý.
 The strategic implication: country-level revenue analysis and customer-level value 
 analysis tell different stories and should inform different decisions. One is a 
 media buying conversation. The other is a CRM conversation.
+
+---
+
+---
+
+## Verification Pass — AI Self-Check + Meta-Prompting
+
+Following the same verification approach established in Case Study 1, I ran a 
+structured AI self-verification pass before accepting these results as final.
+
+**The verification prompt I sent:**
+
+> *"Please verify the V2 query output is mathematically correct. Run the following checks:*
+>
+> *1. **Spot-check the % of Total Revenue column** — Sum all 59 customer percentages 
+> and confirm they add up to approximately 100%.*
+>
+> *2. **Verify the global revenue total** — Use Helena Holý's figures ($49.62 at 2.13%) 
+> to back-calculate the implied global total. Show your work.*
+>
+> *3. **Check the AOV calculation for one customer** — For Helena Holý: divide Total 
+> Lifetime Spend ($49.62) by Number of Purchases (7). Does that match the Avg Order 
+> Value shown?*
+>
+> *4. **Confirm the tier summary adds up** — Do the four tier revenue figures sum to 
+> the same global total implied in Check 2?*
+>
+> *5. **Flag any anomalies** — Are there any customers where the AOV, purchase count, 
+> or tier assignment looks inconsistent with their spend?*
+>
+> *6. **Meta-check** — Beyond these five checks, what other verification methods would 
+> you recommend for a customer segmentation query specifically?"*
+
+---
+
+**Verification Results:**
+
+**✅ Check 1 — Pct of Total Revenue sums to ~100%**
+The 59 percentage values sum to 100.11% — a delta of +0.11 percentage points. 
+This is expected and correct. ROUND(..., 2) is applied to each individual row 
+before summing, so small rounding residuals accumulate across 59 rows. The query 
+logic is sound. Note: the delta is slightly larger than Case Study 1's 0.03% 
+because we have 59 rows here vs. 24 — more rows means more rounding residuals 
+accumulating. Fully expected behavior.
+
+**✅ Check 2 — Global revenue back-calculation**
+
+| Method | Value |
+|--------|-------|
+| Helena back-calc ($49.62 ÷ 2.13%) | $2,329.58 |
+| Direct sum of all 59 spend values | $2,328.60 |
+| Delta | $0.98 |
+
+The $0.98 gap is a rounding artifact — Helena's true percentage is 
+49.62 / 2328.60 × 100 = 2.1309%, which rounds to 2.13%. Back-calculating 
+from the rounded figure slightly inflates the implied total. Expected behavior, 
+not a query bug.
+
+**✅ Check 3 — AOV spot-check (Helena Holý)**
+$49.62 ÷ 7 = $7.0886 → rounds to $7.09. Matches the output exactly. 
+PRINTF rounding is operating on the raw float, not a pre-rounded intermediate.
+
+**✅ Check 3b — AOV × Purchases reconciliation (all 59 rows)**
+Every single row reconciles within $0.05. No inconsistencies between spend, 
+purchase count, and AOV anywhere in the dataset.
+
+**✅ Check 4 — Tier summary cross-check**
+
+| Value Tier | Customers | Total Tier Revenue | % of Total |
+|------------|-----------|-------------------|------------|
+| Platinum | 5 | $235.10 | 10.10% |
+| Gold | 9 | $379.58 | 16.30% |
+| Silver | 44 | $1,677.28 | 72.03% |
+| Bronze | 1 | $36.64 | 1.57% |
+| **TOTAL** | **59** | **$2,328.60** | **100.00%** |
+
+Grand total of $2,328.60 matches the direct sum from Check 2 exactly. 
+No customers dropped or double-counted.
+
+---
+
+**🔬 Check 6 — Meta-Verification: What Else Should We Check?**
+
+The AI surfaced three additional checks specific to customer segmentation queries:
+
+**Duplicate customer guard:**
+> Run `SELECT CustomerId, COUNT(*) FROM Customer GROUP BY CustomerId HAVING COUNT(*) > 1`
+>
+> If any CustomerId appears more than once in the Customer table, the JOIN will 
+> create duplicate rows — inflating lifetime spend and purchase counts silently.
+
+**Orphaned invoice check:**
+> Run `SELECT COUNT(*) FROM Invoice WHERE CustomerId NOT IN (SELECT CustomerId FROM Customer)`
+>
+> Any invoices without a matching customer record would be excluded by the INNER JOIN 
+> — meaning their revenue is silently dropped from the global total, causing the 
+> tier summary to understate total revenue.
+
+**Tier boundary edge case:**
+> Confirm that customers sitting exactly on a threshold ($45.00, $40.00, $37.62) 
+> are assigned to the correct tier. CASE WHEN evaluates top-to-bottom and stops 
+> at the first TRUE condition — so a customer at exactly $40.00 should be Gold, 
+> not Silver. Spot-check confirmed this is correct.
+
+I ran all three checks against the Chinook database. No duplicate customers. 
+No orphaned invoices. Tier boundary assignments confirmed correct.
+
+---
+
+**Overall Verdict: Numbers are mathematically consistent and defendable.**
+
+The tier summary and customer detail query reconcile exactly to $2,328.60 — 
+matching the direct sum of all 59 customer spend values. All percentage 
+calculations are consistent with known rounding behavior. The AOV reconciliation 
+across all 59 rows confirms the NULLIF guard and PRINTF formatting are operating 
+correctly throughout.
+
+The orphaned invoice check is worth highlighting as a silent failure mode — 
+it's the kind of defensive check that belongs in any production customer 
+analytics workflow, and it would never be caught by just looking at the output.
