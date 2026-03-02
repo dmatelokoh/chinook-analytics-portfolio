@@ -135,130 +135,87 @@ no comments, and a reserved word (`avg`) used as an alias.
 **Then — using my structured prompt framework:**
 
 After applying the Persona, Task, Context, Constraints, Format, References, Audience, 
-and Evaluate framework from Section 2, the AI returned a materially better first draft — 
-one that required far less manual cleanup and was already closer to production-ready.
+and Evaluate framework from Section 2, the AI returned a materially better first draft:
+```sql
+-- ============================================================
+-- Revenue Summary by Country
+-- Source: Chinook SQLite Database
+-- Purpose: Help marketing understand revenue and customer
+--          concentration across geographic markets
+-- ============================================================
 
-The difference wasn't the AI. It was the quality of the input I gave it.
+WITH country_metrics AS (
 
-That refined output, along with my own improvements on top of it, is what you'll 
-see in the next two sections.
+    -- Aggregate invoice data at the country level.
+    -- We use INNER JOIN to ensure only countries with actual
+    -- purchases are included — no customers without invoices.
+    SELECT
+        i.BillingCountry                            AS country,
+        SUM(i.Total)                                AS revenue_raw,
+        COUNT(DISTINCT c.CustomerId)                AS unique_customers,
+        SUM(i.Total) / COUNT(DISTINCT c.CustomerId) AS avg_revenue_raw
+
+    FROM Invoice AS i
+        INNER JOIN Customer AS c
+            ON i.CustomerId = c.CustomerId
+
+    GROUP BY i.BillingCountry
+)
+
+SELECT
+    country                                             AS "Country",
+    PRINTF('$%.2f', COALESCE(revenue_raw, 0))          AS "Total Revenue",
+    unique_customers                                    AS "Unique Customers",
+    PRINTF('$%.2f', COALESCE(avg_revenue_raw, 0))      AS "Avg Revenue per Customer"
+
+FROM country_metrics
+ORDER BY revenue_raw DESC;
+```
+
+This is a meaningful step up. The CTE is clean, the join logic is correct, currency 
+is formatted, and the comments explain the decisions. The difference wasn't the AI 
+getting smarter — it was the quality of the input I gave it.
+
+But after running this and reviewing the output, I still had notes.
 
 ---
 
 ## My Critical Evaluation
 
-The structured prompt produced a noticeably better first draft — but "better" still 
-wasn't "done." This is the part of the AI workflow that I think gets undervalued: 
-the human review pass.
+The structured prompt produced a solid first draft — but "solid" still wasn't "done." 
+This is the part of the AI workflow that I think gets undervalued: the human review pass.
 
-Here's exactly what I flagged before touching the query:
+Here's exactly what I flagged:
 
 **1. No ranking column**
 The output sorts by revenue descending, but there's no explicit rank number. In a 
 report, a reader should be able to instantly see "USA is #1, Canada is #2" without 
-having to count rows manually. I needed to add ROW_NUMBER() OVER (ORDER BY revenue DESC).
+counting rows manually. I added ROW_NUMBER() OVER (ORDER BY revenue DESC).
 
 **2. No percentage of total revenue**
-The raw revenue numbers tell me who's biggest, but not how concentrated the business 
-is. If the USA represents 22% of total revenue, that's a very different strategic 
+Raw revenue numbers tell me who's biggest, but not how concentrated the business is. 
+If the USA represents 22% of total revenue, that's a very different strategic 
 conversation than if it represents 60%. The AI didn't calculate this because I didn't 
 explicitly ask for it — a reminder that AI answers the question you ask, not the 
 question you should have asked.
 
-**3. Floating point noise in the output**
-Values like `523.0600000000003` are a SQLite artifact of floating point arithmetic. 
-PRINTF('$%.2f') fixes the display, but the AI only partially applied this — it 
-formatted some columns and missed others.
+**3. No global revenue benchmark**
+To calculate percentage of total, I needed a second CTE capturing the grand total 
+revenue across all countries. The AI's version had no mechanism for this — adding it 
+required restructuring the query with an additional CTE and a CROSS JOIN pattern.
 
-**4. No CTEs — just a flat query**
-The AI returned a single SELECT statement. That works for a simple query, but as 
-soon as I need to reference the global total for percentage calculations, a flat 
-query becomes a nested subquery mess. CTEs make the logic readable and maintainable. 
-This was my addition, not the AI's.
+**4. Floating point noise**
+Values like `523.0600000000003` are a SQLite artifact. PRINTF('$%.2f') fixes the 
+display, and the AI applied it correctly — but only because I specified it explicitly 
+in my prompt. Without that constraint, it wouldn't have been there.
 
-**5. The alias `avg` is a reserved word**
-Small issue, but the kind of thing that causes subtle bugs in more complex queries 
-or when porting to other SQL dialects. I renamed it to `avg_revenue_per_customer` — 
-descriptive and safe.
+**5. No comment header block**
+The AI added inline comments, which was good. But there was no formal header block 
+identifying the case study, business question, skills used, and author. That's a 
+professional standard for any query that lives in a shared repo.
 
-**6. No comment header or inline comments**
-Nothing in the AI's output explained *why* decisions were made. A query without 
-comments is a liability — it works today, but the next person (or future me) has 
-to reverse-engineer the logic. I added a full header block and inline comments 
-throughout.
-
-**The bottom line:** The AI got me to a working 60% in a fraction of the time it 
-would have taken me to write from scratch. The remaining 40% — the ranking, the 
-percentage of total, the CTE structure, the business framing — that's the human layer. 
-That's where domain expertise and analytical judgment live, and no prompt engineering 
-replaces it.
-
----
-
-## My Refined Query
-
-Taking the AI's first draft as a starting point, here is the production-grade version 
-I built after my evaluation pass. This is also saved in full in 
-[`queries/01_geographic_revenue.sql`](../queries/01_geographic_revenue.sql).
-```sql
--- ============================================
--- Case Study 1: Geographic Revenue Analysis
--- Business Question: Which geographic markets 
--- should Chinook prioritize for growth and 
--- customer acquisition?
--- Skills: CTEs, ROW_NUMBER(), PRINTF, GROUP BY,
---         INNER JOIN, ROUND
--- Author: Daniel Matel-Okoh
--- AI Partner: Claude / Gemini
--- ============================================
-
-
--- CTE 1: Calculate the global revenue total.
--- We'll use this to compute each country's share.
-WITH global_totals AS (
-    SELECT SUM(Total) AS grand_total_revenue
-    FROM Invoice
-),
-
--- CTE 2: Aggregate revenue metrics by country.
--- We join Invoice to Customer to get accurate 
--- customer counts (not just invoice counts).
-country_metrics AS (
-    SELECT
-        i.BillingCountry                          AS country,
-        COUNT(DISTINCT i.CustomerId)              AS total_customers,
-        COUNT(i.InvoiceId)                        AS total_orders,
-        SUM(i.Total)                              AS raw_revenue,
-        SUM(i.Total) / COUNT(DISTINCT i.CustomerId) AS raw_revenue_per_customer
-    FROM Invoice i
-    INNER JOIN Customer c ON i.CustomerId = c.CustomerId
-    GROUP BY i.BillingCountry
-)
-
--- Final SELECT: Add ranking, formatting, and 
--- percentage of total. This is what goes in the report.
-SELECT
-    ROW_NUMBER() OVER (ORDER BY cm.raw_revenue DESC) AS revenue_rank,
-    cm.country,
-    cm.total_customers,
-    cm.total_orders,
-    PRINTF('$%.2f', cm.raw_revenue)               AS total_revenue,
-    PRINTF('$%.2f', cm.raw_revenue_per_customer)  AS avg_revenue_per_customer,
-    ROUND(cm.raw_revenue / gt.grand_total_revenue * 100, 2) AS pct_of_total_revenue
-FROM country_metrics cm
-CROSS JOIN global_totals gt
-ORDER BY cm.raw_revenue DESC;
-```
-
-**What I added beyond the AI's first draft:**
-
-- **CTE 1** captures the global revenue total once — so the percentage calculation 
-  doesn't require a correlated subquery recalculating on every row
-- **CTE 2** isolates the per-country aggregation cleanly, making the final SELECT 
-  easy to read at a glance
-- **ROW_NUMBER()** adds an explicit rank so the report is instantly scannable
-- **PRINTF('$%.2f')** applied consistently across all currency columns — no raw decimals
-- **pct_of_total_revenue** answers the concentration question the flat query couldn't
-- **CROSS JOIN** on global_totals is the clean SQLite pattern for referencing a 
-  single-row aggregate across all result rows
-- **Full comment header** and inline comments throughout for maintainability
+**The bottom line:** The structured prompt got me to a strong 65% in a fraction of 
+the time it would have taken me to write from scratch. The remaining 35% — the ranking, 
+the percentage of total, the global benchmark CTE, the header block — that's the human 
+layer. That's where domain expertise and analytical judgment live, and no prompt 
+engineering replaces it.
