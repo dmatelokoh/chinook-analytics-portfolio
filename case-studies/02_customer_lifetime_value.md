@@ -473,3 +473,132 @@ value of strong context priming carrying through the session.
 | Gold | 9 | $379.58 | 16.30% |
 | Platinum | 5 | $235.10 | 10.10% |
 | Bronze | 1 | $36.64 | 1.57% |
+
+---
+
+## The Business Insight
+
+*Interpreted through a digital marketing lens by Daniel Matel-Okoh*
+
+---
+
+### The Tier Structure Reveals a Pricing Reality
+
+The most striking finding from the tier summary isn't which customers are Platinum 
+— it's that 72% of total revenue sits in Silver. At first glance that looks like a 
+segmentation problem. But the deeper explanation is a product pricing one.
+
+The Chinook catalog is predominantly priced at $0.99 and $1.99 per track. When 
+customers buy similar volumes of tracks at nearly identical price points, spend 
+clusters are almost inevitable — there's simply not enough price variance in the 
+product to create dramatic revenue separation between customers. This is why the 
+gap between our #1 customer ($49.62) and our #59 customer ($36.64) is only $13 
+over their entire customer lifetime.
+
+This is a case where the data is correct, but the interpretation requires product 
+context. A hiring manager who only looks at the numbers might conclude the 
+segmentation is poorly designed. The reality is that the pricing structure creates 
+natural compression — and that's a business model conversation, not a data quality 
+one.
+
+This is also where a more dynamic approach to tiering becomes worth exploring. 
+Rather than fixed dollar thresholds, a PERCENT_RANK() approach would automatically 
+adapt to the actual distribution — always surfacing the top 10% as Platinum 
+regardless of how compressed the spend range is. For a catalog-priced business 
+like Chinook, that's likely the more durable long-term solution.
+
+---
+
+### Purchase Frequency — A Signal Worth Investigating
+
+Almost every customer made exactly 7 purchases. One customer (Puja Srivastava) 
+made 6. That's an unusually consistent pattern across 59 customers in 24 countries.
+
+In digital marketing, when you see uniform behavior across a diverse customer base, 
+you look for an external cause — not an internal one. The questions I'd want to 
+answer next:
+
+- **Are the purchase dates clustered?** If most customers bought at similar times, 
+  something external drove that behavior — a sale, a new album release, a promotional 
+  email, a payday cycle.
+- **Are there seasonal patterns?** A time-series analysis of invoice dates by customer 
+  would answer this quickly.
+- **Is this a data artifact?** In a sample dataset like Chinook, uniform purchase 
+  counts can sometimes reflect how the data was generated rather than real customer 
+  behavior. Worth flagging when presenting to stakeholders.
+
+The next logical query would be a purchase date distribution analysis — pulling 
+InvoiceDate by customer and looking for clustering. If the dates align, we have a 
+promotional calendar opportunity. If they don't, the consistency is organic and tells 
+us something genuinely interesting about this customer base's buying habits.
+
+---
+
+### Prioritize Platinum for Retention — The AOV Story
+
+When asked which tier to prioritize for retention investment, the instinct might be 
+Silver — after all, 72% of revenue lives there. But I'd argue Platinum deserves the 
+highest-touch retention strategy, and the AOV column is why.
+
+Platinum customers aren't just spending more in total — they're spending more per 
+transaction. Helena Holý's AOV is $7.09. The average Silver customer's AOV is $5.37. 
+That $1.72 difference per purchase compounds significantly over a customer lifetime. 
+A Platinum customer isn't just a higher spender — they're a higher-quality buyer. 
+They select higher-value items, buy more per session, or both.
+
+In practice this means:
+- **Platinum:** White-glove retention — early access to new releases, personalized 
+  recommendations, loyalty rewards. The cost of losing one Platinum customer is 
+  disproportionate to their headcount.
+- **Gold:** Upsell and upgrade campaigns — these customers are one behavioral nudge 
+  away from Platinum. Targeted promotions on higher-priced tracks or albums could 
+  move them up.
+- **Silver:** Volume retention — the tier is large and consistent. Focus on preventing 
+  churn rather than upgrading spend. Subscription models or bundle offers would serve 
+  this segment well.
+- **Bronze:** Re-engagement — one customer, one data point. Monitor and investigate 
+  before investing campaign budget.
+
+---
+
+### Puja Srivastava — The Anomaly Worth Watching
+
+Puja is the only Bronze customer and the only customer with fewer than 7 purchases. 
+But her AOV ($6.11) is higher than most Silver customers and comparable to Gold. 
+She's not a low-value customer — she's an under-developed one.
+
+In acquisition terms, she looks like a high-potential customer who hasn't been 
+fully activated yet. The strategic question is whether her lower purchase count 
+reflects disengagement or simply a shorter customer tenure. I'd want to look at 
+her first purchase date relative to the rest of the customer base before drawing 
+any conclusions. If she's a newer customer, she may naturally grow into Silver 
+or Gold over time. If she's been around as long as everyone else and still only 
+made 6 purchases, that's a re-engagement conversation.
+
+---
+
+### The Geographic Insight No One Expected
+
+The USA is our #1 market by revenue. But our top 5 customers — every single 
+Platinum tier customer — come from five different countries: Czech Republic, 
+USA, Chile, Hungary, and Ireland.
+
+This is a meaningful disconnect. At the country level, the US dominates. At the 
+individual customer level, our most valuable relationships are geographically 
+dispersed. That tells us two things:
+
+**First**, high-value customers don't correlate with market size. The Czech Republic 
+has our #1 customer (Helena Holý at $49.62) despite being a relatively small market 
+overall. Chile has our #3. These are markets that wouldn't get budget priority in a 
+country-level revenue analysis — but they're producing our best individual customers.
+
+**Second**, Canada is our #2 market by total revenue but doesn't appear in the 
+customer rankings until #16 (François Tremblay at $39.62). That means Canada's 
+revenue strength comes from volume — more customers spending at average rates — 
+not from a concentration of high-value relationships. That's a fundamentally 
+different growth lever than a market like Czech Republic, where the opportunity 
+is to find more customers like Helena Holý.
+
+The strategic implication: country-level revenue analysis and customer-level value 
+analysis tell different stories and should inform different decisions. One is a 
+media buying conversation. The other is a CRM conversation.
