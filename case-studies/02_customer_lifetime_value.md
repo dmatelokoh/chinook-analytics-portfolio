@@ -326,3 +326,52 @@ deciding where to draw the lines. That's the analyst layer, not the AI layer.
 > In a professional context, a well-maintained prompt library is a productivity 
 > asset — the kind of institutional knowledge that makes an analyst faster and 
 > more consistent over time, regardless of which AI tool they're using.
+
+---
+
+## Iterative Prompting — From V1 to V2
+
+Following the same iterative prompting and prompt chaining approach established 
+in Case Study 1, I reformatted my evaluation notes as a structured feedback prompt 
+and fed them back to the AI.
+
+**The feedback prompt I sent:**
+
+> *"The V1 query was a strong start, but I have specific changes I need you to 
+> incorporate. Please update the query with the following:*
+>
+> *1. **Add a ranking column** — Use ROW_NUMBER() OVER (ORDER BY lifetime_spend DESC) 
+> as the first column in the final SELECT. Label it "Rank".*
+>
+> *2. **Recalibrate the tier thresholds** — After reviewing the actual spend 
+> distribution, the original thresholds create unbalanced tiers. Use these 
+> updated values instead:*
+> - *Platinum: lifetime_spend ≥ $45.00*
+> - *Gold: lifetime_spend ≥ $40.00*
+> - *Silver: lifetime_spend ≥ $37.62*
+> - *Bronze: lifetime_spend < $37.62*
+>
+> *3. **Add a percentage of total revenue column** — Add a third CTE that captures 
+> global lifetime spend across all customers. Then add a pct_of_total_revenue column 
+> in the final SELECT using the same CROSS JOIN pattern from Case Study 1. Round to 
+> 2 decimal places.*
+>
+> *4. **Update all column aliases to title case** — Replace all snake_case aliases 
+> with properly spaced, presentation-ready labels. Examples:*
+> - *customer_name → "Customer Name"*
+> - *total_lifetime_spend → "Total Lifetime Spend"*
+> - *number_of_purchases → "Number of Purchases"*
+> - *avg_order_value → "Avg Order Value"*
+> - *value_tier → "Value Tier"*
+>
+> *5. **Add a tier summary query** — After the main customer-level query, add a 
+> second standalone query that produces a tier summary showing:*
+> - *Value tier label*
+> - *Number of customers in that tier*
+> - *Total revenue from that tier (formatted)*
+> - *Percentage of total revenue from that tier*
+>
+> *Keep everything else — the CTE structure, join logic, NULLIF guard, inline 
+> comments, and header block — exactly as it is."*
+
+---
