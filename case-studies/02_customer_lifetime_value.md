@@ -47,6 +47,38 @@ Context priming solves this by front-loading everything the AI needs to know onc
 at the start of the session — so every subsequent prompt in that chat benefits from 
 the established context without repeating it.
 
+A natural question is: why not just continue the same chat from Case Study 1 
+instead of starting fresh and re-priming? There are a few reasons I deliberately 
+choose to start new sessions for each case study:
+
+**1. Context window degradation**
+As a conversation gets longer, AI models have to manage an increasing amount of 
+information in their context window — the total amount of text they can "hold in 
+mind" at once. In very long sessions, early instructions and established patterns 
+can get deprioritized as new content fills the window. Starting fresh guarantees 
+the AI is working from a clean, focused context — not a cluttered one.
+
+**2. Accumulated errors carry forward**
+If the AI made a subtle mistake or developed a bad habit mid-conversation — a 
+slightly wrong interpretation of the schema, a formatting inconsistency — 
+continuing that session carries the error forward. A new session with a strong 
+context prime resets to a clean baseline.
+
+**3. Portability and reproducibility**
+A well-written context prime is reusable. If I switch AI tools — from Claude to 
+Gemini to GPT — I can drop the same prime into any new session and get consistent 
+outputs. A long running conversation is locked to one tool and one session. A 
+context prime is a portable asset.
+
+**4. Professional discipline**
+In a real analytics team, you can't rely on "the AI remembers what we talked about 
+last week." Documenting your context as a structured prime means your workflow is 
+repeatable, shareable with teammates, and not dependent on any single conversation 
+surviving.
+
+The context prime is essentially a reusable session configuration — it takes 
+60 seconds to paste and saves significant cleanup time downstream.
+
 ---
 
 **🧠 Persona**
