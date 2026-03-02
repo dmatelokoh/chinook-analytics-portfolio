@@ -1,4 +1,4 @@
-# Case Study 1: Where Is the Revenue Coming From?
+markdown# Case Study 1: Where Is the Revenue Coming From?
 ## Geographic Revenue Analysis
 
 ---
@@ -135,7 +135,7 @@ no comments, and a reserved word (`avg`) used as an alias.
 **Then — using my structured prompt framework:**
 
 After applying the Persona, Task, Context, Constraints, Format, References, Audience, 
-and Evaluate framework from Section 2, the AI returned a materially better first draft:
+and Evaluate framework, the AI returned a materially better first draft:
 ```sql
 -- ============================================================
 -- Revenue Summary by Country
@@ -145,20 +145,14 @@ and Evaluate framework from Section 2, the AI returned a materially better first
 -- ============================================================
 
 WITH country_metrics AS (
-
-    -- Aggregate invoice data at the country level.
-    -- We use INNER JOIN to ensure only countries with actual
-    -- purchases are included — no customers without invoices.
     SELECT
         i.BillingCountry                            AS country,
         SUM(i.Total)                                AS revenue_raw,
         COUNT(DISTINCT c.CustomerId)                AS unique_customers,
         SUM(i.Total) / COUNT(DISTINCT c.CustomerId) AS avg_revenue_raw
-
     FROM Invoice AS i
         INNER JOIN Customer AS c
             ON i.CustomerId = c.CustomerId
-
     GROUP BY i.BillingCountry
 )
 
@@ -167,7 +161,6 @@ SELECT
     PRINTF('$%.2f', COALESCE(revenue_raw, 0))          AS "Total Revenue",
     unique_customers                                    AS "Unique Customers",
     PRINTF('$%.2f', COALESCE(avg_revenue_raw, 0))      AS "Avg Revenue per Customer"
-
 FROM country_metrics
 ORDER BY revenue_raw DESC;
 ```
@@ -214,11 +207,17 @@ The AI added inline comments, which was good. But there was no formal header blo
 identifying the case study, business question, skills used, and author. That's a 
 professional standard for any query that lives in a shared repo.
 
+**6. No total orders column**
+I wanted to see not just how many unique customers each country has, but how many 
+total orders they placed. Orders-per-customer is a loyalty signal — a country with 
+5 customers and 35 orders is behaving very differently from one with 5 customers 
+and 6 orders. I added COUNT(i.InvoiceId) AS total_orders.
+
 **The bottom line:** The structured prompt got me to a strong 65% in a fraction of 
 the time it would have taken me to write from scratch. The remaining 35% — the ranking, 
-the percentage of total, the global benchmark CTE, the header block — that's the human 
-layer. That's where domain expertise and analytical judgment live, and no prompt 
-engineering replaces it.
+the percentage of total, the global benchmark CTE, the total orders column, the header 
+block — that's the human layer. That's where domain expertise and analytical judgment 
+live, and no prompt engineering replaces it.
 
 ---
 
@@ -249,10 +248,14 @@ preserving everything it had already gotten right.
 > revenue using SUM(Total), then use a CROSS JOIN to make that value available in the 
 > final SELECT.*
 >
-> *4. **Confirm currency formatting is applied to all money columns** — Use PRINTF('$%.2f') 
+> *4. **Add a total orders column** — Use COUNT(InvoiceId) to capture every order placed 
+> per country, including repeat purchases. Place it immediately after Unique Customers so 
+> readers can compare headcount vs. order volume directly.*
+>
+> *5. **Confirm currency formatting is applied to all money columns** — Use PRINTF('$%.2f') 
 > on every column that contains a dollar amount.*
 >
-> *5. **Add a formal comment header block** at the top of the query in this exact format:*
+> *6. **Add a formal comment header block** at the top of the query in this exact format:*
 > ```
 > -- ============================================
 > -- Case Study 1: Geographic Revenue Analysis
@@ -285,6 +288,7 @@ WITH country_metrics AS (
         i.BillingCountry                                        AS country,
         SUM(i.Total)                                            AS revenue_raw,
         COUNT(DISTINCT i.CustomerId)                            AS unique_customer_count,
+        COUNT(i.InvoiceId)                                      AS total_orders,
         SUM(i.Total) / COUNT(DISTINCT i.CustomerId)             AS avg_revenue_per_customer_raw
     FROM Invoice AS i
         INNER JOIN Customer AS c
@@ -302,6 +306,7 @@ SELECT
     cm.country                                                    AS "Country",
     PRINTF('$%.2f', COALESCE(cm.revenue_raw, 0))                  AS "Total Revenue",
     cm.unique_customer_count                                      AS "Unique Customers",
+    cm.total_orders                                               AS "Total Orders",
     PRINTF('$%.2f', COALESCE(cm.avg_revenue_per_customer_raw, 0)) AS "Avg Revenue Per Customer",
     ROUND((cm.revenue_raw / gt.global_revenue_raw) * 100.0, 2)   AS "% of Global Revenue"
 FROM
@@ -318,6 +323,7 @@ ORDER BY
 | Ranking column | ❌ | ✅ ROW_NUMBER() |
 | % of global revenue | ❌ | ✅ ROUND(..., 2) |
 | Global benchmark CTE | ❌ | ✅ CROSS JOIN pattern |
+| Total orders column | ❌ | ✅ COUNT(InvoiceId) |
 | Float division fix (100.0) | ❌ | ✅ AI inferred this edge case |
 | Comment header block | ❌ | ✅ Full header |
 | Currency formatting | ✅ | ✅ |
@@ -333,32 +339,32 @@ That's the compounding value of precise prompting.
 
 **V2 Query Results:**
 
-| Rank | Country | Total Revenue | Unique Customers | Avg Rev/Customer | % of Global Revenue |
-|------|---------|---------------|------------------|------------------|---------------------|
-| 1 | USA | $523.06 | 13 | $40.24 | 22.46% |
-| 2 | Canada | $303.96 | 8 | $37.99 | 13.05% |
-| 3 | France | $195.10 | 5 | $39.02 | 8.38% |
-| 4 | Brazil | $190.10 | 5 | $38.02 | 8.16% |
-| 5 | Germany | $156.48 | 4 | $39.12 | 6.72% |
-| 6 | United Kingdom | $112.86 | 3 | $37.62 | 4.85% |
-| 7 | Czech Republic | $90.24 | 2 | $45.12 | 3.88% |
-| 8 | Portugal | $77.24 | 2 | $38.62 | 3.32% |
-| 9 | India | $75.26 | 2 | $37.63 | 3.23% |
-| 10 | Chile | $46.62 | 1 | $46.62 | 2.00% |
-| 11 | Hungary | $45.62 | 1 | $45.62 | 1.96% |
-| 12 | Ireland | $45.62 | 1 | $45.62 | 1.96% |
-| 13 | Austria | $42.62 | 1 | $42.62 | 1.83% |
-| 14 | Finland | $41.62 | 1 | $41.62 | 1.79% |
-| 15 | Netherlands | $40.62 | 1 | $40.62 | 1.74% |
-| 16 | Norway | $39.62 | 1 | $39.62 | 1.70% |
-| 17 | Sweden | $38.62 | 1 | $38.62 | 1.66% |
-| 18 | Argentina | $37.62 | 1 | $37.62 | 1.62% |
-| 19 | Australia | $37.62 | 1 | $37.62 | 1.62% |
-| 20 | Belgium | $37.62 | 1 | $37.62 | 1.62% |
-| 21 | Denmark | $37.62 | 1 | $37.62 | 1.62% |
-| 22 | Italy | $37.62 | 1 | $37.62 | 1.62% |
-| 23 | Poland | $37.62 | 1 | $37.62 | 1.62% |
-| 24 | Spain | $37.62 | 1 | $37.62 | 1.62% |
+| Rank | Country | Total Revenue | Unique Customers | Total Orders | Avg Rev/Customer | % of Global Revenue |
+|------|---------|---------------|------------------|--------------|------------------|---------------------|
+| 1 | USA | $523.06 | 13 | 91 | $40.24 | 22.46% |
+| 2 | Canada | $303.96 | 8 | 56 | $37.99 | 13.05% |
+| 3 | France | $195.10 | 5 | 35 | $39.02 | 8.38% |
+| 4 | Brazil | $190.10 | 5 | 35 | $38.02 | 8.16% |
+| 5 | Germany | $156.48 | 4 | 28 | $39.12 | 6.72% |
+| 6 | United Kingdom | $112.86 | 3 | 21 | $37.62 | 4.85% |
+| 7 | Czech Republic | $90.24 | 2 | 14 | $45.12 | 3.88% |
+| 8 | Portugal | $77.24 | 2 | 14 | $38.62 | 3.32% |
+| 9 | India | $75.26 | 2 | 13 | $37.63 | 3.23% |
+| 10 | Chile | $46.62 | 1 | 7 | $46.62 | 2.00% |
+| 11 | Hungary | $45.62 | 1 | 7 | $45.62 | 1.96% |
+| 12 | Ireland | $45.62 | 1 | 7 | $45.62 | 1.96% |
+| 13 | Austria | $42.62 | 1 | 7 | $42.62 | 1.83% |
+| 14 | Finland | $41.62 | 1 | 7 | $41.62 | 1.79% |
+| 15 | Netherlands | $40.62 | 1 | 7 | $40.62 | 1.74% |
+| 16 | Norway | $39.62 | 1 | 7 | $39.62 | 1.70% |
+| 17 | Sweden | $38.62 | 1 | 7 | $38.62 | 1.66% |
+| 18 | Argentina | $37.62 | 1 | 7 | $37.62 | 1.62% |
+| 19 | Australia | $37.62 | 1 | 7 | $37.62 | 1.62% |
+| 20 | Belgium | $37.62 | 1 | 7 | $37.62 | 1.62% |
+| 21 | Denmark | $37.62 | 1 | 7 | $37.62 | 1.62% |
+| 22 | Italy | $37.62 | 1 | 7 | $37.62 | 1.62% |
+| 23 | Poland | $37.62 | 1 | 7 | $37.62 | 1.62% |
+| 24 | Spain | $37.62 | 1 | 7 | $37.62 | 1.62% |
 
 ---
 
@@ -385,14 +391,12 @@ Asking the AI to reason about *how* to verify — not just *whether* the numbers
 All 24 country percentages sum to 100.03%. The 0.03% gap is expected — each percentage 
 is independently rounded to 2 decimal places before summing, so small rounding remainders 
 accumulate across 24 rows. This is a display artifact, not a data error. If a stakeholder 
-flags this, the answer is: *"Percentages are independently rounded — minor sum variance 
-is normal."*
+flags this, the answer is: *"Percentages are independently rounded — minor sum variance is normal."*
 
 **✅ Check 2 — Global revenue back-calculation**
 Back-calculating from USA's percentage: $523.06 ÷ 0.2246 = $2,328.84. The known Chinook 
 Invoice total is $2,328.60. The $0.24 variance is entirely explained by rounding the 
-percentage to 2 decimal places — the true ratio is 22.464...%, not exactly 22.46%. 
-Mathematically consistent.
+percentage to 2 decimal places. Mathematically consistent.
 
 **✅ Check 3 — USA average revenue per customer**
 $523.06 ÷ 13 customers = $40.2354... → formatted to $40.24. Exact match confirmed.
@@ -417,18 +421,16 @@ would run before presenting to leadership. Two are worth highlighting:
 
 **Duplicate invoice guard:**
 > Run `SELECT InvoiceId, COUNT(*) FROM Invoice GROUP BY InvoiceId HAVING COUNT(*) > 1`
-> 
-> If any InvoiceId appears more than once, SUM(Total) is silently inflated. The current 
-> query has no deduplication logic — this is the most common revenue inflation bug in 
-> aggregation queries.
+>
+> If any InvoiceId appears more than once, SUM(Total) is silently inflated. This is 
+> the most common revenue inflation bug in aggregation queries.
 
 **NULL billing country audit:**
 > Run `SELECT COUNT(*) FROM Invoice WHERE BillingCountry IS NULL`
 >
-> Any invoices with a NULL country are excluded from all 24 country rows AND from the 
+> Any invoices with a NULL country are excluded from all country rows AND from the 
 > global total CTE — meaning percentages could sum to less than 100% and the grand 
-> total would be understated. This is a silent error that formatted output would never 
-> expose.
+> total would be understated silently.
 
 I ran both checks against the Chinook database. No duplicate invoices. No NULL billing 
 countries. The data is clean.
@@ -437,10 +439,6 @@ countries. The data is clean.
 
 **Overall Verdict: Numbers are mathematically consistent and defendable.**
 
-The verification pass confirmed what the query structure suggested — the logic is sound, 
-the join is clean, and the output is ready for the business insight layer. 
-
 The meta-prompting addition was particularly valuable: the duplicate invoice check and 
 NULL audit are exactly the kind of defensive checks that separate a junior analyst 
-("the query ran") from a senior analyst ("the query ran and I can prove the numbers 
-are right").
+("the query ran") from a senior analyst ("the query ran and I can prove the numbers are right").
