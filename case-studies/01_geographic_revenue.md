@@ -359,3 +359,88 @@ That's the compounding value of precise prompting.
 | 22 | Italy | $37.62 | 1 | $37.62 | 1.62% |
 | 23 | Poland | $37.62 | 1 | $37.62 | 1.62% |
 | 24 | Spain | $37.62 | 1 | $37.62 | 1.62% |
+
+---
+
+## Verification Pass — AI Self-Check + Meta-Prompting
+
+Before drawing any business conclusions from this data, I ran a structured verification 
+pass. Rather than just trusting the output, I used a technique called **AI Self-Verification** 
+— prompting the AI to check its own work against the raw numbers.
+
+I also added a sixth question that demonstrates meta-prompting applied to quality control:
+
+> *"Beyond the five checks above, what other verification methods would you recommend 
+> to ensure this query output is accurate and trustworthy? Think about this from the 
+> perspective of a senior data analyst who needs to defend these numbers to a leadership team."*
+
+Asking the AI to reason about *how* to verify — not just *whether* the numbers are correct 
+— surfaces checks I might not have thought to run myself.
+
+---
+
+**Verification Results:**
+
+**✅ Check 1 — Percentages sum to ~100%**
+All 24 country percentages sum to 100.03%. The 0.03% gap is expected — each percentage 
+is independently rounded to 2 decimal places before summing, so small rounding remainders 
+accumulate across 24 rows. This is a display artifact, not a data error. If a stakeholder 
+flags this, the answer is: *"Percentages are independently rounded — minor sum variance 
+is normal."*
+
+**✅ Check 2 — Global revenue back-calculation**
+Back-calculating from USA's percentage: $523.06 ÷ 0.2246 = $2,328.84. The known Chinook 
+Invoice total is $2,328.60. The $0.24 variance is entirely explained by rounding the 
+percentage to 2 decimal places — the true ratio is 22.464...%, not exactly 22.46%. 
+Mathematically consistent.
+
+**✅ Check 3 — USA average revenue per customer**
+$523.06 ÷ 13 customers = $40.2354... → formatted to $40.24. Exact match confirmed.
+
+**✅ Check 4 — Row count completeness**
+Output has 24 rows. Chinook has customers from 24 countries with completed invoices. 
+The INNER JOIN correctly excluded registered customers with no purchase history without 
+silently dropping any active market.
+
+**⚠️ Check 5 — Anomaly scan**
+Chile ($46.62), Czech Republic ($45.12), and Hungary ($45.62) show average revenue 
+per customer 14–18% above the global average of $39.47. These are not data errors — 
+they are small-sample effects. Each of those countries has only 1–2 customers, so a 
+single high-value invoice moves the average significantly. No real anomalies detected.
+
+---
+
+**🔬 Check 6 — Meta-Verification: What Else Should We Check?**
+
+The AI's response to the meta-prompt surfaced six additional checks a senior analyst 
+would run before presenting to leadership. Two are worth highlighting:
+
+**Duplicate invoice guard:**
+> Run `SELECT InvoiceId, COUNT(*) FROM Invoice GROUP BY InvoiceId HAVING COUNT(*) > 1`
+> 
+> If any InvoiceId appears more than once, SUM(Total) is silently inflated. The current 
+> query has no deduplication logic — this is the most common revenue inflation bug in 
+> aggregation queries.
+
+**NULL billing country audit:**
+> Run `SELECT COUNT(*) FROM Invoice WHERE BillingCountry IS NULL`
+>
+> Any invoices with a NULL country are excluded from all 24 country rows AND from the 
+> global total CTE — meaning percentages could sum to less than 100% and the grand 
+> total would be understated. This is a silent error that formatted output would never 
+> expose.
+
+I ran both checks against the Chinook database. No duplicate invoices. No NULL billing 
+countries. The data is clean.
+
+---
+
+**Overall Verdict: Numbers are mathematically consistent and defendable.**
+
+The verification pass confirmed what the query structure suggested — the logic is sound, 
+the join is clean, and the output is ready for the business insight layer. 
+
+The meta-prompting addition was particularly valuable: the duplicate invoice check and 
+NULL audit are exactly the kind of defensive checks that separate a junior analyst 
+("the query ran") from a senior analyst ("the query ran and I can prove the numbers 
+are right").
