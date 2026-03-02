@@ -442,3 +442,99 @@ countries. The data is clean.
 The meta-prompting addition was particularly valuable: the duplicate invoice check and 
 NULL audit are exactly the kind of defensive checks that separate a junior analyst 
 ("the query ran") from a senior analyst ("the query ran and I can prove the numbers are right").
+
+---
+
+## The Business Insight
+
+*Interpreted through a digital marketing lens by Daniel Matel-Okoh*
+
+---
+
+### The Top-Line Story: Three Markets Drive the Business
+
+The USA (22.46%), Canada (13.05%), and France (8.38%) are the only markets above 8% 
+of global revenue — together they account for nearly 44% of total revenue from 24 
+countries. Every other market is under 9% individually. For a marketing team allocating 
+budget, that's a clear signal: these three markets are where the business lives.
+
+But "biggest" and "best opportunity" are not the same thing. The strategic question 
+for each market is different.
+
+---
+
+### USA — Monetize Deeper, Not Wider
+
+The USA is the dominant market by every metric: most customers (13), most orders (91), 
+highest total revenue ($523.06). But the average revenue per customer ($40.24) is 
+actually below the global average for mid-size markets like Czech Republic ($45.12) 
+and Chile ($46.62). That's a flag.
+
+In digital marketing terms, this is a classic penetration vs. monetization problem. 
+We have the audience. We're not maximizing yield from it. Before spending another 
+dollar on US customer acquisition, I'd want to answer two questions:
+
+1. **What's the genre distribution of US purchases?** If 80% of US revenue comes from 
+   2-3 genres, that's the 80/20 signal — and it tells us exactly where to focus 
+   merchandising, recommendations, and promotional spend.
+2. **Can we apply US genre insights to Canada?** The two markets share significant 
+   cultural and demographic overlap. If Rock and Alternative dominate in the US, 
+   there's a reasonable hypothesis that the same push in Canada — our #2 market — 
+   could lift revenue per customer there too. This is the kind of cross-market 
+   insight that makes regional marketing efficient.
+
+The next logical analysis from this query is a US-specific genre breakdown — which 
+is exactly what Case Study 3 addresses.
+
+---
+
+### Czech Republic — A Small Market Worth Watching
+
+With only 2 customers, the Czech Republic has the highest average revenue per customer 
+($45.12) of any multi-customer market. Sample size is too small to draw conclusions — 
+but in a digital marketing context, this is the kind of signal you put on a watchlist, 
+not in a press release.
+
+If Czech Republic customer counts grow and the AOV holds, this becomes a high-value 
+emerging market worth targeted acquisition investment. If it was one high-spending 
+customer pulling the average up, that's a different conversation — one about retention 
+and whale protection, not acquisition.
+
+---
+
+### The Missing Metric: Orders-to-Customer Ratio
+
+One column I'd add in the next iteration is the percentage of total orders coming 
+from unique customers — essentially an orders-per-customer ratio by country. 
+The current data shows us *that* the USA has 91 orders from 13 customers (7.0 
+orders/customer) and France has 35 orders from 5 customers (7.0 orders/customer) 
+— but we can't see this directly without calculating it manually.
+
+This metric matters because a country with a disproportionately high orders-per-customer 
+ratio likely has "whale" customers — individuals driving outsized purchase volume. 
+Whales deserve different treatment than average customers: early access, loyalty 
+perks, direct relationship management. Identifying them is a retention priority, 
+not just a reporting curiosity.
+
+A follow-up query calculating `total_orders / unique_customers` per country and 
+flagging any market more than 1 standard deviation above the mean would surface 
+these markets immediately.
+
+---
+
+### The Concentration Risk No One Is Talking About
+
+The top 3 markets (USA, Canada, France) represent 44% of revenue. The bottom 15 
+markets — each with a single customer — collectively represent about 25%. That's 
+15 markets where one customer churning means that market goes to $0.
+
+In marketing portfolio terms, this is dangerous concentration. A competitor entering 
+the US market aggressively, a licensing change in North America, or even a single 
+large US customer churning would have outsized impact on the business. A healthy 
+revenue portfolio looks more like the bottom of this table — many small contributors 
+— not the top.
+
+The strategic recommendation isn't to abandon the US. It's to deliberately invest 
+in growing the mid-tier markets (Germany, UK, Brazil) where there are already 
+multiple customers and a foundation to build on — reducing dependency on any single 
+geography over time.
