@@ -375,3 +375,101 @@ and fed them back to the AI.
 > comments, and header block — exactly as it is."*
 
 ---
+---
+
+**What the prompt chaining achieved:**
+
+| | V1 (Initial AI Output) | V2 (After Prompt Chaining) |
+|---|---|---|
+| Ranking column | ❌ | ✅ ROW_NUMBER() |
+| Data-driven tier thresholds | ❌ | ✅ Recalibrated from distribution |
+| % of total revenue per customer | ❌ | ✅ CROSS JOIN pattern |
+| Global revenue benchmark CTE | ❌ | ✅ CTE 3 added |
+| Title case column aliases | ❌ | ✅ Presentation-ready |
+| Tier summary query | ❌ | ✅ Standalone second query |
+| V2 changelog in header block | ❌ | ✅ AI inferred this unprompted |
+| NULLIF guard on division | ✅ | ✅ |
+| Correct join type | ✅ | ✅ |
+| Inline comments | ✅ | ✅ |
+
+One thing worth noting: the AI added a "Changes: V2" section to the comment 
+header block without being asked — it inferred from the feedback prompt that 
+this was a versioned update and documented it accordingly. That's the compounding 
+value of strong context priming carrying through the session.
+
+---
+
+**V2 Main Query Results:**
+
+| Rank | Customer Name | Country | Total Lifetime Spend | Purchases | Avg Order Value | % of Total | Value Tier |
+|------|--------------|---------|---------------------|-----------|-----------------|------------|------------|
+| 1 | Helena Holý | Czech Republic | $49.62 | 7 | $7.09 | 2.13% | Platinum |
+| 2 | Richard Cunningham | USA | $47.62 | 7 | $6.80 | 2.05% | Platinum |
+| 3 | Luis Rojas | Chile | $46.62 | 7 | $6.66 | 2.00% | Platinum |
+| 4 | Ladislav Kovács | Hungary | $45.62 | 7 | $6.52 | 1.96% | Platinum |
+| 5 | Hugh O'Reilly | Ireland | $45.62 | 7 | $6.52 | 1.96% | Platinum |
+| 6 | Frank Ralston | USA | $43.62 | 7 | $6.23 | 1.87% | Gold |
+| 7 | Julia Barnett | USA | $43.62 | 7 | $6.23 | 1.87% | Gold |
+| 8 | Fynn Zimmermann | Germany | $43.62 | 7 | $6.23 | 1.87% | Gold |
+| 9 | Astrid Gruber | Austria | $42.62 | 7 | $6.09 | 1.83% | Gold |
+| 10 | Victor Stevens | USA | $42.62 | 7 | $6.09 | 1.83% | Gold |
+| 11 | Terhi Hämäläinen | Finland | $41.62 | 7 | $5.95 | 1.79% | Gold |
+| 12 | František Wichterlová | Czech Republic | $40.62 | 7 | $5.80 | 1.74% | Gold |
+| 13 | Isabelle Mercier | France | $40.62 | 7 | $5.80 | 1.74% | Gold |
+| 14 | Johannes Van der Berg | Netherlands | $40.62 | 7 | $5.80 | 1.74% | Gold |
+| 15 | Luís Gonçalves | Brazil | $39.62 | 7 | $5.66 | 1.70% | Silver |
+| 16 | François Tremblay | Canada | $39.62 | 7 | $5.66 | 1.70% | Silver |
+| 17 | Bjørn Hansen | Norway | $39.62 | 7 | $5.66 | 1.70% | Silver |
+| 18 | Jack Smith | USA | $39.62 | 7 | $5.66 | 1.70% | Silver |
+| 19 | Dan Miller | USA | $39.62 | 7 | $5.66 | 1.70% | Silver |
+| 20 | Heather Leacock | USA | $39.62 | 7 | $5.66 | 1.70% | Silver |
+| 21 | João Fernandes | Portugal | $39.62 | 7 | $5.66 | 1.70% | Silver |
+| 22 | Wyatt Girard | France | $39.62 | 7 | $5.66 | 1.70% | Silver |
+| 23 | Jennifer Peterson | Canada | $38.62 | 7 | $5.52 | 1.66% | Silver |
+| 24 | Tim Goyer | USA | $38.62 | 7 | $5.52 | 1.66% | Silver |
+| 25 | Camille Bernard | France | $38.62 | 7 | $5.52 | 1.66% | Silver |
+| 26 | Dominique Lefebvre | France | $38.62 | 7 | $5.52 | 1.66% | Silver |
+| 27 | Joakim Johansson | Sweden | $38.62 | 7 | $5.52 | 1.66% | Silver |
+| 28 | Manoj Pareek | India | $38.62 | 7 | $5.52 | 1.66% | Silver |
+| 29 | Leonie Köhler | Germany | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 30 | Daan Peeters | Belgium | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 31 | Kara Nielsen | Denmark | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 32 | Eduardo Martins | Brazil | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 33 | Alexandre Rocha | Brazil | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 34 | Roberto Almeida | Brazil | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 35 | Fernanda Ramos | Brazil | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 36 | Mark Philips | Canada | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 37 | Frank Harris | USA | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 38 | Michelle Brooks | USA | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 39 | Kathy Chase | USA | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 40 | John Gordon | USA | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 41 | Patrick Gray | USA | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 42 | Robert Brown | Canada | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 43 | Edward Francis | Canada | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 44 | Martha Silk | Canada | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 45 | Aaron Mitchell | Canada | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 46 | Ellie Sullivan | Canada | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 47 | Madalena Sampaio | Portugal | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 48 | Hannah Schneider | Germany | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 49 | Niklas Schröder | Germany | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 50 | Marc Dubois | France | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 51 | Lucas Mancini | Italy | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 52 | Stanisław Wójcik | Poland | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 53 | Enrique Muñoz | Spain | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 54 | Emma Jones | United Kingdom | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 55 | Phil Hughes | United Kingdom | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 56 | Steve Murray | United Kingdom | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 57 | Mark Taylor | Australia | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 58 | Diego Gutiérrez | Argentina | $37.62 | 7 | $5.37 | 1.62% | Silver |
+| 59 | Puja Srivastava | India | $36.64 | 6 | $6.11 | 1.57% | Bronze |
+
+---
+
+**V2 Tier Summary Results:**
+
+| Value Tier | Number of Customers | Total Tier Revenue | % of Total Revenue |
+|------------|--------------------|--------------------|-------------------|
+| Silver | 44 | $1,677.28 | 72.03% |
+| Gold | 9 | $379.58 | 16.30% |
+| Platinum | 5 | $235.10 | 10.10% |
+| Bronze | 1 | $36.64 | 1.57% |
