@@ -95,3 +95,50 @@ Going forward, I apply this framework to the majority of my AI interactions in t
 project — especially anywhere the output will be used in a business context. Not every 
 prompt needs all eight components, but thinking through each one, even briefly, 
 consistently produces better results than typing the first thing that comes to mind.
+
+---
+
+## The AI's Raw Output
+
+To demonstrate why prompt structure matters, I ran two versions of the same request.
+
+**First — a generic, unstructured prompt:**
+> *"Write me a SQL query that shows revenue by country, number of customers, 
+> and average spend. Sort by revenue descending."*
+
+The AI returned this:
+```sql
+SELECT BillingCountry, 
+       SUM(Total) as total, 
+       COUNT(DISTINCT CustomerId) as customers, 
+       SUM(Total)/COUNT(DISTINCT CustomerId) as avg
+FROM Invoice
+GROUP BY BillingCountry
+ORDER BY total DESC;
+```
+
+**The output looked like this:**
+
+| BillingCountry | total | customers | avg |
+|----------------|-------|-----------|-----|
+| USA | 523.0600000000003 | 13 | 40.23538... |
+| Canada | 303.9599999999999 | 8 | 37.99499... |
+| France | 195.09999999999994 | 5 | 39.01999... |
+| Brazil | 190.09999999999997 | 5 | 38.01999... |
+
+It runs. It's directionally correct. But it would never go in front of a marketing 
+director as-is — raw floating point decimals, no ranking, no percentage of total, 
+no comments, and a reserved word (`avg`) used as an alias.
+
+---
+
+**Then — using my structured prompt framework:**
+
+After applying the Persona, Task, Context, Constraints, Format, References, Audience, 
+and Evaluate framework from Section 2, the AI returned a materially better first draft — 
+one that required far less manual cleanup and was already closer to production-ready.
+
+The difference wasn't the AI. It was the quality of the input I gave it.
+
+That refined output, along with my own improvements on top of it, is what you'll 
+see in the next two sections.
