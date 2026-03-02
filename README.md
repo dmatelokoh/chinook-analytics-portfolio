@@ -67,15 +67,3 @@ Full breakdown: [`ai-collaboration/ai_collaboration_log.md`](ai-collaboration/ai
 
 *All queries are SQLite-compatible and tested against the Chinook database.*
 ```
-
----
-
-## Your Action for Phase 1
-
-On your computer, create this folder structure manually:
-```
-chinook-analytics-portfolio/
-├── README.md                  ← paste the content above
-├── queries/                   ← empty folder for now
-├── case-studies/              ← empty folder for now
-└── ai-collaboration/          ← empty folder for now
