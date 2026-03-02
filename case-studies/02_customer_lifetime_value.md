@@ -292,3 +292,37 @@ Study 1's first draft — fewer structural issues, better comments, correct join
 from the start. But the tier threshold problem required human judgment that no 
 prompt could replace. You have to look at the actual data distribution before 
 deciding where to draw the lines. That's the analyst layer, not the AI layer.
+
+---
+
+> ### 📚 Prompt Library Update — Living, Breathing Prompts
+>
+> One of the most valuable habits I've built working with AI is maintaining a 
+> **prompt library** — a personal collection of reusable, versioned prompts that 
+> get updated every time I discover a gap in the output.
+>
+> After completing Case Study 1 and now Case Study 2, I noticed a recurring pattern:
+> the AI consistently omitted two columns I always want in an analytical output —
+> a ranking column and a percentage of total column. Neither was included in V1 
+> of either query despite strong context priming.
+>
+> Rather than accepting this as something I'll just catch in every evaluation pass, 
+> I treat it as a signal to update my prompt. Specifically, I'd add the following 
+> to the **Persona / Standards** section of my context prime:
+>
+> > *"For any query that ranks or compares rows, always include:*
+> > *1. An explicit ROW_NUMBER() ranking column as the first column*
+> > *2. A percentage of total column showing each row's share of the relevant aggregate*
+> > *Unless I explicitly tell you these are not needed."*
+>
+> This one addition to the context prime would have eliminated two of the five 
+> issues in my Critical Evaluation — before the AI even wrote the first line of SQL.
+>
+> **This is the compounding value of prompt library management.** Each case study 
+> makes the next prompt smarter. Over time, V1 outputs get closer and closer to 
+> production-ready — not because the AI got better, but because the instructions 
+> got more precise. The gap between V1 and V2 shrinks with every iteration.
+>
+> In a professional context, a well-maintained prompt library is a productivity 
+> asset — the kind of institutional knowledge that makes an analyst faster and 
+> more consistent over time, regardless of which AI tool they're using.
