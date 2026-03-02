@@ -219,3 +219,143 @@ the time it would have taken me to write from scratch. The remaining 35% — the
 the percentage of total, the global benchmark CTE, the header block — that's the human 
 layer. That's where domain expertise and analytical judgment live, and no prompt 
 engineering replaces it.
+
+---
+
+## Iterative Prompting — From V1 to V2
+
+This is where **iterative prompting** and **prompt chaining** come into practice.
+
+- **Iterative Prompting** means refining your prompt based on evaluation of the previous output
+- **Prompt Chaining** means the output of one prompt becomes the direct input of the next
+
+After completing my critical evaluation of the V1 output, I didn't rewrite the query 
+manually. Instead, I reformatted my evaluation notes as a structured feedback prompt 
+and fed them back to the AI — letting it incorporate my specific changes while 
+preserving everything it had already gotten right.
+
+**The feedback prompt I sent:**
+
+> *"The query you returned was a strong first draft, but I have specific feedback I need 
+> you to incorporate. Please update the query with the following changes:*
+>
+> *1. **Add a ranking column** — Use ROW_NUMBER() OVER (ORDER BY revenue DESC) to add 
+> an explicit rank number as the first column.*
+>
+> *2. **Add percentage of total revenue** — Add a column showing each country's revenue 
+> as a percentage of total global revenue, rounded to 2 decimal places using ROUND(..., 2).*
+>
+> *3. **Add a global revenue benchmark CTE** — Add a second CTE that captures grand total 
+> revenue using SUM(Total), then use a CROSS JOIN to make that value available in the 
+> final SELECT.*
+>
+> *4. **Confirm currency formatting is applied to all money columns** — Use PRINTF('$%.2f') 
+> on every column that contains a dollar amount.*
+>
+> *5. **Add a formal comment header block** at the top of the query in this exact format:*
+> ```
+> -- ============================================
+> -- Case Study 1: Geographic Revenue Analysis
+> -- Business Question: [question here]
+> -- Skills: [list skills used]
+> -- Author: Daniel Matel-Okoh
+> -- AI Partner: Claude / Gemini
+> -- ============================================
+> ```
+> *Do not change anything else about the query structure — keep the existing CTE, 
+> join logic, aliases, and inline comments exactly as they are."*
+
+---
+
+**The V2 Query — AI Output After Prompt Chaining:**
+```sql
+-- ============================================
+-- Case Study 1: Geographic Revenue Analysis
+-- Business Question: Which countries generate the most revenue,
+--                   how many unique customers does each have,
+--                   and what share of global revenue do they represent?
+-- Skills: CTEs, Window Functions, Aggregate Functions,
+--         CROSS JOIN, PRINTF formatting, ROUND, ROW_NUMBER
+-- Author: Daniel Matel-Okoh
+-- AI Partner: Claude
+-- ============================================
+
+WITH country_metrics AS (
+    SELECT
+        i.BillingCountry                                        AS country,
+        SUM(i.Total)                                            AS revenue_raw,
+        COUNT(DISTINCT i.CustomerId)                            AS unique_customer_count,
+        SUM(i.Total) / COUNT(DISTINCT i.CustomerId)             AS avg_revenue_per_customer_raw
+    FROM Invoice AS i
+        INNER JOIN Customer AS c
+            ON i.CustomerId = c.CustomerId
+    GROUP BY
+        i.BillingCountry
+),
+global_totals AS (
+    SELECT
+        SUM(Total) AS global_revenue_raw
+    FROM Invoice
+)
+SELECT
+    ROW_NUMBER() OVER (ORDER BY cm.revenue_raw DESC)              AS "Rank",
+    cm.country                                                    AS "Country",
+    PRINTF('$%.2f', COALESCE(cm.revenue_raw, 0))                  AS "Total Revenue",
+    cm.unique_customer_count                                      AS "Unique Customers",
+    PRINTF('$%.2f', COALESCE(cm.avg_revenue_per_customer_raw, 0)) AS "Avg Revenue Per Customer",
+    ROUND((cm.revenue_raw / gt.global_revenue_raw) * 100.0, 2)   AS "% of Global Revenue"
+FROM
+    country_metrics AS cm
+    CROSS JOIN global_totals AS gt
+ORDER BY
+    cm.revenue_raw DESC;
+```
+
+**What the prompt chaining achieved:**
+
+| | V1 (Initial AI Output) | V2 (After Prompt Chaining) |
+|---|---|---|
+| Ranking column | ❌ | ✅ ROW_NUMBER() |
+| % of global revenue | ❌ | ✅ ROUND(..., 2) |
+| Global benchmark CTE | ❌ | ✅ CROSS JOIN pattern |
+| Float division fix (100.0) | ❌ | ✅ AI inferred this edge case |
+| Comment header block | ❌ | ✅ Full header |
+| Currency formatting | ✅ | ✅ |
+| Correct join type | ✅ | ✅ |
+| Inline comments | ✅ | ✅ |
+
+One thing worth noting: the AI added `100.0` instead of `100` in the percentage 
+calculation to force float division in SQLite — an edge case I didn't explicitly 
+specify, but that my feedback prompt gave it enough context to reason through. 
+That's the compounding value of precise prompting.
+
+---
+
+**V2 Query Results:**
+
+| Rank | Country | Total Revenue | Unique Customers | Avg Rev/Customer | % of Global Revenue |
+|------|---------|---------------|------------------|------------------|---------------------|
+| 1 | USA | $523.06 | 13 | $40.24 | 22.46% |
+| 2 | Canada | $303.96 | 8 | $37.99 | 13.05% |
+| 3 | France | $195.10 | 5 | $39.02 | 8.38% |
+| 4 | Brazil | $190.10 | 5 | $38.02 | 8.16% |
+| 5 | Germany | $156.48 | 4 | $39.12 | 6.72% |
+| 6 | United Kingdom | $112.86 | 3 | $37.62 | 4.85% |
+| 7 | Czech Republic | $90.24 | 2 | $45.12 | 3.88% |
+| 8 | Portugal | $77.24 | 2 | $38.62 | 3.32% |
+| 9 | India | $75.26 | 2 | $37.63 | 3.23% |
+| 10 | Chile | $46.62 | 1 | $46.62 | 2.00% |
+| 11 | Hungary | $45.62 | 1 | $45.62 | 1.96% |
+| 12 | Ireland | $45.62 | 1 | $45.62 | 1.96% |
+| 13 | Austria | $42.62 | 1 | $42.62 | 1.83% |
+| 14 | Finland | $41.62 | 1 | $41.62 | 1.79% |
+| 15 | Netherlands | $40.62 | 1 | $40.62 | 1.74% |
+| 16 | Norway | $39.62 | 1 | $39.62 | 1.70% |
+| 17 | Sweden | $38.62 | 1 | $38.62 | 1.66% |
+| 18 | Argentina | $37.62 | 1 | $37.62 | 1.62% |
+| 19 | Australia | $37.62 | 1 | $37.62 | 1.62% |
+| 20 | Belgium | $37.62 | 1 | $37.62 | 1.62% |
+| 21 | Denmark | $37.62 | 1 | $37.62 | 1.62% |
+| 22 | Italy | $37.62 | 1 | $37.62 | 1.62% |
+| 23 | Poland | $37.62 | 1 | $37.62 | 1.62% |
+| 24 | Spain | $37.62 | 1 | $37.62 | 1.62% |
