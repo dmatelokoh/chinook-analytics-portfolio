@@ -55,47 +55,21 @@ to ensure the AI had everything it needed to return something useful the first t
 
 ---
 
-## How This Prompt Was Built — Meta-Prompting in Practice
+## How This Prompt Was Built
 
-The structured prompt above didn't come from nowhere. It was itself the product of 
-a meta-prompting process — using AI to help me build better prompts.
-
-**Here's what that looked like:**
-
-My first instinct was to write something like this:
+My first instinct was a one-liner:
 
 > *"Using the Chinook database, write me a SQL query that shows revenue by country, 
 > number of customers, and average spend. Sort by revenue descending."*
 
-That's a functional prompt. It would return something. But "something" isn't the 
-same as "something good." The output would likely have raw decimals, weak aliases, 
-no comments, and no awareness of SQLite's limitations.
+That would return something, but not something presentable — raw decimals, weak aliases, 
+no comments, no awareness of SQLite's limitations. So before writing my actual prompt, 
+I asked the AI for a reusable prompt framework for technical tasks. It returned the 
+eight-part structure (Persona, Task, Context, Constraints, Format, References, Audience, 
+Evaluate) that I used to rebuild my request from scratch.
 
-So instead of sending that prompt directly, I stepped back and asked a different 
-question first:
-
-> *"What are the key components of a well-structured AI prompt for a technical task? 
-> Give me a reusable framework I can apply to SQL and analytics requests."*
-
-The AI returned a framework: Persona, Task, Context, Constraints, Format, References, 
-Audience, Evaluate. I then used that framework as a template and rebuilt my original 
-vague prompt against each category — deliberately filling in every slot.
-
-The result was the structured prompt you see above. Same underlying ask. 
-Completely different quality of output.
-
-**Why this matters:**
-
-This is meta-prompting — using AI to improve the inputs you give to AI. It's a 
-compounding skill. The better your prompts, the better your outputs, the less time 
-you spend fixing AI mistakes downstream. In a data analytics context, a bad prompt 
-might give you a query that runs but answers the wrong question. That's worse than 
-no query at all, because it looks correct until someone makes a decision based on it.
-
-Going forward, I apply this framework to the majority of my AI interactions in this 
-project — especially anywhere the output will be used in a business context. Not every 
-prompt needs all eight components, but thinking through each one, even briefly, 
-consistently produces better results than typing the first thing that comes to mind.
+The before/after speaks for itself — same underlying ask, completely different quality 
+of output.
 
 ---
 
@@ -217,22 +191,16 @@ and 6 orders. I added COUNT(i.InvoiceId) AS total_orders.
 **The bottom line:** The structured prompt got me to a strong 65% in a fraction of 
 the time it would have taken me to write from scratch. The remaining 35% — the ranking, 
 the percentage of total, the global benchmark CTE, the total orders column, the header 
-block — that's the human layer. That's where domain expertise and analytical judgment 
-live, and no prompt engineering replaces it.
+block — came from knowing what a marketing director actually needs to see. The AI 
+couldn't have added those without being told.
 
 ---
 
 ## Iterative Prompting — From V1 to V2
 
-This is where **iterative prompting** and **prompt chaining** come into practice.
-
-- **Iterative Prompting** means refining your prompt based on evaluation of the previous output
-- **Prompt Chaining** means the output of one prompt becomes the direct input of the next
-
-After completing my critical evaluation of the V1 output, I didn't rewrite the query 
-manually. Instead, I reformatted my evaluation notes as a structured feedback prompt 
-and fed them back to the AI — letting it incorporate my specific changes while 
-preserving everything it had already gotten right.
+After completing my evaluation, I reformatted my notes as a structured feedback prompt 
+and fed them back to the AI — letting it incorporate my changes while preserving 
+everything it already got right.
 
 **The feedback prompt I sent:**
 
@@ -372,10 +340,10 @@ That's the compounding value of precise prompting.
 ## Verification Pass — AI Self-Check + Meta-Prompting
 
 Before drawing any business conclusions from this data, I ran a structured verification 
-pass. Rather than just trusting the output, I used a technique called **AI Self-Verification** 
-— prompting the AI to check its own work against the raw numbers.
+pass. Rather than just trusting the output, I prompted the AI to check its own work 
+against the raw numbers.
 
-I also added a sixth question that demonstrates meta-prompting applied to quality control:
+I also added a sixth question that applies meta-prompting to quality control:
 
 > *"Beyond the five checks above, what other verification methods would you recommend 
 > to ensure this query output is accurate and trustworthy? Think about this from the 
@@ -389,10 +357,8 @@ Asking the AI to reason about *how* to verify — not just *whether* the numbers
 **Verification Results:**
 
 **✅ Check 1 — Percentages sum to ~100%**
-All 24 country percentages sum to 100.03%. The 0.03% gap is expected — each percentage 
-is independently rounded to 2 decimal places before summing, so small rounding remainders 
-accumulate across 24 rows. This is a display artifact, not a data error. If a stakeholder 
-flags this, the answer is: *"Percentages are independently rounded — minor sum variance is normal."*
+All 24 country percentages sum to 100.03%. The 0.03% gap comes from independently 
+rounding each row to 2 decimal places — display artifact, not a data error.
 
 **✅ Check 2 — Global revenue back-calculation**
 Back-calculating from USA's percentage: $523.06 ÷ 0.2246 = $2,328.84. The known Chinook 
@@ -447,10 +413,6 @@ NULL audit are exactly the kind of defensive checks that separate a junior analy
 ---
 
 ## The Business Insight
-
-*Interpreted through a digital marketing lens by Daniel Matel-Okoh*
-
----
 
 ### The Top-Line Story: Three Markets Drive the Business
 
@@ -523,7 +485,7 @@ these markets immediately.
 
 ---
 
-### The Concentration Risk No One Is Talking About
+### Revenue Concentration Is a Vulnerability
 
 The top 3 markets (USA, Canada, France) represent 44% of revenue. The bottom 15 
 markets — each with a single customer — collectively represent about 25%. That's 
