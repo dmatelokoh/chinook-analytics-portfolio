@@ -307,8 +307,7 @@ and fed them back to the AI.
 
 **The feedback prompt I sent:**
 
-> *"The query you returned was the strongest first draft I've received — the 
-> context priming and prompt standards clearly worked well. But I have four 
+> *"The query you returned was strong, but I have four 
 > specific changes I need you to incorporate:*
 >
 > *1. **Replace the 'vs. Global Average' performance label with a catalog efficiency metric.**
