@@ -19,7 +19,7 @@ The database is **Chinook** — a fictional digital media store modeled on iTune
 Each case study follows a deliberate structure that shows not just *what* I 
 built, but *how* I think:
 
-> **Business Question → AI Prompt → Raw AI Output → My Evaluation → Refined Query → Business Insight**
+> **Business Question → My Evaluation → Business Insight**
 
 ---
 
@@ -43,26 +43,10 @@ built, but *how* I think:
 
 ## AI Collaboration Approach
 
-I used AI (Claude, Gemini) as a **deliberate collaborator**, not a shortcut. 
-My workflow across all three case studies:
-
-1. **Context priming** — every session opened with a full context prime 
-   establishing coding standards, schema, audience, and style conventions.
-2. **Structured prompting** — an 8-part prompt framework (Persona, Task, 
-   Context, Constraints, Format, References, Audience, Evaluate) built to 
-   eliminate common failure modes before the first line of SQL was written.
-3. **Critical evaluation** — every V1 output reviewed for correctness, business 
-   meaning, and presentation quality. AI can't know that a performance label is 
-   measuring price point instead of genre demand. That requires domain knowledge.
-4. **Iterative refinement** — evaluation gaps reformatted as structured feedback 
-   prompts and fed back to the AI. V1 → V2 in every case study.
-5. **Prompt library management** — recurring gaps updated into the context prime 
-   so V1 outputs improved across case studies. By Case Study 3, columns that 
-   required feedback in Case Study 1 appeared automatically.
-6. **Verification** — structured AI self-check pass on every query, including a 
-   meta-prompt asking the AI what *else* to verify. In Case Study 3, the 
-   meta-prompt caught a silent exclusion error that standard math checks would 
-   never have found.
+I used AI (Claude, Gemini) as a collaborator, not a shortcut. Every case study 
+followed a structured prompt → evaluate → refine cycle, with a context prime 
+that improved across sessions. The domain judgment — knowing when a metric 
+measures price point instead of demand, or when a label misleads — stayed mine.
 
 Full breakdown with concrete examples: [`ai-collaboration/ai_collaboration_log.md`](ai-collaboration/ai_collaboration_log.md)
 
@@ -75,8 +59,8 @@ functions (ROW_NUMBER, PERCENT_RANK), CASE WHEN, PRINTF, ROUND, COALESCE,
 NULLIF, UNION ALL  
 **Analytics:** Revenue segmentation, CLV, Pareto analysis, benchmarking, 
 catalog efficiency, geographic prioritization  
-**AI Fluency:** Prompt engineering, context priming, prompt library management, 
-critical evaluation, iterative refinement, verification, meta-prompting
+**AI Fluency:** Prompt engineering, context priming, critical evaluation, 
+iterative refinement
 
 ---
 
