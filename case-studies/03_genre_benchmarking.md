@@ -1,3 +1,4 @@
+
 # Case Study 3: What's Selling and What Isn't?
 ## Genre & Track Performance Benchmarking
 
@@ -28,16 +29,12 @@ This is not just a revenue ranking. The goal is to understand:
 
 ## The Prompt I Gave the AI
 
-Using the structured prompt framework and context priming approach established 
-in Case Study 1 and refined in Case Study 2, here is the prompt I built for 
-this analysis.
+Using the structured prompt framework and context priming approach from the 
+previous case studies, here is the prompt I built for this analysis.
 
-Note that by Case Study 3, my context prime has been updated to reflect lessons 
-learned from the first two case studies — specifically the prompt library updates 
-around always including a ranking column and a percentage of total column. This 
-is the compounding value of prompt library management in practice: the V1 output 
-for this case study should be closer to production-ready than either of the 
-previous two.
+By Case Study 3, my context prime reflects lessons from the first two — 
+specifically the standing instructions around ranking and percentage-of-total 
+columns. The V1 output should be closer to production-ready as a result.
 
 ---
 
@@ -132,11 +129,8 @@ previous two.
 
 ## The AI's Raw Output
 
-The context-primed prompt in a fresh AI session produced the strongest V1 output 
-of all three case studies — a direct result of the cumulative prompt library 
-updates from Cases 1 and 2.
-
-Notable improvements in V1 without any feedback required:
+The V1 output was the strongest of the three case studies. Notable improvements 
+without any feedback required:
 - ROW_NUMBER() ranking included from the start — prompt library update working
 - % of Total Revenue included from the start — prompt library update working
 - Global average calculated correctly once in its own CTE — not recalculated per row
@@ -300,9 +294,8 @@ actually means something to the person reading it.
 
 ## Iterative Prompting — From V1 to V2
 
-Following the same iterative prompting and prompt chaining approach established 
-in Case Study 1, I reformatted my evaluation notes as a structured feedback prompt 
-and fed them back to the AI.
+I reformatted my evaluation notes as a structured feedback prompt and fed them 
+back to the AI.
 
 **The feedback prompt I sent:**
 
@@ -502,8 +495,7 @@ ORDER BY
 
 ## Verification Pass — AI Self-Check + Meta-Prompting
 
-Following the same verification approach established in Case Study 1, I ran a 
-structured AI self-verification pass before accepting these results as final.
+I ran the same structured verification pass before accepting these results.
 
 **The verification prompt I sent:**
 
@@ -672,20 +664,15 @@ of NULL, which cleaned up the output.
 **Overall Verdict: Numbers are mathematically consistent and defendable — 
 and the verification pass made the query meaningfully better.**
 
-This is the strongest example across all three case studies of why verification 
-matters. The math was correct from the start. But the silent exclusion check 
-surfaced a real data completeness issue that no amount of arithmetic checking 
-would have caught. Opera wasn't a calculation error — it was a design gap. The 
-meta-prompt found it. The human made the call on how to fix it. That's the 
-workflow working exactly as intended.
+The math was correct from the start. But the silent exclusion check surfaced a 
+real data completeness issue that no amount of arithmetic checking would have 
+caught. Opera wasn't a calculation error — it was a design gap. The meta-prompt 
+found it. The human made the call on how to fix it. That's the workflow working 
+exactly as intended.
 
 ---
 
 ## The Business Insight
-
-*Interpreted through a digital marketing lens by Daniel Matel-Okoh*
-
----
 
 ### Rock Is the Business — Treat It That Way
 
