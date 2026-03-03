@@ -1,3 +1,4 @@
+
 # Case Study 2: Who Are Our Best Customers?
 ## Customer Lifetime Value Segmentation
 
@@ -26,56 +27,10 @@ This is not just a ranking exercise. The goal is to understand:
 
 ## The Prompt I Gave the AI
 
-Using the structured prompt framework established in Case Study 1, here is the 
-prompt I built for this analysis.
-
-One technique I apply consistently when starting a new AI session is **Context Priming** 
-— also called **Session Framing**. Rather than jumping straight into the task, I open 
-every new chat by giving the AI the full context it needs to behave like a consistent, 
-informed collaborator: the database I'm working in, the coding standards I follow, 
-the audience I'm writing for, and the style conventions I expect.
-
-This matters because AI has no memory between sessions. Without context priming, 
-a new chat is a blank slate — the AI doesn't know you're working in SQLite, doesn't 
-know you prefer CTEs over nested subqueries, and doesn't know your output is going 
-to a non-technical marketing director. You'd have to re-specify all of that in every 
-single prompt, or accept inconsistent outputs.
-
-Context priming solves this by front-loading everything the AI needs to know once, 
-at the start of the session — so every subsequent prompt in that chat benefits from 
-the established context without repeating it.
-
-A natural question is: why not just continue the same chat from Case Study 1 
-instead of starting fresh and re-priming? There are a few reasons I deliberately 
-choose to start new sessions for each case study:
-
-**1. Context window degradation**
-As a conversation gets longer, AI models have to manage an increasing amount of 
-information in their context window — the total amount of text they can "hold in 
-mind" at once. In very long sessions, early instructions and established patterns 
-can get deprioritized as new content fills the window. Starting fresh guarantees 
-the AI is working from a clean, focused context — not a cluttered one.
-
-**2. Accumulated errors carry forward**
-If the AI made a subtle mistake or developed a bad habit mid-conversation — a 
-slightly wrong interpretation of the schema, a formatting inconsistency — 
-continuing that session carries the error forward. A new session with a strong 
-context prime resets to a clean baseline.
-
-**3. Portability and reproducibility**
-A well-written context prime is reusable. If I switch AI tools — from Claude to 
-Gemini to GPT — I can drop the same prime into any new session and get consistent 
-outputs. A long running conversation is locked to one tool and one session. A 
-context prime is a portable asset.
-
-**4. Professional discipline**
-In a real analytics team, you can't rely on "the AI remembers what we talked about 
-last week." Documenting your context as a structured prime means your workflow is 
-repeatable, shareable with teammates, and not dependent on any single conversation 
-surviving.
-
-The context prime is essentially a reusable session configuration — it takes 
-60 seconds to paste and saves significant cleanup time downstream.
+Using the structured prompt framework from Case Study 1, I built the following 
+prompt in a fresh AI session. I start each case study in a new chat with a full 
+context prime — database, coding standards, audience, style conventions — so the 
+AI works from a clean, focused baseline rather than a degrading context window.
 
 ---
 
@@ -146,9 +101,8 @@ The context prime is essentially a reusable session configuration — it takes
 
 ## The AI's Raw Output
 
-Following the same structured prompt approach established in Case Study 1, I ran 
-the context-primed prompt in a fresh AI session. The V1 output was notably stronger 
-than Case Study 1's first draft — a direct result of the context priming doing its job.
+I ran the context-primed prompt in a fresh session. The V1 output was notably 
+stronger than Case Study 1's first draft — the context prime was already paying off.
 
 A few things the AI got right unprompted:
 - Calculated lifetime spend from InvoiceLine (UnitPrice × Quantity) rather than 
@@ -293,45 +247,20 @@ deciding where to draw the lines. That's the analyst layer, not the AI layer.
 
 ---
 
-> ### 📚 Prompt Library Update — Living, Breathing Prompts
->
-> One of the most valuable habits I've built working with AI is maintaining a 
-> **prompt library** — a personal collection of reusable, versioned prompts that 
-> get updated every time I discover a gap in the output.
->
-> After completing Case Study 1 and now Case Study 2, I noticed a recurring pattern:
-> the AI consistently omitted two columns I always want in an analytical output —
-> a ranking column and a percentage of total column. Neither was included in V1 
-> of either query despite strong context priming.
->
-> Rather than accepting this as something I'll just catch in every evaluation pass, 
-> I treat it as a signal to update my prompt. Specifically, I'd add the following 
-> to the **Persona / Standards** section of my context prime:
->
-> > *"For any query that ranks or compares rows, always include:*
-> > *1. An explicit ROW_NUMBER() ranking column as the first column*
-> > *2. A percentage of total column showing each row's share of the relevant aggregate*
-> > *Unless I explicitly tell you these are not needed."*
->
-> This one addition to the context prime would have eliminated two of the five 
-> issues in my Critical Evaluation — before the AI even wrote the first line of SQL.
->
-> **This is the compounding value of prompt library management.** Each case study 
-> makes the next prompt smarter. Over time, V1 outputs get closer and closer to 
-> production-ready — not because the AI got better, but because the instructions 
-> got more precise. The gap between V1 and V2 shrinks with every iteration.
->
-> In a professional context, a well-maintained prompt library is a productivity 
-> asset — the kind of institutional knowledge that makes an analyst faster and 
-> more consistent over time, regardless of which AI tool they're using.
+> **Prompt Library Update:** After two case studies, I noticed a pattern — the AI 
+> consistently omitted ranking columns and percentage-of-total columns in V1 outputs. 
+> Rather than catching this every time in evaluation, I added a standing instruction 
+> to my context prime: *"For any query that ranks or compares rows, always include 
+> a ROW_NUMBER() ranking column and a percentage-of-total column unless I say 
+> otherwise."* That one addition would have eliminated two of the five issues 
+> flagged above.
 
 ---
 
 ## Iterative Prompting — From V1 to V2
 
-Following the same iterative prompting and prompt chaining approach established 
-in Case Study 1, I reformatted my evaluation notes as a structured feedback prompt 
-and fed them back to the AI.
+I reformatted my evaluation notes as a structured feedback prompt and fed them 
+back to the AI.
 
 **The feedback prompt I sent:**
 
@@ -600,8 +529,8 @@ value of strong context priming carrying through the session.
 
 ## Verification Pass — AI Self-Check + Meta-Prompting
 
-Following the same verification approach established in Case Study 1, I ran a 
-structured AI self-verification pass before accepting these results as final.
+Following the same verification approach from Case Study 1, I ran a structured 
+AI self-verification pass before accepting these results as final.
 
 **The verification prompt I sent:**
 
@@ -717,10 +646,6 @@ analytics workflow, and it would never be caught by just looking at the output.
 
 ## The Business Insight
 
-*Interpreted through a digital marketing lens by Daniel Matel-Okoh*
-
----
-
 ### The Tier Structure Reveals a Pricing Reality
 
 The most striking finding from the tier summary isn't which customers are Platinum 
@@ -816,7 +741,7 @@ made 6 purchases, that's a re-engagement conversation.
 
 ---
 
-### The Geographic Insight No One Expected
+### Geography Tells a Different Story at the Customer Level
 
 The USA is our #1 market by revenue. But our top 5 customers — every single 
 Platinum tier customer — come from five different countries: Czech Republic, 
