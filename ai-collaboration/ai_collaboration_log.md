@@ -224,7 +224,45 @@ to fix, but a signal about where the process needed to get sharper.
 
 ---
 
-## Summary — The 8 Dimensions in Practice
+## 9. Tool Selection — Using the Right AI for the Right Job
+
+Not all AI models are equal, and not all tasks benefit from the same tool. 
+Part of working effectively with AI is understanding the strengths of different 
+models and deliberately matching the tool to the task — rather than defaulting 
+to one model for everything.
+
+For this project I used two different Claude models at two distinct stages:
+
+**Claude Sonnet** handled the technical execution — SQL generation, iterative 
+refinement, verification passes, and structured output. Sonnet is fast, 
+efficient, and well-suited for tasks with clear inputs and measurable outputs. 
+When the job is "write a CTE that calculates lifetime spend per customer and 
+formats it correctly for SQLite," speed and precision matter more than depth 
+of reasoning.
+
+**Claude Opus** handled the editorial review — reading the completed project 
+end-to-end and flagging passages that sounded robotic, transitions that felt 
+abrupt, and phrasing that didn't match the voice of a confident marketing 
+professional. Opus is better suited for tasks that require judgment about 
+nuance, tone, and coherence across a large body of work. When the job is 
+"does this sound like a human wrote it," depth of reasoning matters more 
+than speed.
+
+This two-model workflow — Sonnet for execution, Opus for review — mirrors 
+how a professional team operates: one person builds, another reviews. The 
+reviewer isn't better than the builder. They're optimized for a different 
+part of the process.
+
+**The broader principle:** AI tool selection is a skill. Knowing that a 
+faster, more efficient model is the right choice for structured technical 
+tasks — and that a more reasoning-capable model is the right choice for 
+open-ended qualitative review — is the kind of workflow judgment that 
+compounds over time. Every project gets a little more efficient when you 
+stop treating all AI tools as interchangeable.
+
+---
+
+## Summary — The 9 Dimensions in Practice
 
 | Dimension | Where Demonstrated |
 |-----------|-------------------|
@@ -236,6 +274,7 @@ to fix, but a signal about where the process needed to get sharper.
 | Prompt Precision | Explicit removal instruction after contradictory feedback (CS3) |
 | AI Self-Verification | Opera silent exclusion caught by meta-prompt (CS3) |
 | Adaptability | Threshold recalibration (CS2), catalog efficiency metric (CS3) |
+| Tool Selection | Sonnet for SQL execution, Opus for editorial review |
 
-The through-line across all eight dimensions is the same: AI accelerates the 
+The through-line across all nine dimensions is the same: AI accelerates the 
 work. Human judgment makes the output worth presenting.
