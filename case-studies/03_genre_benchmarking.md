@@ -708,3 +708,173 @@ surfaced a real data completeness issue that no amount of arithmetic checking
 would have caught. Opera wasn't a calculation error — it was a design gap. The 
 meta-prompt found it. The human made the call on how to fix it. That's the 
 workflow working exactly as intended.
+
+---
+
+## The Business Insight
+
+*Interpreted through a digital marketing lens by Daniel Matel-Okoh*
+
+---
+
+### Rock Is the Business — Treat It That Way
+
+Rock represents 35.5% of total revenue. In power law terms, this is exactly 
+what you'd expect — a small number of categories driving a disproportionate 
+share of output. The strategic response isn't to diversify away from Rock. 
+It's to go deeper.
+
+The questions I'd want answered before the next planning cycle:
+
+- **Which markets are driving Rock revenue?** Case Study 1 showed the USA 
+  is our largest market overall — but is that true specifically for Rock, or 
+  are there surprise markets where Rock over-indexes?
+- **Who are our top Rock artists and top Rock buyers?** Do we have a customer 
+  buyer persona for the ideal Rock customer — demographics, purchase patterns, 
+  AOV? Both for current customers and potential acquisition targets?
+- **Are there emerging Rock artists not yet in our catalog?** Catalog gaps in 
+  our #1 revenue genre are a direct revenue leak.
+- **What is Rock's YoY growth trend?** A genre representing 35.5% of revenue 
+  that is growing is a very different strategic conversation than one that is 
+  flat or declining. One, three, and five year trend lines would significantly 
+  change how aggressively we invest in catalog expansion and marketing support 
+  for this genre.
+
+The concentration is healthy as long as it's growing. If Rock's share is 
+declining, the 73.5% top-4 concentration becomes a risk conversation — not 
+just a success story.
+
+---
+
+### The Top 4 Concentration — Healthy or Risky?
+
+Rock, Latin, Metal, and Alternative & Punk represent 73.5% of total revenue 
+combined. Whether that's healthy or risky depends entirely on trend direction.
+
+If those four genres are growing year-over-year, concentration is a feature — 
+it tells us where to focus resources and where the market is rewarding us. If 
+they're flat or declining, 73.5% in four categories with no strong second tier 
+emerging is a vulnerability. The remaining 21 genres represent only 26.5% of 
+revenue combined — not enough of a cushion if the top 4 soften.
+
+This is the strongest argument for building out the YoY analysis as a follow-up 
+query. One, five, and ten year trend lines across all genres would transform this 
+snapshot into a strategic roadmap.
+
+---
+
+### Sci Fi & Fantasy — The Hidden Opportunity
+
+Sci Fi & Fantasy ranks #11 by total revenue but #1 by catalog efficiency at 
+$1.53 per catalog track. Before drawing conclusions, that number needs context 
+— video content is priced at $1.99 vs. $0.99 for music, so the comparison isn't 
+perfectly apples-to-apples.
+
+But even when compared only against other video genres, Sci Fi & Fantasy stands 
+out. TV Shows generates $1.01 per catalog track. Drama generates $0.90. Comedy 
+generates $1.05. Sci Fi & Fantasy at $1.53 is a significant outlier even within 
+its own pricing tier.
+
+That gap signals one of two things: either the catalog is very tight and highly 
+curated, or customer demand for this genre significantly exceeds the current 
+catalog depth. Either way, it's an opportunity worth investigating with the same 
+framework applied to Rock — top titles, top buyers, geographic performance, and 
+catalog gaps. If we can identify what's driving the efficiency and replicate it 
+through targeted catalog expansion, this genre could move from #11 to a much 
+higher revenue rank without requiring new customers.
+
+---
+
+### Video Content Investment — Get the COGS First
+
+TV Shows, Drama, Comedy, Sci Fi & Fantasy, and Science Fiction all price at 
+$1.99 — double the music track price. Their catalog efficiency figures are 
+stronger than most music genres as a result. On the surface, this looks like 
+a clear argument for investing more in video content.
+
+But the surface is misleading without cost data. Video content licensing and 
+acquisition costs are fundamentally different from music track costs. Before 
+making any catalog investment decision in video, we need the COGS breakdown — 
+what does it cost to license a TV Show episode vs. a music track? The higher 
+price point only justifies more investment if the margin holds up. A genre 
+generating $1.53 per catalog track at 20% margin is worth less than a genre 
+generating $0.99 per catalog track at 70% margin.
+
+This is the one question this dataset cannot answer on its own. It's also the 
+right question to bring to a leadership conversation.
+
+---
+
+### Opera — Cost-Benefit Before Any Decision
+
+Opera has 1 track in the catalog and zero sales. The instinct might be to remove 
+it immediately — but the right first step is a cost analysis. What does it 
+actually cost Chinook to carry this track? Licensing fees, catalog maintenance, 
+storage overhead?
+
+If the cost is negligible, there's no urgency to remove it — it's not hurting 
+anything and removing it creates a small administrative task for no real gain. 
+If there's a meaningful ongoing cost attached to it, that changes the calculus 
+entirely. Zero revenue against any non-trivial cost is a straightforward 
+cut decision.
+
+The broader implication: Opera surfaced because the verification pass caught it 
+as a silent exclusion. Without that check, we would have presented a 24-genre 
+report to leadership and never known a 25th genre existed in the catalog. This 
+is the practical value of a verification workflow — it doesn't just catch math 
+errors, it catches completeness gaps that shape the entire framing of the analysis.
+
+---
+
+### Alternative — Catalog Pruning Conversation
+
+Alternative ranks #18 with the worst catalog efficiency in the dataset at $0.35 
+per catalog track. With approximately 40 tracks in the catalog and only 14 ever 
+sold, the implied sell-through rate is around 35% — significantly below genres 
+like Bossa Nova (100%) and Blues (~84%).
+
+The question worth asking is whether the unsold Alternative tracks are genuinely 
+unpopular or simply underpromoted. Before pruning the catalog, I'd want to know 
+how much merchandising support these tracks have received. If they've never been 
+featured in a recommendation engine, a promotional email, or a curated playlist, 
+low sell-through isn't a signal of low demand — it's a signal of low visibility.
+
+If they have been promoted and still aren't selling, then a targeted catalog 
+reduction makes sense. Remove the bottom-performing titles, consolidate the 
+Alternative and Alternative & Punk catalogs into a single genre label, and 
+redirect the freed catalog capacity toward genres with proven demand.
+
+---
+
+### Bossa Nova — A Diversity Signal
+
+Every single track in the Bossa Nova catalog has sold at least once. 100% 
+sell-through across 15 tracks is a meaningful signal — it tells us there's 
+a genuine, engaged audience for this genre even though it represents only 0.6% 
+of total revenue.
+
+This doesn't necessarily mean we should expand the Bossa Nova catalog 
+aggressively. It means the current catalog is well-matched to existing demand. 
+Before expanding, I'd want to understand whether demand exceeds supply — are 
+customers searching for Bossa Nova content and not finding it? — or whether 
+the current 15 tracks represent the natural ceiling for this genre's audience.
+
+At a minimum, Bossa Nova is a good example of healthy genre diversity: a small, 
+well-curated catalog serving a specific audience efficiently. That's a model 
+worth applying to other underperforming genres before investing in catalog 
+expansion.
+
+---
+
+### The YoY Dimension — What This Report Can't Tell Us Alone
+
+Almost every insight in this report would be significantly sharpened by 
+year-over-year trend data. Is Rock's 35.5% share growing or declining? Is 
+Sci Fi & Fantasy's catalog efficiency improving as the catalog expands? Is 
+the Global Avg Revenue per Track — our KPI for catalog-wide AOV — trending 
+upward?
+
+A one, five, and ten year trend analysis across all genres would transform 
+this snapshot into a strategic planning tool. The current report answers 
+"where are we now." The YoY analysis answers "where are we going" — and 
+that's the question leadership actually makes budget decisions on.
