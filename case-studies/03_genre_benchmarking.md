@@ -296,3 +296,53 @@ product domain knowledge — specifically understanding that track pricing creat
 misleading benchmark — and a presentation judgment call about column order. That's 
 the human layer: knowing not just whether the query runs, but whether the output 
 actually means something to the person reading it.
+
+---
+
+## Iterative Prompting — From V1 to V2
+
+Following the same iterative prompting and prompt chaining approach established 
+in Case Study 1, I reformatted my evaluation notes as a structured feedback prompt 
+and fed them back to the AI.
+
+**The feedback prompt I sent:**
+
+> *"The query you returned was the strongest first draft I've received — the 
+> context priming and prompt standards clearly worked well. But I have four 
+> specific changes I need you to incorporate:*
+>
+> *1. **Replace the 'vs. Global Average' performance label with a catalog efficiency metric.**
+> The current label is misleading because it's driven entirely by price point 
+> ($0.99 music vs. $1.99 video), not by actual genre performance. Replace it with 
+> a new metric: revenue per unique track in the catalog — how much revenue each 
+> available track in that genre is generating on average.*
+>
+> *To calculate this, add a new CTE that counts the number of unique tracks per 
+> genre from the Track table (not from InvoiceLine — I want catalog depth, not 
+> tracks sold). Then add a column in the final SELECT that divides total revenue 
+> by unique tracks in catalog. Label the column "Revenue per Catalog Track" and 
+> format it with PRINTF('$%.2f').*
+>
+> *Keep the global average revenue per track column and the existing performance 
+> label — but rename the performance label column to "Catalog Efficiency" to 
+> better reflect what it's now measuring.*
+>
+> *2. **Move the performance label column** to appear directly after "Avg Revenue 
+> per Track" — not at the far right. The comparative context should sit immediately 
+> next to the metric it references.*
+>
+> *3. **Add a total row** at the bottom of the output showing:*
+> - *'TOTAL' as the Genre label*
+> - *Sum of all Total Revenue (formatted)*
+> - *Sum of all Tracks Sold*
+> - *'—' for Avg Revenue per Track and Catalog Efficiency columns*
+> - *'100.0%' for % of Total Revenue*
+> - *'—' for the performance label*
+>
+> *Use a UNION ALL pattern to append the total row to the main query.*
+>
+> *4. **Update the comment header block** to reflect these changes — update the 
+> Purpose field to mention catalog efficiency as the new benchmark metric.*
+>
+> *Keep everything else exactly as it is — CTE structure, join logic, ranking, 
+> formatting, and inline comments."*
