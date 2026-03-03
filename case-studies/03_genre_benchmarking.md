@@ -527,3 +527,184 @@ ORDER BY
 | 23 | Easy Listening | $9.90 | 10 | $0.99 | $1.04 | 0.4% | $0.41 |
 | 24 | Rock And Roll | $5.94 | 6 | $0.99 | $1.04 | 0.3% | $0.49 |
 | | TOTAL | $2,328.60 | 2,240 | — | — | 100.0% | — |
+
+---
+
+## Verification Pass — AI Self-Check + Meta-Prompting
+
+Following the same verification approach established in Case Study 1, I ran a 
+structured AI self-verification pass before accepting these results as final.
+
+**The verification prompt I sent:**
+
+> *"Please verify the V2 query output is mathematically correct. Run the 
+> following checks:*
+>
+> *1. **Spot-check the % of Total Revenue column** — Sum all 24 genre percentages 
+> and confirm they add up to approximately 100%.*
+>
+> *2. **Verify the global revenue total** — The TOTAL row shows $2,328.60. 
+> Cross-check this against the sum of all 24 individual genre revenue figures. 
+> Do they match?*
+>
+> *3. **Check the Revenue per Catalog Track calculation for one genre** — For 
+> Sci Fi & Fantasy: divide Total Revenue ($39.80) by the number of unique tracks 
+> in the catalog for that genre. Show your work and confirm it matches the $1.53 
+> shown.*
+>
+> *4. **Verify the Tracks Sold total** — The TOTAL row shows 2,240 tracks sold. 
+> Sum all 24 individual genre track counts and confirm they match.*
+>
+> *5. **Flag any anomalies** — Are there any genres where the Revenue per Catalog 
+> Track, Tracks Sold, or Total Revenue looks inconsistent or surprising?*
+>
+> *6. **Meta-check** — Beyond these five checks, what other verification methods 
+> would you recommend specifically for a genre benchmarking query that uses 
+> catalog depth as a metric?"*
+
+---
+
+**Verification Results:**
+
+**✅ Check 1 — Percentages sum to 100%**
+All 24 genre percentages sum to exactly 100.0%. No rounding drift. All rows 
+account for the full total.
+
+**✅ Check 2 — Genre revenues sum to TOTAL row**
+Running sum across all 24 genres = $2,328.60. Matches the TOTAL row exactly. 
+No genres dropped or double-counted.
+
+**✅ Check 3 — Sci Fi & Fantasy Revenue per Catalog Track**
+$39.80 ÷ $1.53 = 26.01 → 26 unique catalog tracks.
+Reverse check: $39.80 ÷ 26 = $1.530769... → formats to $1.53. Confirmed correct.
+
+This genre ranks #11 by total revenue but #1 by catalog efficiency — its small, 
+tight catalog is generating more revenue per available track than any other genre 
+in the database. That's the insight the original "vs. Global Average" label 
+completely missed.
+
+**✅ Check 4 — Tracks Sold total**
+Sum of all 24 genre track counts = 2,240. Matches the TOTAL row exactly.
+
+**⚠️ Check 5 — Anomalies flagged**
+
+**Bossa Nova — perfect sell-through:**
+$14.85 ÷ $0.99 = exactly 15 catalog tracks. Tracks Sold is also 15. Every single 
+track in the Bossa Nova catalog sold at least once — the only genre in the dataset 
+where Revenue per Catalog Track equals Avg Revenue per Track. Worth confirming 
+against raw data before presenting to leadership.
+
+**Alternative vs. Alternative & Punk — catalog tagging flag:**
+Alternative & Punk is #4 with $241.56 revenue while Alternative is #18 with 
+$13.86. These may represent an inconsistent tagging convention in the source 
+data rather than two genuinely distinct genre segments. If consolidated, the 
+combined genre would rank solidly in the top 3.
+
+**Rock vs. Rock And Roll — same issue:**
+Rock is #1 with $826.65 revenue. Rock And Roll is #24 with $5.94. In most music 
+catalogs, Rock And Roll is the parent genre of Rock, not a separate category. 
+Worth flagging to the product team as a potential catalog organization issue.
+
+---
+
+**🔬 Check 6 — Meta-Verification: Where the Real Discovery Happened**
+
+The AI surfaced several additional checks specific to genre benchmarking queries 
+that use catalog depth. One of them caught a real error.
+
+The AI recommended running this silent exclusion check:
+```sql
+SELECT g.Name, COUNT(t.TrackId) AS catalog_tracks
+FROM Genre g
+INNER JOIN Track t ON t.GenreId = g.GenreId
+LEFT JOIN InvoiceLine il ON il.TrackId = t.TrackId
+GROUP BY g.Name
+HAVING SUM(il.Quantity) IS NULL;
+```
+
+**Result:**
+
+| Name | catalog_tracks |
+|------|---------------|
+| Opera | 1 |
+
+**The silent exclusion check caught a real gap.** Opera has 1 track in the catalog 
+and zero sales. Because the original query used INNER JOIN all the way through 
+Genre → Track → InvoiceLine, Opera was being silently dropped from the output 
+entirely — never appearing in the benchmark, never appearing in the TOTAL row.
+
+This created two specific problems:
+
+1. **The TOTAL row understated catalog scope.** The query reported against 24 
+   genres, but Chinook actually carries 25. Any framing like "across our full 
+   catalog" would have been technically incorrect.
+
+2. **Revenue per Catalog Track was slightly inflated.** Opera's unsold track 
+   wasn't in any denominator, so the metric was only measuring genres that had 
+   already proven commercial viability — it couldn't surface Opera-style problems 
+   by design.
+
+**The fix decision — Option A vs. Option B:**
+
+The AI presented two options:
+- **Option A:** Keep the INNER JOIN, add a comment noting that zero-sales genres 
+  are excluded. Clean and defensible.
+- **Option B:** Change the InvoiceLine JOIN to LEFT JOIN, use NULLIF and COALESCE 
+  to handle zero-sales rows, and let Opera appear at the bottom with $0.00 values.
+
+I chose **Option B.** For a report designed to inform catalog investment decisions, 
+a genre sitting at $0.00 revenue with 1 catalog track is precisely the kind of 
+finding that should surface — not be silently excluded. Dead catalog inventory is 
+actionable information.
+
+**The final aesthetic fix:**
+
+After implementing Option B, I noticed the TOTAL row was showing NULL in the Rank 
+column instead of a placeholder. A small thing — but attention to detail matters 
+in a stakeholder report. I updated the UNION ALL total row to use `'—'` instead 
+of NULL, which cleaned up the output.
+
+---
+
+**Final Query Results — 25 Genres + TOTAL:**
+
+| Rank | Genre | Total Revenue | Tracks Sold | Avg Rev/Track | Global Avg | % of Total | Rev/Catalog Track |
+|------|-------|---------------|-------------|---------------|------------|------------|-------------------|
+| 1 | Rock | $826.65 | 835 | $0.99 | $1.04 | 35.5% | $0.64 |
+| 2 | Latin | $382.14 | 386 | $0.99 | $1.04 | 16.4% | $0.66 |
+| 3 | Metal | $261.36 | 264 | $0.99 | $1.04 | 11.2% | $0.70 |
+| 4 | Alternative & Punk | $241.56 | 244 | $0.99 | $1.04 | 10.4% | $0.73 |
+| 5 | TV Shows | $93.53 | 47 | $1.99 | $1.04 | 4.0% | $1.01 |
+| 6 | Jazz | $79.20 | 80 | $0.99 | $1.04 | 3.4% | $0.61 |
+| 7 | Blues | $60.39 | 61 | $0.99 | $1.04 | 2.6% | $0.75 |
+| 8 | Drama | $57.71 | 29 | $1.99 | $1.04 | 2.5% | $0.90 |
+| 9 | R&B/Soul | $40.59 | 41 | $0.99 | $1.04 | 1.7% | $0.67 |
+| 10 | Classical | $40.59 | 41 | $0.99 | $1.04 | 1.7% | $0.55 |
+| 11 | Sci Fi & Fantasy | $39.80 | 20 | $1.99 | $1.04 | 1.7% | $1.53 |
+| 12 | Reggae | $29.70 | 30 | $0.99 | $1.04 | 1.3% | $0.51 |
+| 13 | Pop | $27.72 | 28 | $0.99 | $1.04 | 1.2% | $0.58 |
+| 14 | Soundtrack | $19.80 | 20 | $0.99 | $1.04 | 0.9% | $0.46 |
+| 15 | Comedy | $17.91 | 9 | $1.99 | $1.04 | 0.8% | $1.05 |
+| 16 | Hip Hop/Rap | $16.83 | 17 | $0.99 | $1.04 | 0.7% | $0.48 |
+| 17 | Bossa Nova | $14.85 | 15 | $0.99 | $1.04 | 0.6% | $0.99 |
+| 18 | Alternative | $13.86 | 14 | $0.99 | $1.04 | 0.6% | $0.35 |
+| 19 | World | $12.87 | 13 | $0.99 | $1.04 | 0.6% | $0.46 |
+| 20 | Science Fiction | $11.94 | 6 | $1.99 | $1.04 | 0.5% | $0.92 |
+| 21 | Heavy Metal | $11.88 | 12 | $0.99 | $1.04 | 0.5% | $0.42 |
+| 22 | Electronica/Dance | $11.88 | 12 | $0.99 | $1.04 | 0.5% | $0.40 |
+| 23 | Easy Listening | $9.90 | 10 | $0.99 | $1.04 | 0.4% | $0.41 |
+| 24 | Rock And Roll | $5.94 | 6 | $0.99 | $1.04 | 0.3% | $0.49 |
+| 25 | Opera | $0.00 | 0 | $0.00 | $1.04 | 0.0% | $0.00 |
+| — | TOTAL | $2,328.60 | 2,240 | — | — | 100.0% | — |
+
+---
+
+**Overall Verdict: Numbers are mathematically consistent and defendable — 
+and the verification pass made the query meaningfully better.**
+
+This is the strongest example across all three case studies of why verification 
+matters. The math was correct from the start. But the silent exclusion check 
+surfaced a real data completeness issue that no amount of arithmetic checking 
+would have caught. Opera wasn't a calculation error — it was a design gap. The 
+meta-prompt found it. The human made the call on how to fix it. That's the 
+workflow working exactly as intended.
