@@ -229,7 +229,10 @@ to fix, but a signal about where the process needed to get sharper.
 Not all AI models are equal, and not all tasks benefit from the same tool. 
 Part of working effectively with AI is understanding the strengths of different 
 models and deliberately matching the tool to the task — rather than defaulting 
-to one model for everything.
+to one model for everything. This isn't just about performance. It's also about 
+cost. More capable models consume more tokens per request — using a heavyweight 
+model for every task is the AI equivalent of taking a private jet to a meeting 
+across town. The right tool for the right job saves money and gets there faster.
 
 For this project I used two different Claude models at two distinct stages:
 
@@ -238,7 +241,8 @@ refinement, verification passes, and structured output. Sonnet is fast,
 efficient, and well-suited for tasks with clear inputs and measurable outputs. 
 When the job is "write a CTE that calculates lifetime spend per customer and 
 formats it correctly for SQLite," speed and precision matter more than depth 
-of reasoning.
+of reasoning — and Sonnet's lower token cost means more iterations for the 
+same budget.
 
 **Claude Opus** handled the editorial review — reading the completed project 
 end-to-end and flagging passages that sounded robotic, transitions that felt 
@@ -246,7 +250,7 @@ abrupt, and phrasing that didn't match the voice of a confident marketing
 professional. Opus is better suited for tasks that require judgment about 
 nuance, tone, and coherence across a large body of work. When the job is 
 "does this sound like a human wrote it," depth of reasoning matters more 
-than speed.
+than speed — and that's where the higher token cost is justified.
 
 This two-model workflow — Sonnet for execution, Opus for review — mirrors 
 how a professional team operates: one person builds, another reviews. The 
@@ -257,8 +261,8 @@ part of the process.
 faster, more efficient model is the right choice for structured technical 
 tasks — and that a more reasoning-capable model is the right choice for 
 open-ended qualitative review — is the kind of workflow judgment that 
-compounds over time. Every project gets a little more efficient when you 
-stop treating all AI tools as interchangeable.
+compounds over time. Every project gets a little more efficient, and a 
+little less expensive, when you stop treating all AI tools as interchangeable.
 
 ---
 
