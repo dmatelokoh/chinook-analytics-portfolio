@@ -307,13 +307,13 @@ and fed them back to the AI.
 
 **The feedback prompt I sent:**
 
-> *"The query you returned was strong, but I have three 
-> specific changes I need you to incorporate:*
+> *"The query you returned was strong, but I have three specific changes I need 
+> you to incorporate:*
 >
-> *1. **Replace the 'vs. Global Average' performance label with a catalog efficiency metric.**
-> The current label is misleading because it's driven entirely by price point 
-> ($0.99 music vs. $1.99 video), not by actual genre performance. Replace it with 
-> a new metric: revenue per unique track in the catalog — how much revenue each 
+> *1. **Replace the 'vs. Global Average' performance label with a catalog efficiency 
+> metric.** The current label is misleading because it's driven entirely by price 
+> point ($0.99 music vs. $1.99 video), not by actual genre performance. Replace it 
+> with a new metric: revenue per unique track in the catalog — how much revenue each 
 > available track in that genre is generating on average.*
 >
 > *To calculate this, add a new CTE that counts the number of unique tracks per 
@@ -322,22 +322,23 @@ and fed them back to the AI.
 > by unique tracks in catalog. Label the column "Revenue per Catalog Track" and 
 > format it with PRINTF('$%.2f').*
 >
-> *Keep the global average revenue per track column and the existing performance 
-> label — but rename the performance label column to "Catalog Efficiency" to 
-> better reflect what it's now measuring.*
+> *Remove the existing 'vs. Global Average' performance label column entirely — 
+> it is being replaced by "Revenue per Catalog Track". Keep the "Global Avg Revenue 
+> per Track" column as a trending KPI.*
 >
 > *2. **Add a total row** at the bottom of the output showing:*
 > - *'TOTAL' as the Genre label*
 > - *Sum of all Total Revenue (formatted)*
 > - *Sum of all Tracks Sold*
-> - *'—' for Avg Revenue per Track and Catalog Efficiency columns*
+> - *'—' for Avg Revenue per Track and Revenue per Catalog Track columns*
 > - *'100.0%' for % of Total Revenue*
-> - *'—' for the performance label*
+> - *'—' for Global Avg Revenue per Track*
 >
 > *Use a UNION ALL pattern to append the total row to the main query.*
 >
 > *3. **Update the comment header block** to reflect these changes — update the 
-> Purpose field to mention catalog efficiency as the new benchmark metric.*
+> Purpose field to mention catalog efficiency as the new benchmark metric, and add 
+> a note explaining that Global Avg Revenue per Track serves as a trending KPI.*
 >
 > *Keep everything else exactly as it is — CTE structure, join logic, ranking, 
 > formatting, and inline comments."*
@@ -346,18 +347,20 @@ and fed them back to the AI.
 
 **A note on prompt precision — what this iteration taught me:**
 
-When I sent the feedback prompt to replace the "vs. Global Average" column with 
-the catalog efficiency metric, the AI correctly added the new "Revenue per Catalog 
-Track" column — but also kept the original performance label column. It wasn't the 
-AI's fault. I asked it to add something new but never explicitly said to remove the 
-old column. The AI did exactly what I asked.
+My first version of this feedback prompt said "Keep the global average revenue 
+per track column and the existing performance label" — which contradicted my 
+instruction to replace the performance label. The AI did exactly what I told it: 
+it added the new catalog efficiency column but kept the old performance label too, 
+because I hadn't explicitly said to remove it.
 
 This is a prompt precision lesson worth documenting: **AI executes instructions 
 literally.** If you want something removed, you have to say so explicitly. Assuming 
 the AI will infer that a replacement means a removal is one of the most common 
-sources of unexpected output. I sent a follow-up prompt specifying the removal, 
-and the column was cleanly dropped on the next iteration.
+sources of unexpected output. I caught the contradiction, updated the feedback 
+prompt to explicitly state "Remove the existing 'vs. Global Average' performance 
+label column entirely", and the column was cleanly dropped on the next iteration.
 
+The corrected feedback prompt above reflects the final version I sent.
 ---
 
 **The V2 Query — AI Output After Prompt Chaining:**
