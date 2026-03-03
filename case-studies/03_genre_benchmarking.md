@@ -307,7 +307,7 @@ and fed them back to the AI.
 
 **The feedback prompt I sent:**
 
-> *"The query you returned was strong, but I have four 
+> *"The query you returned was strong, but I have three 
 > specific changes I need you to incorporate:*
 >
 > *1. **Replace the 'vs. Global Average' performance label with a catalog efficiency metric.**
@@ -326,11 +326,7 @@ and fed them back to the AI.
 > label — but rename the performance label column to "Catalog Efficiency" to 
 > better reflect what it's now measuring.*
 >
-> *2. **Move the performance label column** to appear directly after "Avg Revenue 
-> per Track" — not at the far right. The comparative context should sit immediately 
-> next to the metric it references.*
->
-> *3. **Add a total row** at the bottom of the output showing:*
+> *2. **Add a total row** at the bottom of the output showing:*
 > - *'TOTAL' as the Genre label*
 > - *Sum of all Total Revenue (formatted)*
 > - *Sum of all Tracks Sold*
@@ -340,8 +336,191 @@ and fed them back to the AI.
 >
 > *Use a UNION ALL pattern to append the total row to the main query.*
 >
-> *4. **Update the comment header block** to reflect these changes — update the 
+> *3. **Update the comment header block** to reflect these changes — update the 
 > Purpose field to mention catalog efficiency as the new benchmark metric.*
 >
 > *Keep everything else exactly as it is — CTE structure, join logic, ranking, 
 > formatting, and inline comments."*
+
+---
+
+**A note on prompt precision — what this iteration taught me:**
+
+When I sent the feedback prompt to replace the "vs. Global Average" column with 
+the catalog efficiency metric, the AI correctly added the new "Revenue per Catalog 
+Track" column — but also kept the original performance label column. It wasn't the 
+AI's fault. I asked it to add something new but never explicitly said to remove the 
+old column. The AI did exactly what I asked.
+
+This is a prompt precision lesson worth documenting: **AI executes instructions 
+literally.** If you want something removed, you have to say so explicitly. Assuming 
+the AI will infer that a replacement means a removal is one of the most common 
+sources of unexpected output. I sent a follow-up prompt specifying the removal, 
+and the column was cleanly dropped on the next iteration.
+
+---
+
+**The V2 Query — AI Output After Prompt Chaining:**
+```sql
+-- ============================================================
+-- Query    : Genre Performance Benchmark vs. Global Average
+-- Database : Chinook (SQLite)
+-- Author   : Senior Data Analyst, Chinook Digital Media
+-- Purpose  : Benchmarks each genre's revenue and sales performance
+--            against the global average revenue per track sold, and
+--            evaluates catalog efficiency via revenue per unique track
+--            in the genre's catalog, to guide catalog investment,
+--            merchandising priority, and promotional spend decisions.
+-- Audience : Product and Marketing Team
+-- Notes    : Revenue is derived from InvoiceLine (UnitPrice * Quantity).
+--            Global average is computed across all genres combined,
+--            not as a simple average of per-genre averages.
+--            Catalog depth is sourced from the Track table (not
+--            InvoiceLine) to reflect available inventory, not units sold.
+--            Global Avg Revenue per Track serves as a trending KPI —
+--            a rising figure over time indicates growing AOV across
+--            the catalog, driven by either higher-priced content
+--            adoption or a shift in catalog mix toward premium genres.
+-- ============================================================
+
+WITH genre_stats AS (
+    SELECT
+        g.GenreId,
+        g.Name                                      AS genre_name,
+        SUM(il.UnitPrice * il.Quantity)             AS total_revenue_raw,
+        SUM(il.Quantity)                            AS total_tracks_sold
+    FROM Genre g
+    INNER JOIN Track t
+        ON t.GenreId = g.GenreId
+    INNER JOIN InvoiceLine il
+        ON il.TrackId = t.TrackId
+    GROUP BY
+        g.GenreId,
+        g.Name
+),
+global_avg AS (
+    SELECT
+        SUM(total_revenue_raw) * 1.0
+            / SUM(total_tracks_sold)                AS avg_rev_per_track_global
+    FROM genre_stats
+),
+catalog_depth AS (
+    SELECT
+        GenreId,
+        COUNT(TrackId)                              AS unique_tracks_in_catalog
+    FROM Track
+    GROUP BY
+        GenreId
+),
+genre_benchmarked AS (
+    SELECT
+        gs.genre_name,
+        gs.total_revenue_raw,
+        gs.total_tracks_sold,
+        gs.total_revenue_raw * 1.0
+            / gs.total_tracks_sold                  AS avg_rev_per_track_raw,
+        ga.avg_rev_per_track_global,
+        gs.total_revenue_raw * 1.0
+            / cd.unique_tracks_in_catalog           AS rev_per_catalog_track_raw
+    FROM genre_stats gs
+    INNER JOIN global_avg ga
+        ON 1 = 1
+    INNER JOIN catalog_depth cd
+        ON cd.GenreId = gs.GenreId
+)
+SELECT
+    "Rank",
+    "Genre",
+    "Total Revenue",
+    "Tracks Sold",
+    "Avg Revenue per Track",
+    "Global Avg Revenue per Track",
+    "% of Total Revenue",
+    "Revenue per Catalog Track"
+FROM (
+    SELECT
+        ROW_NUMBER() OVER (
+            ORDER BY total_revenue_raw DESC
+        )                                                           AS "Rank",
+        genre_name                                                  AS "Genre",
+        PRINTF('$%.2f', COALESCE(total_revenue_raw, 0))            AS "Total Revenue",
+        total_tracks_sold                                           AS "Tracks Sold",
+        PRINTF('$%.2f', COALESCE(avg_rev_per_track_raw, 0))        AS "Avg Revenue per Track",
+        PRINTF('$%.2f', COALESCE(avg_rev_per_track_global, 0))     AS "Global Avg Revenue per Track",
+        PRINTF('%.1f%%',
+            COALESCE(total_revenue_raw, 0) * 100.0
+            / SUM(total_revenue_raw) OVER ()
+        )                                                           AS "% of Total Revenue",
+        PRINTF('$%.2f', COALESCE(rev_per_catalog_track_raw, 0))    AS "Revenue per Catalog Track",
+        1                                                           AS _sort_grp,
+        total_revenue_raw                                           AS _sort_rev
+    FROM genre_benchmarked
+
+    UNION ALL
+
+    SELECT
+        NULL,
+        'TOTAL',
+        PRINTF('$%.2f', SUM(total_revenue_raw)),
+        SUM(total_tracks_sold),
+        '—',
+        '—',
+        '100.0%',
+        '—',
+        2,
+        0
+    FROM genre_benchmarked
+)
+ORDER BY
+    _sort_grp,
+    _sort_rev DESC;
+```
+
+---
+
+**What the prompt chaining achieved:**
+
+| | V1 (Initial AI Output) | V2 (After Prompt Chaining) |
+|---|---|---|
+| Ranking column | ✅ | ✅ |
+| % of Total Revenue | ✅ | ✅ |
+| Catalog efficiency metric | ❌ | ✅ Revenue per Catalog Track |
+| Meaningful performance label | ❌ | ✅ Replaced price-driven label |
+| Column order — label next to metric | ❌ | ✅ |
+| Total row | ❌ | ✅ UNION ALL pattern |
+| Global avg as trending KPI | ❌ | ✅ Documented in header |
+| Correct join logic | ✅ | ✅ |
+| Float division fix (* 1.0) | ✅ | ✅ |
+| Inline comments | ✅ | ✅ |
+
+---
+
+**V2 Query Results:**
+
+| Rank | Genre | Total Revenue | Tracks Sold | Avg Rev/Track | Global Avg | % of Total | Rev/Catalog Track |
+|------|-------|---------------|-------------|---------------|------------|------------|-------------------|
+| 1 | Rock | $826.65 | 835 | $0.99 | $1.04 | 35.5% | $0.64 |
+| 2 | Latin | $382.14 | 386 | $0.99 | $1.04 | 16.4% | $0.66 |
+| 3 | Metal | $261.36 | 264 | $0.99 | $1.04 | 11.2% | $0.70 |
+| 4 | Alternative & Punk | $241.56 | 244 | $0.99 | $1.04 | 10.4% | $0.73 |
+| 5 | TV Shows | $93.53 | 47 | $1.99 | $1.04 | 4.0% | $1.01 |
+| 6 | Jazz | $79.20 | 80 | $0.99 | $1.04 | 3.4% | $0.61 |
+| 7 | Blues | $60.39 | 61 | $0.99 | $1.04 | 2.6% | $0.75 |
+| 8 | Drama | $57.71 | 29 | $1.99 | $1.04 | 2.5% | $0.90 |
+| 9 | R&B/Soul | $40.59 | 41 | $0.99 | $1.04 | 1.7% | $0.67 |
+| 10 | Classical | $40.59 | 41 | $0.99 | $1.04 | 1.7% | $0.55 |
+| 11 | Sci Fi & Fantasy | $39.80 | 20 | $1.99 | $1.04 | 1.7% | $1.53 |
+| 12 | Reggae | $29.70 | 30 | $0.99 | $1.04 | 1.3% | $0.51 |
+| 13 | Pop | $27.72 | 28 | $0.99 | $1.04 | 1.2% | $0.58 |
+| 14 | Soundtrack | $19.80 | 20 | $0.99 | $1.04 | 0.9% | $0.46 |
+| 15 | Comedy | $17.91 | 9 | $1.99 | $1.04 | 0.8% | $1.05 |
+| 16 | Hip Hop/Rap | $16.83 | 17 | $0.99 | $1.04 | 0.7% | $0.48 |
+| 17 | Bossa Nova | $14.85 | 15 | $0.99 | $1.04 | 0.6% | $0.99 |
+| 18 | Alternative | $13.86 | 14 | $0.99 | $1.04 | 0.6% | $0.35 |
+| 19 | World | $12.87 | 13 | $0.99 | $1.04 | 0.6% | $0.46 |
+| 20 | Science Fiction | $11.94 | 6 | $1.99 | $1.04 | 0.5% | $0.92 |
+| 21 | Heavy Metal | $11.88 | 12 | $0.99 | $1.04 | 0.5% | $0.42 |
+| 22 | Electronica/Dance | $11.88 | 12 | $0.99 | $1.04 | 0.5% | $0.40 |
+| 23 | Easy Listening | $9.90 | 10 | $0.99 | $1.04 | 0.4% | $0.41 |
+| 24 | Rock And Roll | $5.94 | 6 | $0.99 | $1.04 | 0.3% | $0.49 |
+| | TOTAL | $2,328.60 | 2,240 | — | — | 100.0% | — |
