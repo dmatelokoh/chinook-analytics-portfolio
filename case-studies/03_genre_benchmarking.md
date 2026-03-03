@@ -236,7 +236,7 @@ ORDER BY
 
 The V1 output was structurally clean — the prompt library updates eliminated the 
 ranking and percentage issues that required feedback in the previous two case 
-studies. But after reviewing the results, I had three substantive issues to address.
+studies. But after reviewing the results, I had four substantive issues to address.
 
 **1. The "vs. Global Average" metric is misleading**
 
@@ -287,8 +287,7 @@ Rock is our #1 genre with $826.65 in revenue and 835 tracks sold. Rock And Roll
 sits at #24 with just $5.94 and 6 tracks sold. In most music catalogs, Rock and 
 Roll is the parent genre of Rock — not a separate category. This could indicate 
 a catalog tagging issue where a small number of tracks are labeled "Rock And Roll" 
-instead of "Rock." If those tracks were recategorized, Rock's numbers would shift 
-slightly. Worth flagging to the product team before presenting this report.
+instead of "Rock." Worth flagging to the product team before presenting this report.
 
 **The bottom line:** The prompt library updates from Cases 1 and 2 eliminated two 
 recurring structural issues before V1 was even written. The remaining issues required 
@@ -361,6 +360,7 @@ prompt to explicitly state "Remove the existing 'vs. Global Average' performance
 label column entirely", and the column was cleanly dropped on the next iteration.
 
 The corrected feedback prompt above reflects the final version I sent.
+
 ---
 
 **The V2 Query — AI Output After Prompt Chaining:**
@@ -496,37 +496,7 @@ ORDER BY
 | Float division fix (* 1.0) | ✅ | ✅ |
 | Inline comments | ✅ | ✅ |
 
----
-
-**V2 Query Results:**
-
-| Rank | Genre | Total Revenue | Tracks Sold | Avg Rev/Track | Global Avg | % of Total | Rev/Catalog Track |
-|------|-------|---------------|-------------|---------------|------------|------------|-------------------|
-| 1 | Rock | $826.65 | 835 | $0.99 | $1.04 | 35.5% | $0.64 |
-| 2 | Latin | $382.14 | 386 | $0.99 | $1.04 | 16.4% | $0.66 |
-| 3 | Metal | $261.36 | 264 | $0.99 | $1.04 | 11.2% | $0.70 |
-| 4 | Alternative & Punk | $241.56 | 244 | $0.99 | $1.04 | 10.4% | $0.73 |
-| 5 | TV Shows | $93.53 | 47 | $1.99 | $1.04 | 4.0% | $1.01 |
-| 6 | Jazz | $79.20 | 80 | $0.99 | $1.04 | 3.4% | $0.61 |
-| 7 | Blues | $60.39 | 61 | $0.99 | $1.04 | 2.6% | $0.75 |
-| 8 | Drama | $57.71 | 29 | $1.99 | $1.04 | 2.5% | $0.90 |
-| 9 | R&B/Soul | $40.59 | 41 | $0.99 | $1.04 | 1.7% | $0.67 |
-| 10 | Classical | $40.59 | 41 | $0.99 | $1.04 | 1.7% | $0.55 |
-| 11 | Sci Fi & Fantasy | $39.80 | 20 | $1.99 | $1.04 | 1.7% | $1.53 |
-| 12 | Reggae | $29.70 | 30 | $0.99 | $1.04 | 1.3% | $0.51 |
-| 13 | Pop | $27.72 | 28 | $0.99 | $1.04 | 1.2% | $0.58 |
-| 14 | Soundtrack | $19.80 | 20 | $0.99 | $1.04 | 0.9% | $0.46 |
-| 15 | Comedy | $17.91 | 9 | $1.99 | $1.04 | 0.8% | $1.05 |
-| 16 | Hip Hop/Rap | $16.83 | 17 | $0.99 | $1.04 | 0.7% | $0.48 |
-| 17 | Bossa Nova | $14.85 | 15 | $0.99 | $1.04 | 0.6% | $0.99 |
-| 18 | Alternative | $13.86 | 14 | $0.99 | $1.04 | 0.6% | $0.35 |
-| 19 | World | $12.87 | 13 | $0.99 | $1.04 | 0.6% | $0.46 |
-| 20 | Science Fiction | $11.94 | 6 | $1.99 | $1.04 | 0.5% | $0.92 |
-| 21 | Heavy Metal | $11.88 | 12 | $0.99 | $1.04 | 0.5% | $0.42 |
-| 22 | Electronica/Dance | $11.88 | 12 | $0.99 | $1.04 | 0.5% | $0.40 |
-| 23 | Easy Listening | $9.90 | 10 | $0.99 | $1.04 | 0.4% | $0.41 |
-| 24 | Rock And Roll | $5.94 | 6 | $0.99 | $1.04 | 0.3% | $0.49 |
-| | TOTAL | $2,328.60 | 2,240 | — | — | 100.0% | — |
+*Note: Final query results including Opera appear in the Verification Pass section below.*
 
 ---
 
