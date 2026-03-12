@@ -70,6 +70,8 @@ One notable improvement over the SQL case studies: when I asked the AI for the t
 
 *The full V1 code and output are in the Jupyter notebook. The verification checks (row count reconciliation, negative/zero interval check, single-customer spot-check, distribution tail sanity, histogram completeness) all passed.*
 
+
+
 ---
 
 ## Verification Pass
@@ -107,7 +109,7 @@ The fix: cap the display at ~200 days and note how many intervals fall beyond th
 
 **2. The summary stats box isn't audience-appropriate**
 
-The stats box includes "CV = 0.86" and "Std Dev = 34.5 days" without explaining what those mean. A hiring manager evaluating my analytical thinking might know what standard deviation is. A marketing director making campaign decisions almost certainly doesn't care about coefficient of variation without context. If a metric needs a footnote to be useful, it probably shouldn't be on the chart without one.
+The stats box includes "CV = 0.86" and "Std Dev = 34.5 days" without explaining what those mean. A marketing director making campaign decisions almost certainly doesn't care about coefficient of variation without context. If a metric needs a footnote to be useful, it probably shouldn't be on the chart without one.
 
 The fix: keep all metrics on the chart but add plain-language parenthetical explanations — "Std Dev = 34.5 days (how much gaps vary)" and "CV = 0.86 (high variance — not artificial)." The reader sees the number and immediately understands what it means.
 
@@ -154,6 +156,21 @@ I sent the following feedback back to the AI as a structured revision prompt:
 
 **What the iteration achieved:**
 
+## Iterative Prompting — From V1 to V2
+
+I sent the following feedback back to the AI as a structured revision prompt:
+
+1. Cap the x-axis at 200 days with an outlier disclosure note
+2. Expand the annotation box with plain-language explanations for each metric
+3. Move the legend to the upper right so it doesn't cover the peak
+4. Make the subtitle smaller and lighter than the title
+5. Add clear x-axis tick marks at 14-day intervals
+6. Relabel y-axis to "Number of Repeat Purchases" and x-axis to "Days Since Last Purchase"
+7. Add two business context zones: a proactive engagement window (14–21 days) and a win-back trigger zone (40–100 days) as subtle shaded regions
+8. Add a summary table in the bottom right showing the top 5 purchase windows by count and percentage
+
+**What the iteration achieved:**
+
 | | V1 | V2 |
 |---|---|---|
 | X-axis range | Extended to 600 (compressed) | Capped at 200 with outlier note |
@@ -165,6 +182,13 @@ I sent the following feedback back to the AI as a structured revision prompt:
 | Business context | None | Engagement window + win-back zone |
 | Purchase window table | None | Top 5 windows with counts and % |
 
+**V1 — Before:**
+
+![V1 Histogram](figures/v1_inter_purchase_intervals.png)
+
+**V2 — After:**
+
+![V2 Histogram](figures/v2_inter_purchase_intervals.png)
 ---
 
 ## The Business Insight
