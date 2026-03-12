@@ -1,3 +1,29 @@
+# Case Study 1: Is the Purchase Pattern Real?
+## Purchase Timing & Frequency Analysis
+
+---
+
+## The Business Question
+
+SQL Case Study 2 segmented customers by lifetime value and found something unexpected: almost every customer in the original Chinook database made exactly 7 purchases. In a customer base spanning 24 countries with different buying habits, that kind of uniformity doesn't happen organically.
+
+I flagged three possible explanations in that case study: the purchase dates are clustered around external events (a sale, a release, a promotional push), there's a seasonal pattern driving consistent behavior, or it's a data artifact — a byproduct of how the sample database was generated rather than a reflection of real customer behavior.
+
+SQL couldn't answer that question. A COUNT of purchases per customer tells you *how many* — not *when* or *how spread out*. To investigate timing, I needed datetime operations, rolling calculations, and visualizations that SQL alone doesn't support well.
+
+That's what this notebook does. Using an expanded version of the Chinook database (~5,000 customers, ~54,000 invoices, 2019–2025), I'm testing whether purchase frequency looks organic, seasonal, or artificial. The core deliverables:
+
+- **Inter-purchase interval analysis** — how many days pass between consecutive purchases, and what does the distribution look like?
+- **Purchase date scatter plot** — are there visible clusters in when customers buy?
+- **Monthly revenue time series** — does revenue follow seasonal patterns or stay flat?
+- **Cohort retention analysis** — do customers stick around, or do they drop off after a predictable number of purchases?
+
+If the pattern is organic, the distribution should be right-skewed with natural variance — not a tight cluster around a single number. If it's seasonal, we should see spikes aligned with calendar events. If it's artificial, we'll see suspicious uniformity that no real customer base would produce.
+
+The answer shapes how a marketing team thinks about re-engagement timing, campaign cadence, and churn prediction.
+
+---
+
 ## The Prompt I Gave the AI
 
 Using the structured prompt framework from the SQL case studies, I built the following prompt in a fresh AI session. I uploaded my SQL Case Study 2 write-up as a reference file so the AI had context on the business question and the level of analytical depth I'm working at — but no prior knowledge of the expanded database or what the output should look like.
