@@ -26,7 +26,13 @@ The answer shapes how a marketing team thinks about re-engagement timing, campai
 
 ## The Prompt I Gave the AI
 
-Using the structured prompt framework from the SQL case studies, I built the following prompt in a fresh AI session. I uploaded my SQL Case Study 2 write-up as a reference file so the AI had context on the business question and the level of analytical depth I'm working at — but no prior knowledge of the expanded database or what the output should look like.
+Using the structured prompt framework from the SQL case studies, my starting message in a fresh AI session was:
+
+> *"Can you help me create a technical prompt for Python built on this framework: Persona, Task, Context, Constraints, Format, Reference, Audience, Evaluate. The business question I want to answer is 'is customer purchase frequency organic, seasonal, or a data artifact?' I'm working with an expanded synthetic version of the Chinook database that has ~5,000 customers and invoices spanning several years."*
+
+I uploaded my SQL Case Study 2 write-up as a reference file, along with an example prompt from the prior case study, so the AI had context on the business question and the level of analytical depth I'm working at.
+
+The prompt the AI helped me build:
 
 ---
 
@@ -50,10 +56,10 @@ Using the structured prompt framework from the SQL case studies, I built the fol
 > Structure for a Jupyter notebook: markdown headers explaining each step, then the code, then the output. Follow clean visualization standards: title, axis labels, and a source note. Comments should explain *why*, not just *what*. Use descriptive variable names.
 
 **References**
-> I've attached my SQL Case Study 2 write-up as context for the business question and the level of analytical depth I'm looking for.
+> Use the attached SQL Case Study 2 write-up and example prompt as style guides — match the analytical depth and business framing, not just the technical output.
 
 **Audience**
-> This notebook will be reviewed by hiring managers evaluating my analytical thinking. The code should be readable, the visualization should tell a clear story, and the output should connect back to the business question.
+> The output will be reviewed by a non-technical marketing director and their team. Column names, chart labels, and any printed summaries should be immediately understandable without a technical background.
 
 **Evaluate**
 > I'll check the first draft for: correct interval calculation (first invoice excluded, no off-by-one errors), a histogram that reveals the shape of the distribution, and whether the output actually helps answer the question — does this look organic, seasonal, or artificial?
