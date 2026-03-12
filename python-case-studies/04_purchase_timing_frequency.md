@@ -11,7 +11,7 @@ I flagged three possible explanations in that case study: the purchase dates are
 
 SQL couldn't answer that question. A COUNT of purchases per customer tells you *how many* — not *when* or *how spread out*. To investigate timing, I needed datetime operations, rolling calculations, and visualizations that SQL alone doesn't support well.
 
-That's what this notebook does. Using an expanded version of the Chinook database (~5,000 customers, ~54,000 invoices, 2019–2025), I'm testing whether purchase frequency looks organic, seasonal, or artificial. The core deliverables:
+That's what this notebook does. Using an expanded version of the Chinook database (~5,000 customers, ~54,000 invoices, 2019–2025), I'm testing whether purchase frequency looks organic, seasonal, or artificial. The expanded data is synthetic — I built it to have realistic variance, seasonality, and churn patterns, not uniform behavior — so the question isn't whether the data is "real" but whether the analytical framework would hold up against real data. The core deliverables:
 
 - **Inter-purchase interval analysis** — how many days pass between consecutive purchases, and what does the distribution look like?
 - **Purchase date scatter plot** — are there visible clusters in when customers buy?
