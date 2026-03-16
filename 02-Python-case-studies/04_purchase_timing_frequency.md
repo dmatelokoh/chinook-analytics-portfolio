@@ -24,6 +24,14 @@ The answer shapes how a marketing team thinks about re-engagement timing, campai
 
 ---
 
+## Why This Case Study Shows the Full Process
+
+The SQL case studies established a six-step AI collaboration workflow: prompt → output → verification → evaluation → iteration → business insight. This Python case study is the first time that workflow runs against a different toolset — Python instead of SQL — and the process itself changes in meaningful ways. Verification becomes executable code instead of a manual checklist. Meta-prompting builds the prompt instead of writing it from scratch. The iteration cycle includes chart selection, not just query refinement.
+
+Because the tool changed, the process is worth documenting again. Parts 2 and 3 of this case study — and all subsequent deliverables — skip straight to findings and business insights. The methodology is the same; only the first pass needs to show the work.
+
+---
+
 ## The Prompt I Gave the AI
 
 Using the structured prompt framework from the SQL case studies, my starting message in a fresh AI session was:
