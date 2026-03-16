@@ -20,6 +20,14 @@ This is not just a "show me a ranked list" request. The goal is to understand:
 
 ---
 
+## Why This Case Study Shows the Full Process
+
+This portfolio uses AI as a collaborative tool — not a black box. To make that transparent, this first case study documents the complete workflow: how I structured the prompt, what the AI returned, what I changed and why, how I verified the numbers, and what business insights I drew from the results.
+
+The remaining SQL case studies skip straight to the critical evaluation highlights and business insights. The process is the same; it only needs to be shown once.
+
+---
+
 ## The Prompt I Gave the AI
 
 Rather than asking vaguely for "revenue by country," I used a structured prompt framework 
