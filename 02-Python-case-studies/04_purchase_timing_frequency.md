@@ -268,3 +268,45 @@ The aggregate revenue curve masks what's happening at the genre level. If rock d
 The next question isn't "is the business growing?" — it's "where is the growth coming from, and where has it stalled?" That's exactly what Case Study 2 (Cross-Market Genre Analysis) will investigate: whether rock has hit a ceiling in certain markets while other genres are still scaling.
 
 **For a marketing director, the actionable takeaway is:** don't budget next year based on the aggregate growth curve. Break it down by genre and by market. The Q1 dip and Q4 rise are mild enough to plan around, but the real strategic question is which product lines are driving what's left of the growth — and which ones need intervention.
+
+---
+
+## Part 3: Do Customers Stick Around?
+
+Parts 1 and 2 looked at *timing* — how often customers buy and whether revenue follows seasonal patterns. Part 3 looks at the *people*. Specifically: if you group customers by the quarter they first purchased, what percentage of each cohort is still buying one year later? Two years? Three?
+
+This matters because the YoY growth deceleration from Part 2 has two possible explanations. Either Chinook is acquiring fewer new customers, or it's acquiring the same number but they're not sticking around long enough to sustain compounding revenue. Cohort retention analysis separates those two forces.
+
+### The Deliverables
+
+![Cohort Retention Heatmap](figures/part3_v2_cohort_retention_heatmap.png)
+
+**How to read it:** Each row is a yearly cohort (customers grouped by the year of their first purchase). Each column is how many quarters have passed since that first purchase. The percentage in each cell is the share of the original cohort that made at least one purchase in that quarter. Darker blue = higher retention.
+
+![Cohort Retention Curve](figures/part3_v2_cohort_retention_curve.png)
+
+**How to read it:** The dark line is the average retention curve across all 26 quarterly cohorts. The shaded bands show how much individual cohorts deviate from that average — the narrow band (±7 percentage points) is the finding itself.
+
+![Drop-Off Analysis](figures/part3_v2_dropoff_analysis.png)
+
+**How to read it:** The left panel shows how many percentage points of retention are lost each quarter. The right panel shows what cumulative share of total churn has occurred by each quarter mark.
+
+### What the Charts Reveal
+
+**Every cohort decays at the same rate.** This is the headline finding. Whether a customer joined in 2019 or 2024, their retention curve is nearly identical: ~47% still active at Q+1, ~68% at Q+2, peaking at ~89% at Q+3, then declining steadily. The ±7pp spread across 26 quarterly cohorts is remarkably tight. No cohort materially outperformed or underperformed any other. In a real business, you'd expect some variation — a marketing campaign lifts one cohort, a product issue depresses another, a seasonal wave creates a spike. The uniformity here is another synthetic data signature, consistent with the findings from Parts 1 and 2.
+
+**The steepest drop happens at Q+4 (−14.5 percentage points).** This is the single largest quarter-over-quarter loss in the entire lifecycle. The "Critical Loss Zone" spans Q+2 through Q+7, where the business loses the bulk of its customers. By Q+5, half of all eventual churn has already occurred. By Q+8, 80% of it has. After Q+8, the remaining customers trickle out slowly — the curve flattens, but there's almost no one left to retain.
+
+**The 50% retention threshold is crossed around Q+4–Q+5.** A customer's "half-life" at Chinook is roughly 12–15 months. After that point, more than half the original cohort has stopped purchasing entirely. This aligns with the ~7-purchase pattern from SQL Case Study 2 — if the median customer buys once every ~14 days (Part 1) and makes ~7 total purchases, the math lands in the Q+4–Q+5 window.
+
+### Business Insights
+
+**This is a structural retention pattern, not a churn crisis.** The fact that every cohort follows the same curve — regardless of when they joined, regardless of whether revenue was growing at 75% or approaching 0% — means retention isn't getting worse. But it also means it's never gotten better. No product change, no pricing shift, nothing in six years of data moved the needle on customer stickiness. The business has a fixed customer lifecycle, and it hasn't been disrupted.
+
+**The intervention window is Q+1 through Q+5.** If a marketing director had budget for one retention initiative, the drop-off analysis says to spend it early. Fifty percent of total churn happens in the first five quarters. By the time a customer reaches Q+8, they've either committed or they're gone. A loyalty program, a personalized re-engagement campaign, or a subscription offer would have the highest ROI if deployed within the first year of a customer's lifecycle — not as a win-back effort after they've already lapsed.
+
+**Combined with Part 2, this reframes the YoY deceleration.** Part 2 showed revenue growth slowing from ~75% to near-zero. Part 3 shows that the retention curve hasn't changed. That means the deceleration isn't a retention problem — it's an acquisition problem, a ceiling problem, or both. The business can't grow by keeping customers longer (the lifecycle is fixed). Growth has to come from acquiring more customers, increasing spend per customer during the active window, or expanding into new segments. For a marketing director, this distinction matters: the solution isn't a win-back email campaign — it's a top-of-funnel or product expansion strategy.
+
+**In a real-world engagement, the next steps would be clear.** An exit survey with a small incentive (discount on next purchase, entry into a drawing) deployed at Q+3 — just before the steepest drop — would capture why customers leave while they're still engaged enough to respond. Is it price? Catalog gaps? A competitor offering a better experience? The data tells us *when* they leave. Only qualitative research tells us *why*. Additionally, breaking this analysis down by country and by genre would reveal whether the uniform decay holds across segments or masks meaningful variation — a question the Tableau dashboard in the next phase is designed to answer.
+
+**The synthetic data caveat:** The uniformity across cohorts is almost certainly a byproduct of how the expanded database was generated. Real customer cohorts show more variance — seasonal acquisition waves, campaign-driven spikes, product-market fit shifts. The analytical framework here (cohort construction, retention matrix, drop-off identification, intervention window analysis) is transferable to real data. The specific numbers are not. A marketing director reviewing this analysis should evaluate the methodology and the strategic reasoning, not the exact percentages.
