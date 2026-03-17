@@ -11,22 +11,23 @@ I flagged three possible explanations in that case study: the purchase dates are
 
 SQL couldn't answer that question. A COUNT of purchases per customer tells you *how many* — not *when* or *how spread out*. To investigate timing, I needed datetime operations, rolling calculations, and visualizations that SQL alone doesn't support well.
 
-That's what this notebook does. Using an expanded version of the Chinook database (~5,000 customers, ~54,000 invoices, 2019–2025), I'm testing whether purchase frequency looks organic, seasonal, or artificial. The expanded data is synthetic — I built it to have realistic variance, seasonality, and churn patterns, not uniform behavior — so the question isn't whether the data is "real" but whether the analytical framework would hold up against real data. The core deliverables:
+That's what this case study does. Using an expanded version of the Chinook database (~5,000 customers, ~54,000 invoices, 2019–2025), I'm testing each explanation in sequence across three connected parts:
 
-- **Inter-purchase interval analysis** — how many days pass between consecutive purchases, and what does the distribution look like?
-- **Purchase date scatter plot** — are there visible clusters in when customers buy?
-- **Monthly revenue time series** — does revenue follow seasonal patterns or stay flat?
-- **Cohort retention analysis** — do customers stick around, or do they drop off after a predictable number of purchases?
+- **Part 1 — Is the purchase rhythm artificial?** An inter-purchase interval histogram testing whether the time between purchases looks uniform (artificial) or naturally varied (organic). If the distribution is right-skewed with high variance, uniformity is ruled out.
 
-If the pattern is organic, the distribution should be right-skewed with natural variance — not a tight cluster around a single number. If it's seasonal, we should see spikes aligned with calendar events. If it's artificial, we'll see suspicious uniformity that no real customer base would produce.
+- **Part 2 — Are purchases driven by seasons or events?** A monthly revenue time series with year-over-year growth overlay testing whether revenue follows predictable seasonal cycles or clusters around specific dates. If neither pattern appears, the timing is genuinely organic — not driven by external forces.
 
-The answer shapes how a marketing team thinks about re-engagement timing, campaign cadence, and churn prediction.
+- **Part 3 — Do customers actually stick around?** A cohort retention analysis testing whether customers from different signup periods stay active or quietly churn after a predictable number of purchases. Parts 1 and 2 look at the *timing* of purchases. Part 3 looks at the *people* — and tells a marketing director whether to invest in acquiring new customers or keeping the ones they have.
+
+The expanded data is synthetic — I built it to have realistic variance, seasonality, and churn patterns, not uniform behavior — so the question isn't whether the data is "real" but whether the analytical framework would hold up against real data.
+
+Together, the three parts close the investigation that SQL Case Study 2 opened. The answer shapes how a marketing team thinks about re-engagement timing, campaign cadence, and churn prediction.
 
 ---
 
 ## Why This Case Study Shows the Full Process
 
-The SQL case studies established a six-step AI collaboration workflow: prompt → output → verification → evaluation → iteration → business insight. This Python case study is the first time that workflow runs against a different toolset — Python instead of SQL — and the process itself changes in meaningful ways. Verification becomes executable code instead of a manual checklist. Meta-prompting builds the prompt instead of writing it from scratch. The iteration cycle includes chart selection, not just query refinement.
+The SQL case studies established a six-step AI collaboration workflow: prompt → output → verification → evaluation → iteration → business insight. This Python case study is the first time that workflow runs against a different toolset — Python instead of SQL — and the process itself changes in meaningful ways. Verification becomes executable code instead of a manual checklist and the iteration cycle includes chart selection, not just query refinement.
 
 Because the tool changed, the process is worth documenting again. Parts 2 and 3 of this case study — and all subsequent deliverables — skip straight to findings and business insights. The methodology is the same; only the first pass needs to show the work.
 
@@ -83,8 +84,6 @@ One notable improvement over the SQL case studies: when I asked the AI for the t
 **Process update:** In the SQL case studies, verification came after the critical evaluation. For Python, I moved it before — the tool makes automated verification possible, so the workflow should take advantage of that. Verify first, then evaluate.
 
 *The full V1 code and output are in the Jupyter notebook. The verification checks (row count reconciliation, negative/zero interval check, single-customer spot-check, distribution tail sanity, histogram completeness) all passed.*
-
-
 
 ---
 
@@ -154,21 +153,6 @@ The histogram shows the shape, but a marketing director wants the numbers. Addin
 **The bottom line:** The code was correct on the first pass. Every change I made was about audience, framing, and business utility — not about fixing bugs. That's the pattern from the SQL case studies carrying forward: the AI produces technically correct output, the human layer is knowing whether the output actually communicates to the person reading it.
 
 ---
-
-## Iterative Prompting — From V1 to V2
-
-I sent the following feedback back to the AI as a structured revision prompt:
-
-1. Cap the x-axis at 200 days with an outlier disclosure note
-2. Expand the annotation box with plain-language explanations for each metric
-3. Move the legend to the upper right so it doesn't cover the peak
-4. Make the subtitle smaller and lighter than the title
-5. Add clear x-axis tick marks at 14-day intervals
-6. Relabel y-axis to "Number of Repeat Purchases" and x-axis to "Days Since Last Purchase"
-7. Add two business context zones: a proactive engagement window (14–21 days) and a win-back trigger zone (40–100 days) as subtle shaded regions
-8. Add a summary table in the bottom right showing the top 5 purchase windows by count and percentage
-
-**What the iteration achieved:**
 
 ## Iterative Prompting — From V1 to V2
 
