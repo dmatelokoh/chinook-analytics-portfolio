@@ -260,7 +260,7 @@ The **monthly revenue time series with YoY overlay** survived because it answers
 
 The aggregate revenue curve masks what's happening at the genre level. If rock dominates the catalog (which SQL Case Study 1 confirmed), and rock is plateauing, the overall growth deceleration might be a rock problem, not a business-wide problem. There may be genres still growing at 30–40% YoY that are invisible in the aggregate view.
 
-The next question isn't "is the business growing?" — it's "where is the growth coming from, and where has it stalled?"
+The next question isn't "is the business growing?" — it's "where is the growth coming from, and where has it stalled?" That's exactly what the Tableau dashboard will investigate: breaking revenue down by genre, geography, and time so a marketing director can see whether rock has hit a ceiling in certain markets while other genres are still scaling.
 
 **For a marketing director, the actionable takeaway is:** don't budget next year based on the aggregate growth curve. Break it down by genre and by market. The Q1 dip and Q4 rise are mild enough to plan around, but the real strategic question is which product lines are driving what's left of the growth — and which ones need intervention.
 
