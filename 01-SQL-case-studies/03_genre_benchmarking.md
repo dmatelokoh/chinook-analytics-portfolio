@@ -85,7 +85,7 @@ Every single track in the Bossa Nova catalog has sold at least once. 100% sell-t
 
 ### Opera and Alternative — The Cleanup Candidates
 
-Opera has 1 track and zero sales. Alternative has the worst catalog efficiency at $0.35 per catalog track with ~35% sell-through. Both deserve investigation before any action: is the unsold inventory genuinely unpopular, or simply underpromoted? If it's been promoted and isn't selling, catalog pruning makes sense. If it's never been featured, low sell-through is a visibility problem, not a demand problem.
+Opera has 1 track and zero sales. Alternative has the worst catalog efficiency at $0.35 per catalog track — approximately 40 tracks in the catalog with only 14 ever sold, roughly 35% sell-through. Both deserve investigation before any action: is the unsold inventory genuinely unpopular, or simply underpromoted? If it's been promoted and isn't selling, catalog pruning makes sense. If it's never been featured, low sell-through is a visibility problem, not a demand problem.
 
 The Alternative / Alternative & Punk and Rock / Rock And Roll splits also suggest a catalog tagging issue worth flagging to the product team. If consolidated, the combined genres would rank differently — and the efficiency metrics would shift.
 
