@@ -238,7 +238,6 @@ A **scatter plot** (every invoice as a dot, date on X, customer on Y) was the fi
 
 A **heatmap** (invoice counts by month × year) was more readable, but it only told one story: the business is growing. The color gradient went left to right (year over year), not top to bottom (month over month). No seasonal pattern emerged beyond what the time series already showed. It was redundant.
 
-<!-- CHANGE: Removed "Different charts are just tools — sometimes you need to test a few before you find the one that fits the question." The preceding paragraphs already demonstrated the point. -->
 The **monthly revenue time series with YoY overlay** survived because it answers both sub-questions in one chart: are there seasonal patterns (the revenue line), and is the growth rate changing (the YoY line).
 
 ### The Deliverable
@@ -253,17 +252,15 @@ The **monthly revenue time series with YoY overlay** survived because it answers
 
 **Growth is decelerating.** The YoY line tells the more important story. Early growth was ~75% year-over-year (a new business scaling up). By 2023–2024 it drops to ~10–25%. By late 2025 it's approaching 0% and trending negative. Revenue is still *up* — but the rate of growth is slowing. For a marketing director, this is the difference between "we're doing great" and "we're doing great but momentum is slowing, and now is the time to invest in retention before it flattens."
 
-<!-- CHANGE: Rewrote the synthetic data observation. Removed the phrase "synthetic data signature" (was used twice across the doc). Kept the observation about unusually smooth growth, framed it as a caveat rather than a labeled pattern. -->
 **The growth curve is unusually smooth.** Real businesses don't grow this evenly. There are no shocks — no competitor launches, no viral moments, no recession dips. That smoothness likely reflects the steady rate at which customers were added to the expanded database. It doesn't invalidate the analysis, but it means the growth deceleration is structural (the customer addition rate is slowing or capped) rather than market-driven.
 
 ### Business Insights
 
-<!-- CHANGE: Removed "— and that's the point." -->
 **This chart raises more questions than it answers.**
 
 The aggregate revenue curve masks what's happening at the genre level. If rock dominates the catalog (which SQL Case Study 1 confirmed), and rock is plateauing, the overall growth deceleration might be a rock problem, not a business-wide problem. There may be genres still growing at 30–40% YoY that are invisible in the aggregate view.
 
-The next question isn't "is the business growing?" — it's "where is the growth coming from, and where has it stalled?" That's exactly what Case Study 2 (Cross-Market Genre Analysis) will investigate: whether rock has hit a ceiling in certain markets while other genres are still scaling.
+The next question isn't "is the business growing?" — it's "where is the growth coming from, and where has it stalled?"
 
 **For a marketing director, the actionable takeaway is:** don't budget next year based on the aggregate growth curve. Break it down by genre and by market. The Q1 dip and Q4 rise are mild enough to plan around, but the real strategic question is which product lines are driving what's left of the growth — and which ones need intervention.
 
@@ -291,12 +288,10 @@ This matters because the YoY growth deceleration from Part 2 has two possible ex
 
 ### What the Charts Reveal
 
-<!-- CHANGE: Added explicit metric definition before the numbers so the ascending-then-descending retention pattern doesn't confuse readers. The numbers go 47% → 68% → 89% before declining, which looks wrong without context about what's being measured. -->
 **Every cohort decays at the same rate.** This is the headline finding. Whether a customer joined in 2019 or 2024, their retention curve is nearly identical. The metric here is cumulative — the percentage of the original cohort that has made at least one purchase by that quarter mark: ~47% by Q+1, ~68% by Q+2, peaking at ~89% by Q+3 (meaning 89% of each cohort eventually made at least one repeat purchase within their first year), then declining as customers stop returning. The ±7pp spread across 26 quarterly cohorts is remarkably tight. No cohort materially outperformed or underperformed any other.
 
 **The steepest drop happens at Q+4 (−14.5 percentage points).** This is the single largest quarter-over-quarter loss in the entire lifecycle. The "Critical Loss Zone" spans Q+2 through Q+7, where the business loses the bulk of its customers. By Q+5, half of all eventual churn has already occurred. By Q+8, 80% of it has. After Q+8, the remaining customers trickle out slowly — the curve flattens, but there's almost no one left to retain.
 
-<!-- CHANGE: Removed the sentence "if the median customer buys once every ~14 days (Part 1) and makes ~7 total purchases, the math lands in the Q+4–Q+5 window." The arithmetic doesn't reconcile (7 × 14 = 98 days ≈ Q+1, not Q+4). -->
 **The 50% retention threshold is crossed around Q+4–Q+5.** A customer's "half-life" at Chinook is roughly 12–15 months. After that point, more than half the original cohort has stopped purchasing entirely.
 
 ### Business Insights
@@ -307,7 +302,6 @@ This matters because the YoY growth deceleration from Part 2 has two possible ex
 
 **Combined with Part 2, this reframes the YoY deceleration.** Part 2 showed revenue growth slowing from ~75% to near-zero. Part 3 shows that the retention curve hasn't changed. That means the deceleration isn't a retention problem — it's an acquisition problem, a ceiling problem, or both. The business can't grow by keeping customers longer (the lifecycle is fixed). Growth has to come from acquiring more customers, increasing spend per customer during the active window, or expanding into new segments. For a marketing director, this distinction matters: the solution isn't a win-back email campaign — it's a top-of-funnel or product expansion strategy.
 
-<!-- CHANGE: Split the overloaded exit survey sentence into two. -->
 **In a real-world engagement, the next steps would be clear.** An exit survey deployed at Q+3 — just before the steepest drop — would capture why customers leave while they're still engaged enough to respond. A small incentive (discount on next purchase, entry into a drawing) would boost response rates. Is it price? Catalog gaps? A competitor offering a better experience? The data tells us *when* they leave. Only qualitative research tells us *why*. Additionally, breaking this analysis down by country and by genre would reveal whether the uniform decay holds across segments or masks meaningful variation — a question the Tableau dashboard in the next phase is designed to answer.
 
-**The synthetic data caveat:** The uniformity across cohorts is almost certainly a byproduct of how the expanded database was generated. Real customer cohorts show more variance — seasonal acquisition waves, campaign-driven spikes, product-market fit shifts. The analytical framework here (cohort construction, retention matrix, drop-off identification, intervention window analysis) is transferable to real data. The specific numbers are not. A marketing director reviewing this analysis should evaluate the methodology and the strategic reasoning, not the exact percentages.
+**The synthetic data caveat:** The uniformity across cohorts is almost certainly a byproduct of how the expanded database was generated. Real customer cohorts show more variance — seasonal acquisition waves, campaign-driven spikes, product-market fit shifts. The analytical framework here (cohort construction, retention matrix, drop-off identification, intervention window analysis) is transferable to real data. The specific numbers are not. This analysis evaluates the methodology and the strategic reasoning, not the exact percentages.
