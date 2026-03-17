@@ -11,7 +11,6 @@ I flagged three possible explanations in that case study: the purchase dates are
 
 SQL couldn't answer that question. A COUNT of purchases per customer tells you *how many* — not *when* or *how spread out*. To investigate timing, I needed datetime operations, rolling calculations, and visualizations that SQL alone doesn't support well.
 
-<!-- CHANGE: Removed "That's what this case study does." filler sentence. Rewrote the three Part bullets to sound more conversational and less like a methodology abstract. -->
 Using an expanded version of the Chinook database (~5,000 customers, ~54,000 invoices, 2019–2025), I'm testing each explanation in sequence across three connected parts:
 
 - **Part 1 — Is the purchase rhythm artificial?** I'm plotting the time between consecutive purchases for every customer. If the gaps look uniform, it's probably a data artifact. If they're messy and varied, it's organic.
@@ -222,8 +221,6 @@ This is an aggregate view — all customers, all genres, all time periods blende
 - **Time period:** Has the repurchase cycle gotten shorter or longer over the years? A tightening cycle could signal growing engagement. A widening cycle could be an early churn indicator across the customer base.
 
 These are questions for the remaining deliverables in this case study and for the genre-focused case studies that follow.
-
-<!-- CHANGE: Removed the "A Note on the Data" section entirely. The synthetic data caveat was already stated in the Business Question intro and will be restated in Part 3's closing. Two mentions is enough — four was too many. -->
 
 ---
 
