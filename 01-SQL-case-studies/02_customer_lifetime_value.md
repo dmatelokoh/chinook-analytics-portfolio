@@ -33,6 +33,8 @@ I recalibrated based on the actual distribution:
 
 The AI can build the CASE WHEN logic. It can't look at the distribution and decide where the natural breaks are. That's the analyst's job.
 
+These thresholds are static but data-informed. A more dynamic alternative — using PERCENT_RANK() to automatically recalibrate as the customer base grows — would be better for an ongoing dashboard. For a fixed dataset and a marketing use case, static thresholds are more stable: a customer's tier won't shift just because new customers joined.
+
 **Prompt library update:** After two case studies, I noticed the AI consistently omitted ranking columns and percentage-of-total columns. Rather than catching this in every evaluation, I added a standing instruction to the context prime: *"For any query that ranks or compares rows, always include ROW_NUMBER() and a percentage-of-total column unless I say otherwise."* That one addition eliminated two recurring issues going forward.
 
 ---
@@ -69,6 +71,8 @@ In digital marketing, when you see uniform behavior across a diverse customer ba
 
 SQL couldn't answer those questions. This finding is what directly motivated the Python case study — using datetime operations and visualizations to test whether the purchase pattern is organic, seasonal, or artificial.
 
+The one exception — Puja Srivastava at 6 purchases — actually has a higher AOV ($6.11) than most Silver customers, suggesting she's under-developed rather than low-value. Whether that's a tenure issue or a disengagement issue is something the Python cohort analysis can answer.
+
 ### Platinum Customers Deserve Disproportionate Attention
 
 Platinum customers aren't just spending more in total — they're spending more per transaction. Helena Holý's AOV is $7.09 versus $5.37 for the average Silver customer. That $1.72 difference per purchase compounds over a lifetime. These aren't just higher spenders — they're higher-quality buyers.
@@ -79,4 +83,4 @@ The retention strategy by tier: Platinum gets white-glove treatment (early acces
 
 The USA is our #1 market by revenue. But our top 5 customers — every Platinum customer — come from five different countries: Czech Republic, USA, Chile, Hungary, and Ireland. Canada is our #2 market overall but doesn't appear in the customer rankings until #16.
 
-Country-level revenue analysis and customer-level value analysis tell different stories and should inform different decisions. One is a media buying conversation (where to spend acquisition budget). The other is a CRM conversation (who to protect and develop). Treating them as the same analysis would be a strategic mistake.
+Country-level revenue analysis and customer-level value analysis tell different stories and should inform different decisions. One is a media buying conversation (where to spend acquisition budget). The other is a CRM conversation (who to protect and develop). Treating them as interchangeable would miss the point.
