@@ -1,4 +1,4 @@
-# Case Study 1: Is the Purchase Pattern Real?
+# Python Case Study: Is the Purchase Pattern Real?
 ## Purchase Timing & Frequency Analysis
 
 ---
