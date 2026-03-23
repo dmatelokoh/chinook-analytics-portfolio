@@ -22,7 +22,7 @@ This is not just a "show me a ranked list" request. The goal is to understand:
 
 ## Why This Case Study Shows the Full Process
 
-This portfolio uses AI as a collaborative tool — not a black box. To make that transparent, this first case study documents the complete workflow: how I structured the prompt, what the AI returned, what I changed and why, how I verified the numbers, and what business insights I drew from the results.
+This portfolio uses AI as a collaborative tool, not a black box. To make that transparent, this first case study documents the complete workflow: how I structured the prompt, what the AI returned, what I changed and why, how I verified the numbers, and what business insights I drew from the results.
 
 The remaining case studies skip straight to what the AI got right, where I overruled it, and the business insights. The process is the same; it only needs to be shown once.
 
