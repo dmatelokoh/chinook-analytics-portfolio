@@ -134,7 +134,7 @@ FROM country_metrics
 ORDER BY revenue_raw DESC;
 ```
 
-This is a meaningful step up. The CTE is clean, the join logic is correct, currency 
+This is a meaningful step up. The CTE is clean, the join logic is correct, and currency 
 is formatted, and the comments explain the decisions.
 
 But after running this and reviewing the output, I still had notes.
@@ -143,7 +143,7 @@ But after running this and reviewing the output, I still had notes.
 
 ## My Critical Evaluation
 
-The structured prompt produced a solid first draft — but "solid" still wasn't "done." 
+The structured prompt produced a solid first draft, but "solid" still wasn't "done." 
 This is the part of the AI workflow that I think gets undervalued: the human review pass.
 
 Here's exactly what I flagged:
@@ -160,7 +160,7 @@ conversation than if it represents 60%. The AI didn't calculate this because I d
 explicitly ask for it.
 
 **3. No global revenue benchmark**
-To calculate the percentage of total, I needed a second CTE capturing the grand total 
+To calculate the percentage of the total, I needed a second CTE capturing the grand total 
 revenue across all countries. The AI's version had no mechanism for this. Adding it 
 required restructuring the query with an additional CTE and a CROSS JOIN pattern.
 
@@ -282,7 +282,7 @@ ORDER BY
 
 One thing worth noting: the AI added `100.0` instead of `100` in the percentage 
 calculation to force float division in SQLite — an edge case I didn't explicitly 
-specify, but that my feedback prompt gave it enough context to reason through.
+specify, but my feedback prompt gave it enough context to reason through.
 
 ---
 
@@ -341,7 +341,7 @@ All 24 country percentages sum to 100.03%. The 0.03% gap comes from independentl
 rounding each row to 2 decimal places display artifact, not a data error.
 
 **✅ Check 2: Global revenue back-calculation**
-Back-calculating from USA's percentage: $523.06 ÷ 0.2246 = $2,328.84. The known Chinook 
+Back-calculating from the USA's percentage: $523.06 ÷ 0.2246 = $2,328.84. The known Chinook 
 Invoice total is $2,328.60. The $0.24 variance is entirely explained by rounding the 
 percentage to 2 decimal places. Mathematically consistent.
 
@@ -354,7 +354,7 @@ The INNER JOIN correctly excluded registered customers with no purchase history 
 silently dropping any active market.
 
 **⚠️ Check 5: Anomaly scan**
-Chile ($46.62), Czech Republic ($45.12), and Hungary ($45.62) show average revenue 
+Chile ($46.62), the Czech Republic ($45.12), and Hungary ($45.62) show average revenue 
 per customer 14–18% above the global average of $39.47. These are not data errors but 
 small-sample effects. Each of those countries has only 1–2 customers, so a 
 single high-value invoice moves the average significantly. No real anomalies detected.
@@ -406,7 +406,7 @@ for each market is different.
 
 The USA is the dominant market by every metric: most customers (13), most orders (91), and 
 highest total revenue ($523.06). But the average revenue per customer ($40.24) is 
-actually below the global average for mid-size markets like Czech Republic ($45.12) 
+actually below the global average for mid-size markets like the Czech Republic ($45.12) 
 and Chile ($46.62). That's a flag.
 
 In digital marketing terms, this is a classic penetration vs. monetization problem. 
@@ -418,7 +418,7 @@ dollar on US customer acquisition, I'd want to answer two questions:
    merchandising, recommendations, and promotional spend.
 2. **Can we apply US genre insights to Canada?** The two markets share significant 
    cultural and demographic overlap. If Rock and Alternative dominate in the US, 
-   there's a reasonable hypothesis that the same push in Canada, our #2 market 
+   there's a reasonable hypothesis that the same push in Canada, our #2 market, 
    could lift revenue per customer there too. This is the kind of cross-market 
    insight that makes regional marketing efficient.
 
@@ -433,7 +433,7 @@ With only 2 customers, the Czech Republic has the highest average revenue per cu
 ($45.12) of any multi-customer market. Sample size is too small to draw conclusions, 
 but in a digital marketing context, this is the kind of signal you put on a watchlist.
 
-If Czech Republic customer counts grow and the AOV holds, this becomes a high-value 
+If the Czech Republic customer counts grow and the AOV holds, this becomes a high-value 
 emerging market worth targeted acquisition investment. If it were one high-spending 
 customer pulling the average up, that's a different conversation, one about retention 
 and whale protection.
@@ -467,8 +467,8 @@ markets, each with a single customer, collectively represent about 25%. That's
 
 In marketing portfolio terms, this is a dangerous concentration. A competitor entering 
 the US market aggressively, a licensing change in North America, or even a single 
-large US customer churning would have outsized impact on the business. A healthy 
-revenue portfolio looks more like the bottom of this table with many small contributors.
+large US customer churning would have an outsized impact on the business. A healthy 
+revenue portfolio looks more like the bottom of this table, with many small contributors.
 
 The strategic recommendation isn't to abandon the US. It's to deliberately invest 
 in growing the mid-tier markets (Germany, UK, Brazil), where there are already 
