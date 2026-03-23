@@ -20,8 +20,6 @@ I came to data analytics from 8 years in digital marketing (customer acquisition
 | [2](01-SQL-case-studies/02_customer_lifetime_value.md) | Who Are Our Best Customers? | How should we segment customers by lifetime value? | Multi-table JOINs, CASE WHEN tiering, NULLIF |
 | [3](01-SQL-case-studies/03_genre_benchmarking.md) | What's Selling and What Isn't? | Which genres over- or under-perform relative to catalog size? | Benchmarking CTEs, LEFT JOIN, catalog efficiency |
 
-CS1 documents the full AI collaboration workflow (prompt, output, verification, evaluation, iteration, insight). CS2 and CS3 skip to where I overruled the AI and the business insights.
-
 **SQL query files:** [`01-SQL-case-studies/SQL-queries/`](01-SQL-case-studies/SQL-queries/)
 
 ### Python Case Study
@@ -32,7 +30,7 @@ CS1 documents the full AI collaboration workflow (prompt, output, verification, 
 | [2](02-Python-case-studies/04_purchase_timing_frequency.md#part-2-testing-for-date-clustering-and-seasonal-patterns) | Seasonal Patterns & Growth | Are purchases driven by seasons? Is growth decelerating? |
 | [3](02-Python-case-studies/04_purchase_timing_frequency.md#part-3-do-customers-stick-around) | Cohort Retention | Do customers stick around, and where's the intervention window? |
 
-SQL Case Study 2 found that every customer made exactly 7 purchases. The Python case study investigates why, using an expanded synthetic dataset (~5,000 customers, ~54,000 invoices, 2019–2025). Part 1 shows the full process. Parts 2 and 3 skip to findings.
+SQL Case Study 2 found that every customer made exactly 7 purchases. The Python case study investigates why, using an expanded synthetic dataset (~5,000 customers, ~54,000 invoices, 2019–2025).
 
 **Jupyter notebooks:** [`02-Python-case-studies/Python-Queries/`](02-Python-case-studies/Python-Queries/)
 
