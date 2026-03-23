@@ -30,8 +30,7 @@ The remaining case studies skip straight to what the AI got right, where I overr
 
 ## The Prompt I Gave the AI
 
-Rather than asking vaguely for "revenue by country," I used a structured prompt framework 
-to ensure the AI had everything it needed to return something useful the first time.
+Rather than asking vaguely for "revenue by country," I used my structured prompt framework and asked the AI to help me build a technical SQL prompt around the business question. The result is what I sent:
 
 ---
 
@@ -67,17 +66,12 @@ to ensure the AI had everything it needed to return something useful the first t
 
 My first instinct was a one-liner:
 
-> *"Using the Chinook database, write me a SQL query that shows revenue by country, 
+> *"Using the Chinook database, write me a SQL query that shows revenue by country,
 > number of customers, and average spend. Sort by revenue descending."*
 
-That would return something, but not something presentable — raw decimals, weak aliases, 
-no comments, no awareness of SQLite's limitations. So before writing my actual prompt, 
-I asked the AI for a reusable prompt framework for technical tasks. It returned the 
-eight-part structure (Persona, Task, Context, Constraints, Format, References, Audience, 
-Evaluate) that I used to rebuild my request from scratch.
+That would return something, but not something presentable. Raw decimals, weak aliases, no comments, no awareness of SQLite's limitations. So instead of sending that as-is, I used a structured prompt framework I'd been developing (Persona, Task, Context, Constraints, Format, References, Audience, Evaluate) and asked the AI to help me build a technical prompt for SQL around the business question. That collaboration produced the prompt above.
 
-The before/after speaks for itself — same underlying ask, completely different quality 
-of output.
+The before/after speaks for itself: same underlying ask, completely different quality of output.
 
 ---
 
