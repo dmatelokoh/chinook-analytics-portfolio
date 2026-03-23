@@ -30,12 +30,12 @@ The remaining case studies skip straight to what the AI got right, where I overr
 
 ## How This Prompt Was Built
 
-My first instinct was a one-liner:
+A generic prompt for this task would look something like:
 
 > *"Using the Chinook database, write me a SQL query that shows revenue by country,
 > number of customers, and average spend. Sort by revenue descending."*
 
-That would return something, but not something presentable. Raw decimals, weak aliases, no comments, no awareness of SQLite's limitations. So instead of sending that as-is, I used a structured prompt framework I'd been developing (Persona, Task, Context, Constraints, Format, References, Audience, Evaluate) and asked the AI to help me build a technical prompt for SQL around the business question. That collaboration produced the following prompt.
+That would return something, but not something presentable. Raw decimals, weak aliases, no comments, no awareness of SQLite's limitations. Instead, I used a structured prompt framework I'd been developing (Persona, Task, Context, Constraints, Format, References, Audience, Evaluate) and asked the AI to help me build a technical prompt for SQL around the business question. That collaboration produced the following prompt.
 
 ---
 
