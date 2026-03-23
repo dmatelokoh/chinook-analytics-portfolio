@@ -19,7 +19,7 @@ Using an expanded version of the Chinook database (~5,000 customers, ~54,000 inv
 
 - **Part 3: Do customers actually stick around?** A cohort retention analysis grouping customers by when they first purchased and tracking how many are still buying one, two, three years later. Parts 1 and 2 look at the *timing* of purchases. Part 3 looks at the *people*, and tells a marketing director whether to invest in acquiring new customers or keeping the ones they have.
 
-The expanded data is synthetic. I built it to have realistic variance, seasonality, and churn patterns, not uniform behavior. The question isn't whether the data is "real" but whether the analytical framework would hold up against real data.
+**The expanded data is synthetic. I built it to have realistic variance, seasonality, and churn patterns, not uniform behavior. The question isn't whether the data is "real" but whether the analytical framework would hold up against real data.**
 
 Together, the three parts close the investigation that SQL Case Study 2 opened. The answer shapes how a marketing team thinks about re-engagement timing, campaign cadence, and churn prediction.
 
@@ -27,10 +27,9 @@ Together, the three parts close the investigation that SQL Case Study 2 opened. 
 
 ## Why This Case Study Shows the Full Process
 
-<!-- CHANGE: Removed "Because the tool changed, the process is worth documenting again." Defensive hedge. -->
 The SQL case studies established a six-step AI collaboration workflow: prompt, output, verification, evaluation, iteration, business insight. This Python case study is the first time that workflow runs against a different toolset (Python instead of SQL), and the process itself changes in meaningful ways. Verification becomes executable code instead of a manual checklist, and the iteration cycle includes chart selection, not just query refinement.
 
-Parts 2 and 3 of this case study, and all subsequent deliverables, skip straight to findings and business insights. The methodology is the same; only the first pass needs to show the work.
+Parts 2 and 3 of this case study skip straight to findings and business insights. The methodology is the same; only the first pass needs to show the work.
 
 ---
 
@@ -82,7 +81,7 @@ The V1 code was structurally sound: the SQL query, the groupby-shift interval ca
 
 One notable improvement over the SQL case studies: when I asked the AI for the top 5 verification checks, it returned them as executable Python code rather than a manual checklist. In SQL, verification was a separate pass I ran after the analysis was done. In Python, the verification checks run automatically as part of the pipeline. If the math is wrong, the script tells you before you ever see a chart. I restructured the notebook to run verification *before* the summary statistics and histogram, because if the numbers are wrong, evaluating what they mean is pointless.
 
-**Process update:** In the SQL case studies, verification came after the critical evaluation. For Python, I moved it before. The tool makes automated verification possible, so the workflow should take advantage of that. Verify first, then evaluate.
+**Process update:** In the SQL case studies, verification came after the critical evaluation. For Python, I moved it before. The tool makes automated verification possible, so the workflow should take advantage of that.
 
 *The full V1 code and output are in the Jupyter notebook. The verification checks (row count reconciliation, negative/zero interval check, single-customer spot-check, distribution tail sanity, histogram completeness) all passed.*
 
@@ -90,21 +89,21 @@ One notable improvement over the SQL case studies: when I asked the AI for the t
 
 ## Verification Pass
 
-Before evaluating the chart or drawing any conclusions, the verification checks confirmed the data pipeline is correct. Five checks, all passed:
+Before evaluating the chart or drawing any conclusions, the verification checks confirmed that the data pipeline is correct. Five checks, all passed:
 
-**✅ Check 1 — Row count reconciliation**
-> 53,809 invoices − 4,920 first invoices = 48,889 expected intervals. Output: 48,889. Match confirmed.
+**✅ Check 1: Row count reconciliation**
+> 53,809 invoices, 4,920 first invoices = 48,889 expected intervals. Output: 48,889. Match confirmed.
 
-**✅ Check 2 — No negative intervals**
+**✅ Check 2: No negative intervals**
 > Zero negative intervals found. Sort order and groupby boundaries are clean.
 
-**✅ Check 3 — Spot-check one customer end-to-end**
+**✅ Check 3: Spot-check one customer end-to-end**
 > Pulled a random customer's raw invoice dates, calculated gaps manually using an independent method (Series.diff()), and compared to the script's output. Exact match.
 
-**✅ Check 4 — Distribution tails reasonable**
+**✅ Check 4: Distribution tails reasonable**
 > Max interval: 584 days (~19 months). Within plausible range for a lapsed customer. No values exceeding 1,500 days.
 
-**✅ Check 5 — Histogram completeness**
+**✅ Check 5: Histogram completeness**
 > Sum of all histogram bars = 48,889. Matches total interval count. No data silently dropped by bin edges.
 
 **Verdict:** Numbers are mathematically correct. Proceed to evaluation with confidence.
@@ -155,7 +154,7 @@ The histogram shows the shape, but a marketing director wants the numbers. Addin
 
 ---
 
-## Iterative Prompting — From V1 to V2
+## Iterative Prompting: From V1 to V2
 
 I sent the following feedback back to the AI as a structured revision prompt:
 
@@ -209,7 +208,7 @@ The zones on the chart (proactive engagement at 14–21 days, win-back trigger a
 
 What matters is the framework: there's a window where a customer is likely to buy again naturally (the peak of the distribution), and there's a window where they're drifting toward churn (the tail). The exact boundaries get refined through testing, not analysis. Set a reasonable starting point, run the campaign, measure the lift, adjust.
 
-The more actionable insight is the LTV implication. If we know that customers who go X days without a purchase are Y% likely to churn, we want to extract as much revenue as possible before they reach that threshold. The engagement window isn't about accelerating the next purchase alone. It's about maximizing lifetime value while the customer is still active. The win-back zone is the last opportunity before the customer goes from "inactive" to "gone."
+The more actionable insight is the LTV implication. If we know that customers who go X days without a purchase are Y% likely to churn, we want to extract as much revenue as possible before they reach that threshold. The engagement window isn't just about accelerating the next purchase alone. It's about maximizing lifetime value while the customer is still active. The win-back zone is the last opportunity before the customer goes from "inactive" to "gone."
 
 Connecting this to Case Study 2: the CLV tiers we built in SQL assumed relatively uniform purchase behavior. This analysis shows that behavior isn't uniform at all. There are frequent buyers and drifters in every tier. A Platinum customer who hasn't bought in 50 days is a different retention conversation than a Platinum customer who bought last week, even though they're in the same segment. The next evolution of that segmentation should incorporate recency, not just total spend.
 
@@ -221,7 +220,7 @@ This is an aggregate view: all customers, all genres, all time periods blended t
 - **Customer segment:** Do Platinum-tier customers from Case Study 2 have shorter intervals than Silver? If so, purchase frequency might be a better predictor of customer value than total spend.
 - **Time period:** Has the repurchase cycle gotten shorter or longer over the years? A tightening cycle could indicate growing engagement. A widening cycle could be an early churn indicator across the customer base.
 
-These are questions for the remaining deliverables in this case study and for the genre-focused case studies that follow.
+These are questions for the remaining deliverables in this case study.
 
 ---
 
