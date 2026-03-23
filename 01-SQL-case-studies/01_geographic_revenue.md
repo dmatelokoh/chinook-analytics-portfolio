@@ -35,11 +35,11 @@ A generic prompt for this task would look something like:
 > *"Using the Chinook database, write me a SQL query that shows revenue by country,
 > number of customers, and average spend. Sort by revenue descending."*
 
-That would return something, but not something presentable. Raw decimals, weak aliases, no comments, no awareness of SQLite's limitations. Instead, I used a structured prompt framework I'd been developing (Persona, Task, Context, Constraints, Format, References, Audience, Evaluate) and asked the AI to help me build a technical prompt for SQL around the business question. That collaboration produced the following prompt.
+That would return something, but not something presentable. Raw decimals, weak aliases, no comments, no awareness of SQLite's limitations. Instead, I used a structured prompt framework based on core prompt engineering principles (Persona, Task, Context, Constraints, Format, References, Audience, Evaluate) and asked the AI to help me build a technical prompt for SQL around the business question. That collaboration produced the following prompt.
 
 ---
 
-## The Prompt I Gave the AI
+## The Refined Prompt
 
 **🧠 Persona**
 > Act as a senior data analyst who writes clean, well-commented SQL for business stakeholders — not just code that runs, but code that can be read and maintained by others.
@@ -72,7 +72,7 @@ That would return something, but not something presentable. Raw decimals, weak a
 
 To demonstrate why prompt structure matters, I ran two versions of the same request.
 
-**First — a generic, unstructured prompt:**
+**First — the generic, unstructured prompt:**
 > *"Write me a SQL query that shows revenue by country, number of customers, 
 > and average spend. Sort by revenue descending."*
 
@@ -97,15 +97,14 @@ ORDER BY total DESC;
 | Brazil | 190.09999999999997 | 5 | 38.01999... |
 
 It runs. It's directionally correct. But it would never go in front of a marketing 
-director as-is — raw floating point decimals, no ranking, no percentage of total, 
+director as-is. Raw floating point decimals, no ranking, no percentage of total, 
 no comments, and a reserved word (`avg`) used as an alias.
 
 ---
 
-**Then — using my structured prompt framework:**
+**Using the refined prompt, the AI returned this:**
 
-After applying the Persona, Task, Context, Constraints, Format, References, Audience, 
-and Evaluate framework, the AI returned a materially better first draft:
+
 ```sql
 -- ============================================================
 -- Revenue Summary by Country
@@ -136,8 +135,7 @@ ORDER BY revenue_raw DESC;
 ```
 
 This is a meaningful step up. The CTE is clean, the join logic is correct, currency 
-is formatted, and the comments explain the decisions. The difference wasn't the AI 
-getting smarter — it was the quality of the input I gave it.
+is formatted, and the comments explain the decisions. The quality of the output depended on the quality of the input.
 
 But after running this and reviewing the output, I still had notes.
 
