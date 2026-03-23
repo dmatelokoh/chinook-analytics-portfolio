@@ -46,14 +46,24 @@ I chose to switch the InvoiceLine JOIN to LEFT JOIN and let Opera appear at the 
 | 6 | Jazz | $79.20 | 80 | $0.99 | 3.4% | $0.61 |
 | 7 | Blues | $60.39 | 61 | $0.99 | 2.6% | $0.75 |
 | 8 | Drama | $57.71 | 29 | $1.99 | 2.5% | $0.90 |
+| 9 | R&B/Soul | $40.59 | 41 | $0.99 | 1.7% | $0.67 |
+| 10 | Classical | $40.59 | 41 | $0.99 | 1.7% | $0.55 |
 | 11 | Sci Fi & Fantasy | $39.80 | 20 | $1.99 | 1.7% | $1.53 |
+| 12 | Reggae | $29.70 | 30 | $0.99 | 1.3% | $0.51 |
+| 13 | Pop | $27.72 | 28 | $0.99 | 1.2% | $0.58 |
+| 14 | Soundtrack | $19.80 | 20 | $0.99 | 0.9% | $0.46 |
+| 15 | Comedy | $17.91 | 9 | $1.99 | 0.8% | $1.05 |
+| 16 | Hip Hop/Rap | $16.83 | 17 | $0.99 | 0.7% | $0.48 |
 | 17 | Bossa Nova | $14.85 | 15 | $0.99 | 0.6% | $0.99 |
 | 18 | Alternative | $13.86 | 14 | $0.99 | 0.6% | $0.35 |
+| 19 | World | $12.87 | 13 | $0.99 | 0.6% | $0.46 |
+| 20 | Science Fiction | $11.94 | 6 | $1.99 | 0.5% | $0.92 |
+| 21 | Heavy Metal | $11.88 | 12 | $0.99 | 0.5% | $0.42 |
+| 22 | Electronica/Dance | $11.88 | 12 | $0.99 | 0.5% | $0.40 |
+| 23 | Easy Listening | $9.90 | 10 | $0.99 | 0.4% | $0.41 |
 | 24 | Rock And Roll | $5.94 | 6 | $0.99 | 0.3% | $0.49 |
 | 25 | Opera | $0.00 | 0 | $0.00 | 0.0% | $0.00 |
-| — | TOTAL | $2,328.60 | 2,240 | — | 100.0% | — |
-
-*Table abbreviated to highlight key genres. Full 25-genre output available in the SQL query file.*
+| — | **TOTAL** | **$2,328.60** | **2,240** | **—** | **100.0%** | **—** |
 
 *Verification pass confirmed: all percentages sum to 100%, genre revenues reconcile to the TOTAL row, catalog track counts verified against the Track table. No duplicate tracks, no orphaned line items.*
 
