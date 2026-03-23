@@ -7,19 +7,19 @@
 
 SQL Case Study 2 segmented customers by lifetime value and found something unexpected: almost every customer in the original 59-customer dataset made exactly 7 purchases. In a customer base spanning 24 countries with different buying habits, that kind of uniformity doesn't happen organically.
 
-I flagged three possible explanations in that case study: the purchase dates are clustered around external events (a sale, a release, a promotional push), there's a seasonal pattern driving consistent behavior, or it's a data artifact — a byproduct of how the sample database was generated rather than a reflection of real customer behavior.
+I flagged three possible explanations in that case study: the purchase dates are clustered around external events (a sale, a release, a promotional push), there's a seasonal pattern driving consistent behavior, or it's a data artifact, a byproduct of how the sample database was generated rather than a reflection of real customer behavior.
 
-SQL couldn't answer that question. A COUNT of purchases per customer tells you *how many* — not *when* or *how spread out*. To investigate timing, I needed datetime operations, rolling calculations, and visualizations that SQL alone doesn't support well.
+SQL couldn't answer that question. A COUNT of purchases per customer tells you *how many*, not *when* or *how spread out*. To investigate timing, I needed datetime operations, rolling calculations, and visualizations that SQL alone doesn't support well.
 
 Using an expanded version of the Chinook database (~5,000 customers, ~54,000 invoices, 2019–2025), I'm testing each explanation in sequence across three connected parts:
 
-- **Part 1 — Is the purchase rhythm artificial?** I'm plotting the time between consecutive purchases for every customer. If the gaps look uniform, it's probably a data artifact. If they're messy and varied, it's organic.
+- **Part 1: Is the purchase rhythm artificial?** I'm plotting the time between consecutive purchases for every customer. If the gaps look uniform, it's probably a data artifact. If they're messy and varied, it's organic.
 
-- **Part 2 — Are purchases driven by seasons or events?** A monthly revenue time series with a year-over-year growth overlay. If revenue clusters around specific months or dates, that points to seasonal or promotional drivers. If it doesn't, the timing is genuinely organic.
+- **Part 2: Are purchases driven by seasons or events?** A monthly revenue time series with a year-over-year growth overlay. If revenue clusters around specific months or dates, that points to seasonal or promotional drivers. If it doesn't, the timing is genuinely organic.
 
-- **Part 3 — Do customers actually stick around?** A cohort retention analysis grouping customers by when they first purchased and tracking how many are still buying one, two, three years later. Parts 1 and 2 look at the *timing* of purchases. Part 3 looks at the *people* — and tells a marketing director whether to invest in acquiring new customers or keeping the ones they have.
+- **Part 3: Do customers actually stick around?** A cohort retention analysis grouping customers by when they first purchased and tracking how many are still buying one, two, three years later. Parts 1 and 2 look at the *timing* of purchases. Part 3 looks at the *people*, and tells a marketing director whether to invest in acquiring new customers or keeping the ones they have.
 
-The expanded data is synthetic — I built it to have realistic variance, seasonality, and churn patterns, not uniform behavior — so the question isn't whether the data is "real" but whether the analytical framework would hold up against real data.
+The expanded data is synthetic. I built it to have realistic variance, seasonality, and churn patterns, not uniform behavior. The question isn't whether the data is "real" but whether the analytical framework would hold up against real data.
 
 Together, the three parts close the investigation that SQL Case Study 2 opened. The answer shapes how a marketing team thinks about re-engagement timing, campaign cadence, and churn prediction.
 
@@ -28,9 +28,9 @@ Together, the three parts close the investigation that SQL Case Study 2 opened. 
 ## Why This Case Study Shows the Full Process
 
 <!-- CHANGE: Removed "Because the tool changed, the process is worth documenting again." Defensive hedge. -->
-The SQL case studies established a six-step AI collaboration workflow: prompt → output → verification → evaluation → iteration → business insight. This Python case study is the first time that workflow runs against a different toolset — Python instead of SQL — and the process itself changes in meaningful ways. Verification becomes executable code instead of a manual checklist and the iteration cycle includes chart selection, not just query refinement.
+The SQL case studies established a six-step AI collaboration workflow: prompt, output, verification, evaluation, iteration, business insight. This Python case study is the first time that workflow runs against a different toolset (Python instead of SQL), and the process itself changes in meaningful ways. Verification becomes executable code instead of a manual checklist, and the iteration cycle includes chart selection, not just query refinement.
 
-Parts 2 and 3 of this case study — and all subsequent deliverables — skip straight to findings and business insights. The methodology is the same; only the first pass needs to show the work.
+Parts 2 and 3 of this case study, and all subsequent deliverables, skip straight to findings and business insights. The methodology is the same; only the first pass needs to show the work.
 
 ---
 
@@ -78,11 +78,11 @@ The prompt the AI helped me build:
 
 ## The AI's Raw Output (V1)
 
-The V1 code was structurally sound — the SQL query, the groupby-shift interval calculation, the histogram, and the summary statistics all worked correctly on the first pass. The AI also included a useful interpretation table at the end mapping distribution shapes to their meanings (single spike → artificial, right-skewed → organic, etc.), which I kept.
+The V1 code was structurally sound: the SQL query, the groupby-shift interval calculation, the histogram, and the summary statistics all worked correctly on the first pass. The AI also included a useful interpretation table at the end mapping distribution shapes to their meanings (single spike = artificial, right-skewed = organic, etc.), which I kept.
 
-One notable improvement over the SQL case studies: when I asked the AI for the top 5 verification checks, it returned them as executable Python code rather than a manual checklist. In SQL, verification was a separate pass I ran after the analysis was done. In Python, the verification checks run automatically as part of the pipeline — if the math is wrong, the script tells you before you ever see a chart. I restructured the notebook to run verification *before* the summary statistics and histogram, because if the numbers are wrong, evaluating what they mean is pointless.
+One notable improvement over the SQL case studies: when I asked the AI for the top 5 verification checks, it returned them as executable Python code rather than a manual checklist. In SQL, verification was a separate pass I ran after the analysis was done. In Python, the verification checks run automatically as part of the pipeline. If the math is wrong, the script tells you before you ever see a chart. I restructured the notebook to run verification *before* the summary statistics and histogram, because if the numbers are wrong, evaluating what they mean is pointless.
 
-**Process update:** In the SQL case studies, verification came after the critical evaluation. For Python, I moved it before — the tool makes automated verification possible, so the workflow should take advantage of that. Verify first, then evaluate.
+**Process update:** In the SQL case studies, verification came after the critical evaluation. For Python, I moved it before. The tool makes automated verification possible, so the workflow should take advantage of that. Verify first, then evaluate.
 
 *The full V1 code and output are in the Jupyter notebook. The verification checks (row count reconciliation, negative/zero interval check, single-customer spot-check, distribution tail sanity, histogram completeness) all passed.*
 
@@ -113,27 +113,27 @@ Before evaluating the chart or drawing any conclusions, the verification checks 
 
 ## My Critical Evaluation
 
-The V1 output ran correctly — the verification checks confirmed the interval calculation, the histogram renders, and the summary stats are accurate. But after reviewing the chart and the numbers, I had several issues to address before this would be presentable to a non-technical audience.
+The V1 output ran correctly. The verification checks confirmed the interval calculation, the histogram renders, and the summary stats are accurate. But after reviewing the chart and the numbers, I had several issues to address before this would be presentable to a non-technical audience.
 
 **1. The x-axis distorts the story**
 
-The histogram extends to 600 days because one customer had a 584-day gap between purchases. That extreme tail compresses the meaningful part of the distribution — the 0–150 day range where virtually all the action is — into the left third of the chart. A marketing director looking at this would see a spike on the left and empty space on the right, not a clear purchasing pattern.
+The histogram extends to 600 days because one customer had a 584-day gap between purchases. That extreme tail compresses the meaningful part of the distribution (the 0–150 day range where virtually all the action is) into the left third of the chart. A marketing director looking at this would see a spike on the left and empty space on the right, not a clear purchasing pattern.
 
-The fix: cap the display at ~200 days and note how many intervals fall beyond that cutoff. The outliers aren't wrong data — they're just not where the insight lives.
+The fix: cap the display at ~200 days and note how many intervals fall beyond that cutoff. The outliers aren't wrong data, they're just not where the insight lives.
 
 **2. The summary stats box isn't audience-appropriate**
 
 The stats box includes "CV = 0.86" and "Std Dev = 34.5 days" without explaining what those mean. A marketing director making campaign decisions almost certainly doesn't care about coefficient of variation without context. If a metric needs a footnote to be useful, it probably shouldn't be on the chart without one.
 
-The fix: keep all metrics on the chart but add plain-language parenthetical explanations — "Std Dev = 34.5 days (how much gaps vary)" and "CV = 0.86 (high variance — not artificial)." The reader sees the number and immediately understands what it means.
+The fix: keep all metrics on the chart but add plain-language parenthetical explanations, like "Std Dev = 34.5 days (how much gaps vary)" and "CV = 0.86 (high variance, not artificial)." The reader sees the number and immediately understands what it means.
 
 **3. The legend covers the data**
 
-The mean and median legend sits in the upper left — directly over the peak of the distribution, which is the most important part of the chart. It should move to the upper right or outside the plot area so nothing blocks the shape of the data.
+The mean and median legend sits in the upper left, directly over the peak of the distribution, which is the most important part of the chart. It should move to the upper right or outside the plot area so nothing blocks the shape of the data.
 
 **4. The subtitle competes with the title**
 
-"How many days pass between consecutive customer purchases?" is in the same bold weight as the main title. It should be visually subordinate — smaller font, lighter weight — so the eye reads the title first and the subtitle as supporting context.
+"How many days pass between consecutive customer purchases?" is in the same bold weight as the main title. It should be visually subordinate (smaller font, lighter weight) so the eye reads the title first and the subtitle as supporting context.
 
 **5. The x-axis labels need more granularity**
 
@@ -141,7 +141,7 @@ The tick marks don't clearly show regular intervals, which makes it hard to read
 
 **6. The labels speak analyst, not marketer**
 
-"Number of Intervals" and "Days Between Consecutive Purchases" are technically correct but they sound like math, not business. Every interval *is* a repeat purchase — a customer coming back and buying again. Relabeling the y-axis as "Number of Repeat Purchases" and the x-axis as "Days Since Last Purchase" puts the chart in the language a marketing director would actually use. The data doesn't change. The framing does. This is the kind of change the AI wouldn't flag on its own because the original labels are technically accurate — it takes domain knowledge to recognize that the audience won't read them that way.
+"Number of Intervals" and "Days Between Consecutive Purchases" are technically correct but they sound like math, not business. Every interval *is* a repeat purchase, a customer coming back and buying again. Relabeling the y-axis as "Number of Repeat Purchases" and the x-axis as "Days Since Last Purchase" puts the chart in the language a marketing director would actually use. The data doesn't change, but the framing does. The AI wouldn't flag this on its own because the original labels are technically accurate. It takes domain knowledge to recognize that the audience won't read them that way.
 
 **7. The business framing is missing**
 
@@ -149,9 +149,9 @@ The chart shows *what* the distribution looks like but doesn't help the reader u
 
 **8. No purchase window summary**
 
-The histogram shows the shape, but a marketing director wants the numbers. Adding a small table showing the top 5 purchase windows by volume — with counts and percentages — gives them the exact ammunition for a budget meeting: "31.5% of all repeat purchases happen within 2–4 weeks."
+The histogram shows the shape, but a marketing director wants the numbers. Adding a small table showing the top 5 purchase windows by volume, with counts and percentages, gives them the exact ammunition for a budget meeting: "31.5% of all repeat purchases happen within 2–4 weeks."
 
-**The bottom line:** The code was correct on the first pass. Every change I made was about audience, framing, and business utility — not about fixing bugs. That's the pattern from the SQL case studies carrying forward: the AI produces technically correct output, the human layer is knowing whether the output actually communicates to the person reading it.
+**Overall:** The code was correct on the first pass. Every change I made was about audience, framing, and business utility, not about fixing bugs. That's the pattern carrying forward from the SQL case studies: the AI produces technically correct output, and the human layer is knowing whether the output actually communicates to the person reading it.
 
 ---
 
@@ -188,37 +188,38 @@ I sent the following feedback back to the AI as a structured revision prompt:
 **V2 — After:**
 
 ![V2 Histogram](figures/v2_inter_purchase_intervals.png)
+
 ---
 
 ## The Business Insight
 
-### The Verdict: Organic — But With Questions
+### The Verdict: The Pattern Is Organic, But That Raises Its Own Questions
 
-The distribution is right-skewed with high natural variance (CV = 0.86). That rules out a data artifact — if the intervals were synthetically generated with uniform logic, we'd see a tight spike, not a wide curve with a long tail. The pattern looks organic.
+The distribution is right-skewed with high natural variance (CV = 0.86). That rules out a data artifact. If the intervals were synthetically generated with uniform logic, we'd see a tight spike, not a wide curve with a long tail. The pattern looks organic.
 
-But "organic" raises its own question: why does music purchasing cluster around a 2–4 week cycle? Music isn't a consumable — you don't run out of it and restock like groceries. There's no functional reason a customer would need to come back every 30 days. And yet 57.6% of all repeat purchases happen within 6 weeks.
+But "organic" raises its own question: why does music purchasing cluster around a 2–4 week cycle? Music isn't a consumable. You don't run out of it and restock like groceries. There's no functional reason a customer would need to come back every 30 days. And yet 57.6% of all repeat purchases happen within 6 weeks.
 
-That clustering could reflect payday cycles (monthly income → monthly discretionary spend), promotional cadence (if Chinook runs campaigns on a monthly schedule, the data would mirror that), or habitual browsing behavior. This chart can't distinguish between those explanations on its own. In a real-world scenario, the next step would be overlaying the purchase data against the promotional calendar and benchmarking against industry norms — does a 32-day median repurchase cycle look normal for digital music, or is Chinook an outlier?
+That clustering could reflect payday cycles (monthly income leading to monthly discretionary spend), promotional cadence (if Chinook runs campaigns on a monthly schedule, the data would mirror that), or habitual browsing behavior. This chart can't distinguish between those explanations on its own. In a real-world scenario, the next step would be overlaying the purchase data against the promotional calendar and benchmarking against industry norms: does a 32-day median repurchase cycle look normal for digital music, or is Chinook an outlier?
 
 The scatter plot and time series (next deliverables in this case study) should help. If purchase dates cluster around specific calendar events, that points to seasonal or promotional drivers. If they're spread evenly across the year, the cycle is genuinely organic.
 
-### The Engagement Window and Win-Back Zone Are Starting Points, Not Answers
+### The Engagement Window and Win-Back Zone Are Starting Points
 
-The zones on the chart — proactive engagement at 14–21 days, win-back trigger at 40–100 days — are conversation starters for a marketing team, not final campaign thresholds. You could split hairs in either direction on the exact cutoffs, and that's a path to unlimited iterations with diminishing returns.
+The zones on the chart (proactive engagement at 14–21 days, win-back trigger at 40–100 days) are conversation starters for a marketing team, not final campaign thresholds. You could split hairs in either direction on the exact cutoffs, and that's a path to unlimited iterations with diminishing returns.
 
 What matters is the framework: there's a window where a customer is likely to buy again naturally (the peak of the distribution), and there's a window where they're drifting toward churn (the tail). The exact boundaries get refined through testing, not analysis. Set a reasonable starting point, run the campaign, measure the lift, adjust.
 
-The more actionable insight is the LTV implication. If we know that customers who go X days without a purchase are Y% likely to churn, we want to extract as much revenue as possible before they reach that threshold. The engagement window isn't just about accelerating the next purchase — it's about maximizing lifetime value while the customer is still active. The win-back zone is the last opportunity before the customer transitions from "inactive" to "gone."
+The more actionable insight is the LTV implication. If we know that customers who go X days without a purchase are Y% likely to churn, we want to extract as much revenue as possible before they reach that threshold. The engagement window isn't about accelerating the next purchase alone. It's about maximizing lifetime value while the customer is still active. The win-back zone is the last opportunity before the customer goes from "inactive" to "gone."
 
-Connecting this to Case Study 2: the CLV tiers we built in SQL assumed relatively uniform purchase behavior. This analysis shows that behavior isn't uniform at all — there are frequent buyers and drifters in every tier. A Platinum customer who hasn't bought in 50 days is a different retention conversation than a Platinum customer who bought last week, even though they're in the same segment. The next evolution of that segmentation should incorporate recency, not just total spend.
+Connecting this to Case Study 2: the CLV tiers we built in SQL assumed relatively uniform purchase behavior. This analysis shows that behavior isn't uniform at all. There are frequent buyers and drifters in every tier. A Platinum customer who hasn't bought in 50 days is a different retention conversation than a Platinum customer who bought last week, even though they're in the same segment. The next evolution of that segmentation should incorporate recency, not just total spend.
 
-### What This Chart Can't Tell Us Alone
+### What This Chart Can't Tell Us on Its Own
 
-This is an aggregate view — all customers, all genres, all time periods blended together. The shape of the distribution could look very different when broken out by:
+This is an aggregate view: all customers, all genres, all time periods blended together. The shape of the distribution could look very different when broken out by:
 
-- **Genre:** Does Rock (35.5% of revenue) have a tighter repurchase cycle than niche genres? If Rock buyers come back every 3 weeks but Jazz buyers come back every 8 weeks, that's a fundamentally different campaign strategy per genre. This connects directly to Case Study 3's finding about genre concentration.
+- **Genre:** Does Rock (35.5% of revenue) have a tighter repurchase cycle than niche genres? If Rock buyers come back every 3 weeks but Jazz buyers come back every 8 weeks, that requires a different campaign strategy per genre. This connects directly to Case Study 3's finding about genre concentration.
 - **Customer segment:** Do Platinum-tier customers from Case Study 2 have shorter intervals than Silver? If so, purchase frequency might be a better predictor of customer value than total spend.
-- **Time period:** Has the repurchase cycle gotten shorter or longer over the years? A tightening cycle could signal growing engagement. A widening cycle could be an early churn indicator across the customer base.
+- **Time period:** Has the repurchase cycle gotten shorter or longer over the years? A tightening cycle could indicate growing engagement. A widening cycle could be an early churn indicator across the customer base.
 
 These are questions for the remaining deliverables in this case study and for the genre-focused case studies that follow.
 
@@ -226,7 +227,7 @@ These are questions for the remaining deliverables in this case study and for th
 
 ## Part 2: Testing for Date Clustering and Seasonal Patterns
 
-Part 1 showed that inter-purchase intervals follow a right-skewed distribution — median ~14 days, long tail past 100+ days — which ruled out artificial uniformity. But organic intervals alone don't close the investigation. Purchases could still cluster around specific dates (promotions, coordinated events) or follow seasonal revenue cycles that the histogram wouldn't detect.
+Part 1 showed that inter-purchase intervals follow a right-skewed distribution (median ~14 days, long tail past 100+ days), which ruled out artificial uniformity. But organic intervals alone don't close the investigation. Purchases could still cluster around specific dates (promotions, coordinated events) or follow seasonal revenue cycles that the histogram wouldn't detect.
 
 Part 2 tests those two remaining explanations with a monthly revenue time series overlaid with year-over-year growth rates.
 
@@ -234,11 +235,11 @@ Part 2 tests those two remaining explanations with a monthly revenue time series
 
 Before landing on the final chart, I tested two other approaches:
 
-A **scatter plot** (every invoice as a dot, date on X, customer on Y) was the first attempt. With ~54K points, even low alpha transparency produced a uniform gray fog — you couldn't distinguish clustering from noise. The chart was unreadable, so it answered nothing.
+A **scatter plot** (every invoice as a dot, date on X, customer on Y) was the first attempt. With ~54K points, even low alpha transparency produced a uniform gray fog. You couldn't distinguish clustering from noise. The chart was unreadable, so it answered nothing.
 
 A **heatmap** (invoice counts by month × year) was more readable, but it only told one story: the business is growing. The color gradient went left to right (year over year), not top to bottom (month over month). No seasonal pattern emerged beyond what the time series already showed. It was redundant.
 
-The **monthly revenue time series with YoY overlay** survived because it answers both sub-questions in one chart: are there seasonal patterns (the revenue line), and is the growth rate changing (the YoY line).
+The **monthly revenue time series with YoY overlay** made the cut because it answers both sub-questions in one chart: are there seasonal patterns (the revenue line), and is the growth rate changing (the YoY line).
 
 ### The Deliverable
 
@@ -248,11 +249,11 @@ The **monthly revenue time series with YoY overlay** survived because it answers
 
 ### What the Chart Reveals
 
-**Mild seasonality, not strong seasonality.** Revenue dips in Q1 each year, spikes in Q2, declines through Q3, then rises into Q4. The seasonal index ranges from 0.85 (February) to 1.19 (December) — present but not dramatic. This aligns with typical consumer behavior: post-holiday slowdowns, mid-year engagement, and Q4 promotional lift. A marketing director would plan around this, but it's not the kind of seasonality that drives the business.
+**Mild seasonality, not strong seasonality.** Revenue dips in Q1 each year, spikes in Q2, declines through Q3, then rises into Q4. The seasonal index ranges from 0.85 (February) to 1.19 (December): present but not dramatic. This aligns with typical consumer behavior (post-holiday slowdowns, mid-year engagement, and Q4 promotional lift). A marketing director would plan around this, but it's not the kind of seasonality that drives the business.
 
-**Growth is decelerating.** The YoY line tells the more important story. Early growth was ~75% year-over-year (a new business scaling up). By 2023–2024 it drops to ~10–25%. By late 2025 it's approaching 0% and trending negative. Revenue is still *up* — but the rate of growth is slowing. For a marketing director, this is the difference between "we're doing great" and "we're doing great but momentum is slowing, and now is the time to invest in retention before it flattens."
+**Growth is decelerating.** The YoY line tells the more important story. Early growth was ~75% year-over-year (a new business scaling up). By 2023–2024 it drops to ~10–25%. By late 2025 it's approaching 0% and trending negative. Revenue is still *up*, but the rate of growth is slowing. For a marketing director, this is the difference between "we're doing great" and "momentum is slowing, and now is the time to invest in retention before it flattens."
 
-**The growth curve is unusually smooth.** Real businesses don't grow this evenly. There are no shocks — no competitor launches, no viral moments, no recession dips. That smoothness likely reflects the steady rate at which customers were added to the expanded database. It doesn't invalidate the analysis, but it means the growth deceleration is structural (the customer addition rate is slowing or capped) rather than market-driven.
+**The growth curve is unusually smooth.** Real businesses don't grow this evenly. There are no shocks, no competitor launches, no viral moments, no recession dips. That smoothness likely reflects the steady rate at which customers were added to the expanded database. It doesn't invalidate the analysis, but it means the growth deceleration is structural (the customer addition rate is slowing or capped) rather than market-driven.
 
 ### Business Insights
 
@@ -260,17 +261,17 @@ The **monthly revenue time series with YoY overlay** survived because it answers
 
 The aggregate revenue curve masks what's happening at the genre level. If rock dominates the catalog (which SQL Case Study 1 confirmed), and rock is plateauing, the overall growth deceleration might be a rock problem, not a business-wide problem. There may be genres still growing at 30–40% YoY that are invisible in the aggregate view.
 
-The next question isn't "is the business growing?" — it's "where is the growth coming from, and where has it stalled?" That's exactly what the Tableau dashboard will investigate: breaking revenue down by genre, geography, and time so a marketing director can see whether rock has hit a ceiling in certain markets while other genres are still scaling.
+The next question is where the growth is coming from and where it has stalled. That's what the Tableau dashboard investigates: breaking revenue down by genre, geography, and time so a marketing director can see whether rock has hit a ceiling in certain markets while other genres are still scaling.
 
-**For a marketing director, the actionable takeaway is:** don't budget next year based on the aggregate growth curve. Break it down by genre and by market. The Q1 dip and Q4 rise are mild enough to plan around, but the real strategic question is which product lines are driving what's left of the growth — and which ones need intervention.
+**For a marketing director, the actionable takeaway is:** don't budget next year based on the aggregate growth curve. Break it down by genre and by market. The Q1 dip and Q4 rise are mild enough to plan around, but the real strategic question is which product lines are driving what's left of the growth and which ones need intervention.
 
 ---
 
 ## Part 3: Do Customers Stick Around?
 
-Parts 1 and 2 looked at *timing* — how often customers buy and whether revenue follows seasonal patterns. Part 3 looks at the *people*. Specifically: if you group customers by the quarter they first purchased, what percentage of each cohort is still buying one year later? Two years? Three?
+Parts 1 and 2 looked at *timing*: how often customers buy and whether revenue follows seasonal patterns. Part 3 looks at the *people*. Specifically: if you group customers by the quarter they first purchased, what percentage of each cohort is still buying one year later? Two years? Three?
 
-This matters because the YoY growth deceleration from Part 2 has two possible explanations. Either Chinook is acquiring fewer new customers, or it's acquiring the same number but they're not sticking around long enough to sustain compounding revenue. Cohort retention analysis separates those two forces.
+This matters because the YoY growth deceleration from Part 2 has two possible explanations. Either Chinook is acquiring fewer new customers, or it's acquiring the same number but they're not sticking around long enough to sustain revenue growth. Cohort retention analysis separates those two forces.
 
 ### The Deliverables
 
@@ -280,7 +281,7 @@ This matters because the YoY growth deceleration from Part 2 has two possible ex
 
 ![Cohort Retention Curve](figures/part3_v2_cohort_retention_curve.png)
 
-**How to read it:** The dark line is the average retention curve across all 26 quarterly cohorts. The shaded bands show how much individual cohorts deviate from that average — the narrow band (±7 percentage points) is the finding itself.
+**How to read it:** The dark line is the average retention curve across all 26 quarterly cohorts. The shaded bands show how much individual cohorts deviate from that average. The narrow band (±7 percentage points) is the finding itself.
 
 ![Drop-Off Analysis](figures/part3_v2_dropoff_analysis.png)
 
@@ -288,20 +289,20 @@ This matters because the YoY growth deceleration from Part 2 has two possible ex
 
 ### What the Charts Reveal
 
-**Every cohort decays at the same rate.** This is the headline finding. Whether a customer joined in 2019 or 2024, their retention curve is nearly identical. The metric here is cumulative — the percentage of the original cohort that has made at least one purchase by that quarter mark: ~47% by Q+1, ~68% by Q+2, peaking at ~89% by Q+3 (meaning 89% of each cohort eventually made at least one repeat purchase within their first year), then declining as customers stop returning. The ±7pp spread across 26 quarterly cohorts is remarkably tight. No cohort materially outperformed or underperformed any other.
+**Every cohort decays at the same rate.** This is the headline finding. Whether a customer joined in 2019 or 2024, their retention curve is nearly identical. The metric here is cumulative: the percentage of the original cohort that has made at least one purchase by that quarter mark. ~47% by Q+1, ~68% by Q+2, peaking at ~89% by Q+3 (meaning 89% of each cohort eventually made at least one repeat purchase within their first year), then declining as customers stop returning. The ±7pp spread across 26 quarterly cohorts is remarkably tight. No cohort significantly outperformed or underperformed any other.
 
-**The steepest drop happens at Q+4 (−14.5 percentage points).** This is the single largest quarter-over-quarter loss in the entire lifecycle. The "Critical Loss Zone" spans Q+2 through Q+7, where the business loses the bulk of its customers. By Q+5, half of all eventual churn has already occurred. By Q+8, 80% of it has. After Q+8, the remaining customers trickle out slowly — the curve flattens, but there's almost no one left to retain.
+**The steepest drop happens at Q+4 (−14.5 percentage points).** This is the single largest quarter-over-quarter loss in the entire lifecycle. The "Critical Loss Zone" spans Q+2 through Q+7, where the business loses the bulk of its customers. By Q+5, half of all eventual churn has already occurred. By Q+8, 80% of it has. After Q+8, the remaining customers trickle out slowly. The curve flattens, but there's almost no one left to retain.
 
 **The 50% retention threshold is crossed around Q+4–Q+5.** A customer's "half-life" at Chinook is roughly 12–15 months. After that point, more than half the original cohort has stopped purchasing entirely.
 
 ### Business Insights
 
-**This is a structural retention pattern, not a churn crisis.** The fact that every cohort follows the same curve — regardless of when they joined, regardless of whether revenue was growing at 75% or approaching 0% — means retention isn't getting worse. But it also means it's never gotten better. No product change, no pricing shift, nothing in six years of data moved the needle on customer stickiness. The business has a fixed customer lifecycle, and it hasn't been disrupted.
+**This is a structural retention pattern, not a crisis.** Every cohort follows the same curve regardless of when they joined or whether revenue was growing at 75% or approaching 0%. Retention isn't getting worse. But it's also never gotten better. No product change, no pricing shift, nothing in six years of data moved the needle on customer stickiness. The business has a fixed customer lifecycle, and it hasn't been disrupted.
 
-**The intervention window is Q+1 through Q+5.** If a marketing director had budget for one retention initiative, the drop-off analysis says to spend it early. Fifty percent of total churn happens in the first five quarters. By the time a customer reaches Q+8, they've either committed or they're gone. A loyalty program, a personalized re-engagement campaign, or a subscription offer would have the highest ROI if deployed within the first year of a customer's lifecycle — not as a win-back effort after they've already lapsed.
+**The intervention window is Q+1 through Q+5.** If a marketing director had budget for one retention initiative, the drop-off analysis says to spend it early. Fifty percent of total churn happens in the first five quarters. By the time a customer reaches Q+8, they've either committed or they're gone. A loyalty program, a personalized re-engagement campaign, or a subscription offer would have the highest ROI if deployed within the first year of a customer's lifecycle, not as a win-back effort after they've already lapsed.
 
-**Combined with Part 2, this reframes the YoY deceleration.** Part 2 showed revenue growth slowing from ~75% to near-zero. Part 3 shows that the retention curve hasn't changed. That means the deceleration isn't a retention problem — it's an acquisition problem, a ceiling problem, or both. The business can't grow by keeping customers longer (the lifecycle is fixed). Growth has to come from acquiring more customers, increasing spend per customer during the active window, or expanding into new segments. For a marketing director, this distinction matters: the solution isn't a win-back email campaign — it's a top-of-funnel or product expansion strategy.
+**Combined with Part 2, this reframes the YoY deceleration.** Part 2 showed revenue growth slowing from ~75% to near-zero. Part 3 shows that the retention curve hasn't changed. That means the deceleration isn't a retention problem. It's an acquisition problem, a ceiling problem, or both. The business can't grow by keeping customers longer (the lifecycle is fixed). Growth has to come from acquiring more customers, increasing spend per customer during the active window, or expanding into new segments. The solution isn't a win-back email campaign. It's a top-of-funnel or product expansion strategy.
 
-**In a real-world engagement, the next steps would be clear.** An exit survey deployed at Q+3 — just before the steepest drop — would capture why customers leave while they're still engaged enough to respond. A small incentive (discount on next purchase, entry into a drawing) would boost response rates. Is it price? Catalog gaps? A competitor offering a better experience? The data tells us *when* they leave. Only qualitative research tells us *why*. Additionally, breaking this analysis down by country and by genre would reveal whether the uniform decay holds across segments or masks meaningful variation — a question the Tableau dashboard in the next phase is designed to answer.
+**In a real-world engagement, the next steps would be clear.** An exit survey deployed at Q+3, just before the steepest drop, would capture why customers leave while they're still engaged enough to respond. A small incentive (discount on next purchase, entry into a drawing) would boost response rates. Is it price? Catalog gaps? A competitor offering a better experience? The data tells us *when* they leave. Only qualitative research tells us *why*. Additionally, breaking this analysis down by country and by genre would reveal whether the uniform decay holds across segments or masks meaningful variation, a question the Tableau dashboard in the next phase is designed to answer.
 
-**The synthetic data caveat:** The uniformity across cohorts is almost certainly a byproduct of how the expanded database was generated. Real customer cohorts show more variance — seasonal acquisition waves, campaign-driven spikes, product-market fit shifts. The analytical framework here (cohort construction, retention matrix, drop-off identification, intervention window analysis) is transferable to real data. The specific numbers are not. This analysis evaluates the methodology and the strategic reasoning, not the exact percentages.
+**The synthetic data caveat:** The uniformity across cohorts is almost certainly a byproduct of how the expanded database was generated. Real customer cohorts show more variance: seasonal acquisition waves, campaign-driven spikes, product-market fit shifts. The analytical framework here (cohort construction, retention matrix, drop-off identification, intervention window analysis) is transferable to real data. The specific numbers are not. This analysis evaluates the methodology and the strategic reasoning, not the exact percentages.
