@@ -67,7 +67,12 @@ Detailed log: [`04-AI-collaboration/ai_collaboration_log.md`](04-AI-collaboratio
 ## Skills Demonstrated
 
 **SQL:** CTEs, window functions (ROW_NUMBER, PERCENT_RANK), JOINs (INNER, LEFT, CROSS), GROUP BY, CASE WHEN, PRINTF, ROUND, COALESCE, NULLIF
+
 **Python:** pandas, matplotlib, seaborn, sqlite3, datetime, cohort analysis, time series, data generation
+
 **Tableau:** Interactive dashboards, calculated fields, LOD expressions, dashboard actions, cross-filtering, Tableau Public
+
 **Analytics:** Revenue segmentation, CLV tiering, catalog efficiency, geographic prioritization, cohort retention, YoY trend analysis
+
 **AI Collaboration:** Prompt engineering, context priming, critical evaluation, iterative refinement
+
