@@ -28,11 +28,18 @@ The remaining case studies skip straight to what the AI got right, where I overr
 
 ---
 
-## The Prompt I Gave the AI
+## How This Prompt Was Built
 
-Rather than asking vaguely for "revenue by country," I used my structured prompt framework and asked the AI to help me build a technical SQL prompt around the business question. The result is what I sent:
+My first instinct was a one-liner:
+
+> *"Using the Chinook database, write me a SQL query that shows revenue by country,
+> number of customers, and average spend. Sort by revenue descending."*
+
+That would return something, but not something presentable. Raw decimals, weak aliases, no comments, no awareness of SQLite's limitations. So instead of sending that as-is, I used a structured prompt framework I'd been developing (Persona, Task, Context, Constraints, Format, References, Audience, Evaluate) and asked the AI to help me build a technical prompt for SQL around the business question. That collaboration produced the following prompt.
 
 ---
+
+## The Prompt I Gave the AI
 
 **🧠 Persona**
 > Act as a senior data analyst who writes clean, well-commented SQL for business stakeholders — not just code that runs, but code that can be read and maintained by others.
@@ -59,20 +66,6 @@ Rather than asking vaguely for "revenue by country," I used my structured prompt
 
 **✅ Evaluate**
 > I'll check the first draft for: correct join type, no SQLite-incompatible functions, readable aliases, formatted currency, and whether the output actually answers the business question — not just runs without errors.
-
----
-
-## How This Prompt Was Built
-
-My first instinct was a one-liner:
-
-> *"Using the Chinook database, write me a SQL query that shows revenue by country,
-> number of customers, and average spend. Sort by revenue descending."*
-
-That would return something, but not something presentable. Raw decimals, weak aliases, no comments, no awareness of SQLite's limitations. So instead of sending that as-is, I used a structured prompt framework I'd been developing (Persona, Task, Context, Constraints, Format, References, Audience, Evaluate) and asked the AI to help me build a technical prompt for SQL around the business question. That collaboration produced the prompt above.
-
-The before/after speaks for itself: same underlying ask, completely different quality of output.
-
 ---
 
 ## The AI's Raw Output
