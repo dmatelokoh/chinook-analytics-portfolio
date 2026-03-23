@@ -1,77 +1,81 @@
-# Chinook Digital Media — Customer & Revenue Analytics Report
-**A SQL portfolio project by Daniel Matel-Okoh**  
-*Built on the Chinook SQLite database | Developed with AI collaboration (Claude / Gemini)*
+# Chinook Digital Media — Customer & Revenue Analytics
+**Daniel Matel-Okoh**
+*SQL | Python | Tableau | Built with AI collaboration (Claude)*
 
 ---
 
-## About This Project
+## What This Is
 
-This portfolio was built to demonstrate SQL analytics skills applied to real 
-business problems — framed the way an analyst would actually encounter them at 
-a digital media company.
+An end-to-end analytics portfolio built on the Chinook digital media database. Three SQL case studies, one multi-part Python investigation, and an interactive Tableau dashboard, all connected by a single question: where should a marketing team focus its budget?
 
-I came to data analytics from **8 years in digital marketing** (customer 
-acquisition, retention, campaign optimization, CLV, ROAS, funnel analysis). 
-That background shapes every query in this project: I'm not just counting rows, 
-I'm asking whether the numbers should change a business decision.
-
-The database is **Chinook** — a fictional digital media store modeled on iTunes. 
-Each case study follows a deliberate structure that shows not just *what* I 
-built, but *how* I think:
-
-> **Business Question → My Evaluation → Business Insight**
+I came to data analytics from 8 years in digital marketing (customer acquisition, retention, campaign optimization, CLV, ROAS). That background shapes every analysis here. I'm not counting rows. I'm asking whether the numbers should change a business decision.
 
 ---
 
-## Case Studies
+## Portfolio Structure
+
+### SQL Case Studies
 
 | # | Title | Business Question | Key Skills |
 |---|-------|-------------------|------------|
-| [1](case-studies/01_geographic_revenue.md) | Where Is the Revenue Coming From? | Which geographic markets should Chinook prioritize? | CTEs, ROW_NUMBER(), PRINTF, GROUP BY |
-| [2](case-studies/02_customer_lifetime_value.md) | Who Are Our Best Customers? | How should we segment customers by lifetime value? | Multi-table JOINs, CASE WHEN tiering, CTEs |
-| [3](case-studies/03_genre_benchmarking.md) | What's Selling and What Isn't? | Which genres over- or under-perform vs. average? | Benchmarking CTEs, UNION ALL, NULLIF, LEFT JOIN |
+| [1](01-SQL-case-studies/01_geographic_revenue.md) | Where Is the Revenue Coming From? | Which geographic markets should Chinook prioritize? | CTEs, ROW_NUMBER(), CROSS JOIN, PRINTF |
+| [2](01-SQL-case-studies/02_customer_lifetime_value.md) | Who Are Our Best Customers? | How should we segment customers by lifetime value? | Multi-table JOINs, CASE WHEN tiering, NULLIF |
+| [3](01-SQL-case-studies/03_genre_benchmarking.md) | What's Selling and What Isn't? | Which genres over- or under-perform relative to catalog size? | Benchmarking CTEs, LEFT JOIN, catalog efficiency |
+
+CS1 documents the full AI collaboration workflow (prompt, output, verification, evaluation, iteration, insight). CS2 and CS3 skip to where I overruled the AI and the business insights.
+
+**SQL query files:** [`01-SQL-case-studies/SQL-queries/`](01-SQL-case-studies/SQL-queries/)
+
+### Python Case Study
+
+| Part | Title | What It Investigates |
+|------|-------|---------------------|
+| [1](02-Python-case-studies/04_purchase_timing_frequency.md#the-business-question) | Purchase Timing & Frequency | Is the purchase rhythm artificial or organic? |
+| [2](02-Python-case-studies/04_purchase_timing_frequency.md#part-2-testing-for-date-clustering-and-seasonal-patterns) | Seasonal Patterns & Growth | Are purchases driven by seasons? Is growth decelerating? |
+| [3](02-Python-case-studies/04_purchase_timing_frequency.md#part-3-do-customers-stick-around) | Cohort Retention | Do customers stick around, and where's the intervention window? |
+
+SQL Case Study 2 found that every customer made exactly 7 purchases. The Python case study investigates why, using an expanded synthetic dataset (~5,000 customers, ~54,000 invoices, 2019–2025). Part 1 shows the full process. Parts 2 and 3 skip to findings.
+
+**Jupyter notebooks:** [`02-Python-case-studies/Python-Queries/`](02-Python-case-studies/Python-Queries/)
+
+### Tableau Dashboard
+
+**[Chinook Executive Dashboards — Tableau Public](https://public.tableau.com/app/profile/daniel.matel.okoh/viz/ChinookExecutiveDashboards/GeographicPerformance)**
+
+Three interactive views with cross-filtering:
+
+- **Geographic Performance** — Country revenue map, top markets, genre mix by country
+- **Customer Segmentation** — Value tier distribution, CLV scatter, cohort retention curves
+- **Genre Performance** — Revenue ranking with catalog efficiency, YoY trends, market share
+
+The dashboards connect the findings from all three SQL case studies and the Python retention analysis into one stakeholder-ready tool.
+
+**Tableau workbook + data:** [`03-Tableau-case-studies/`](03-Tableau-case-studies/)
 
 ---
 
-## SQL Files
+## About the Data
 
-- [`queries/01_geographic_revenue.sql`](queries/01_geographic_revenue.sql)
-- [`queries/02_customer_lifetime_value.sql`](queries/02_customer_lifetime_value.sql)
-- [`queries/03_genre_benchmarking.sql`](queries/03_genre_benchmarking.sql)
+The SQL case studies use the original Chinook database (59 customers, 24 countries). The Python and Tableau work uses an expanded synthetic version I generated to create realistic variance, seasonality, and churn patterns (~5,000 customers, ~54,000 invoices, ~296,000 line items, 2019–2025). The expanded database was built from the original Chinook schema using Python (sqlite3, pandas, faker, datetime). The generation script and validation checks are in the local project files.
 
 ---
 
-## AI Collaboration Approach
+## AI Collaboration
 
-I used AI (Claude, Gemini) as a collaborator, not a shortcut. Every case study 
-followed a structured prompt → evaluate → refine cycle, with a context prime 
-that improved across sessions. The domain judgment — knowing when a metric 
-measures price point instead of demand, or when a label misleads — stayed mine.
+I used AI (Claude) as a collaborative tool throughout this project. The approach is documented and transparent:
 
-Full breakdown with concrete examples: [`ai-collaboration/ai_collaboration_log.md`](ai-collaboration/ai_collaboration_log.md)
+- CS1 shows the full cycle: structured prompt, raw AI output, my critical evaluation, iterative refinement, and final business insight
+- CS2 and CS3 show where I overruled the AI and why (tier thresholds, misleading benchmarks, silently excluded data)
+- The Python case study shows chart selection, audience reframing, and business context the AI didn't add on its own
+
+Detailed log: [`04-AI-collaboration/ai_collaboration_log.md`](04-AI-collaboration/ai_collaboration_log.md)
 
 ---
 
 ## Skills Demonstrated
 
-**SQL:** SELECT, WHERE, JOINs (INNER, LEFT), GROUP BY, HAVING, CTEs, window 
-functions (ROW_NUMBER, PERCENT_RANK), CASE WHEN, PRINTF, ROUND, COALESCE, 
-NULLIF, UNION ALL  
-**Analytics:** Revenue segmentation, CLV, Pareto analysis, benchmarking, 
-catalog efficiency, geographic prioritization  
-**AI Fluency:** Prompt engineering, context priming, critical evaluation, 
-iterative refinement
-
----
-
-## Database Schema (Quick Reference)
-
-| Table | Key Columns | Role |
-|-------|-------------|------|
-| Customer | CustomerId, FirstName, LastName, Country | Who bought |
-| Invoice | InvoiceId, CustomerId, InvoiceDate, BillingCountry, Total | Each transaction |
-| InvoiceLine | InvoiceLineId, InvoiceId, TrackId, UnitPrice, Quantity | Line items |
-| Track | TrackId, Name, AlbumId, GenreId, UnitPrice | Product catalog |
-| Genre | GenreId, Name | Genre categorization |
-
-*All queries are SQLite-compatible and tested against the Chinook database.*
+**SQL:** CTEs, window functions (ROW_NUMBER, PERCENT_RANK), JOINs (INNER, LEFT, CROSS), GROUP BY, CASE WHEN, PRINTF, ROUND, COALESCE, NULLIF
+**Python:** pandas, matplotlib, seaborn, sqlite3, datetime, cohort analysis, time series, data generation
+**Tableau:** Interactive dashboards, calculated fields, LOD expressions, dashboard actions, cross-filtering, Tableau Public
+**Analytics:** Revenue segmentation, CLV tiering, catalog efficiency, geographic prioritization, cohort retention, YoY trend analysis
+**AI Collaboration:** Prompt engineering, context priming, critical evaluation, iterative refinement
