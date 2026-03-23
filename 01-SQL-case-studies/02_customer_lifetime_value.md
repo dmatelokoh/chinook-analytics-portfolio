@@ -5,7 +5,7 @@
 
 ## The Business Question
 
-In any digital commerce business, a small percentage of customers typically drive a disproportionate share of revenue. But without segmentation, every customer looks the same in a database: just another row in the Customer table.
+In any digital commerce business, a small percentage of customers typically drives a disproportionate share of revenue. But without segmentation, every customer looks the same in a database.
 
 **The core question:** Who are our highest-value customers, how should we segment our customer base by lifetime value, and what does each segment tell us about retention risk and revenue concentration?
 
@@ -13,7 +13,7 @@ The goal is to understand where revenue is concentrated, which customers deserve
 
 ---
 
-## What the AI Got Right — and Where I Overruled It
+## What the AI Got Right and Where I Overruled It
 
 The V1 query was structurally sound. The AI calculated lifetime spend from InvoiceLine (UnitPrice × Quantity), used NULLIF() to guard against division by zero in the AOV calculation, and applied the full CTE structure and comment block from the context prime. Two iterations, mostly clean.
 
@@ -60,15 +60,15 @@ These thresholds are static but data-informed. A more dynamic alternative using 
 
 The most interesting finding here is that 72% of total revenue sits in Silver. That looks like a segmentation failure until you understand the product.
 
-The Chinook catalog is predominantly priced at $0.99 and $1.99 per track. When customers buy similar volumes at nearly identical price points, spend clusters are almost inevitable because there's not enough price variance to create dramatic separation. The gap between our #1 customer ($49.62) and our #59 customer ($36.64) is only $13 over their entire lifetime. The tiers are real, but the compression is structural: a business model conversation, not a data quality one.
+The Chinook catalog is predominantly priced at $0.99 and $1.99 per track. When customers buy similar volumes at nearly identical price points, spend clusters are almost inevitable because there's not enough price variance to create dramatic separation. The gap between our #1 customer ($49.62) and our #59 customer ($36.64) is only $13 over their entire lifetime. The tiers are real, but the compression is structural.
 
 ### Every Customer Made Exactly 7 Purchases
 
 Almost every customer made exactly 7 purchases. One customer (Puja Srivastava) made 6. That's an unusually consistent pattern across 59 customers in 24 countries.
 
-When you see uniform behavior across a diverse customer base, you look for an external cause. The questions this raised: are the purchase dates clustered around specific events? Is there a seasonal pattern? Or is this a data artifact, a byproduct of how the sample database was generated?
+When you see uniform behavior across a diverse customer base, you look for an external cause. The questions this raises: are the purchase dates clustered around specific events? Is there a seasonal pattern? Or is this a data artifact, a byproduct of how the sample database was generated?
 
-SQL couldn't answer those questions. This finding is what directly motivated the Python case study, using datetime operations and visualizations to test whether the purchase pattern is organic, seasonal, or artificial.
+SQL couldn't answer those questions. They required datetime operations and visualizations that Python handles better.
 
 The one exception, Puja Srivastava at 6 purchases, actually has a higher AOV ($6.11) than most Silver customers, suggesting she's under-developed rather than low-value. Whether that's a tenure issue or a disengagement issue is something the Python cohort analysis can answer.
 
