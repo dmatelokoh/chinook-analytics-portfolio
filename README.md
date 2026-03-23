@@ -1,5 +1,6 @@
 # Chinook Digital Media — Customer & Revenue Analytics
 **Daniel Matel-Okoh**
+
 SQL | Python | Tableau
 
 ---
