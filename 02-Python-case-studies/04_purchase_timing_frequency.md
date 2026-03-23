@@ -5,7 +5,7 @@
 
 ## The Business Question
 
-SQL Case Study 2 segmented customers by lifetime value and found something unexpected: almost every customer in the original Chinook database made exactly 7 purchases. In a customer base spanning 24 countries with different buying habits, that kind of uniformity doesn't happen organically.
+SQL Case Study 2 segmented customers by lifetime value and found something unexpected: almost every customer in the original 59-customer dataset made exactly 7 purchases. In a customer base spanning 24 countries with different buying habits, that kind of uniformity doesn't happen organically.
 
 I flagged three possible explanations in that case study: the purchase dates are clustered around external events (a sale, a release, a promotional push), there's a seasonal pattern driving consistent behavior, or it's a data artifact — a byproduct of how the sample database was generated rather than a reflection of real customer behavior.
 
