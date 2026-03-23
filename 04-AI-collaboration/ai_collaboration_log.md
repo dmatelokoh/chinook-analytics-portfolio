@@ -11,7 +11,7 @@ What follows is a breakdown of the specific AI collaboration techniques demonstr
 
 ---
 
-## 1. Prompt Engineering — Building Instructions That Work
+## 1. Prompt Engineering: Building Instructions That Work
 
 For this project I used an 8-part prompt framework consistently across all three case studies: Persona, Task, Context, Constraints, Format, References, Audience, and Evaluate. Each section serves a specific purpose. The Persona section establishes non-negotiable coding standards, the Context section provides the schema, the Constraints section prevents common SQLite compatibility errors before they happen.
 
@@ -21,7 +21,7 @@ The prompt framework itself was developed using meta-prompting: asking the AI "w
 
 ---
 
-## 2. Context Priming — Starting Every Session Right
+## 2. Context Priming: Starting Every Session Right
 
 I opened each case study in a fresh AI session with a full context prime (database, coding standards, audience, style conventions) so the AI worked from a clean baseline every time rather than a degrading context window.
 
@@ -29,7 +29,7 @@ I opened each case study in a fresh AI session with a full context prime (databa
 
 ---
 
-## 3. Prompt Library Management — Prompts as Living Documents
+## 3. Prompt Library Management: Prompts as Living Documents
 
 A prompt library is a personal collection of reusable, versioned prompts that get updated every time a gap in the output is discovered. The goal is to make V1 outputs progressively closer to production-ready, so less time is spent on feedback loops and more time is spent on analysis.
 
@@ -43,7 +43,7 @@ By Case Study 3, both columns appeared in V1 without any feedback required. The 
 
 ---
 
-## 4. Critical Evaluation — The Human Layer
+## 4. Critical Evaluation: The Human Layer
 
 The AI can generate output quickly. Knowing whether that output is correct, meaningful, and ready for a leadership audience is a separate skill.
 
@@ -53,7 +53,7 @@ I replaced the misleading label with a catalog efficiency metric (revenue per un
 
 ---
 
-## 5. Iterative Prompting — Closing the Gap
+## 5. Iterative Prompting: Closing the Gap
 
 No prompt produces perfect output on the first pass. The workflow that closes the gap between V1 and production-ready is straightforward: evaluate the output, identify specific gaps, reformat the evaluation as a structured feedback prompt, and feed it back to the AI.
 
@@ -61,7 +61,7 @@ No prompt produces perfect output on the first pass. The workflow that closes th
 
 ---
 
-## 6. Prompt Precision — AI Executes Literally
+## 6. Prompt Precision: AI Executes Literally
 
 One of the most important lessons from this project: AI executes instructions literally. It doesn't infer intent. If you want something removed, you have to say so explicitly. If you want something added in a specific position, you have to specify the position.
 
