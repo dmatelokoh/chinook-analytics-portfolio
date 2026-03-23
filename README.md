@@ -1,13 +1,12 @@
 # Chinook Digital Media — Customer & Revenue Analytics
 **Daniel Matel-Okoh**
-
 ---
 
 ## What This Is
 
-An end-to-end analytics portfolio built on the Chinook digital media database. Three SQL case studies, one multi-part Python investigation, and an interactive Tableau dashboard, all connected by a single question: where should a marketing team focus its budget?
+An end-to-end analytics portfolio built on the Chinook digital media database. Three SQL case studies, one multi-part Python investigation, and an interactive Tableau dashboard. Each phase builds on the last, and the through-line is a practical one: where should a marketing team focus its budget?
 
-I came to data analytics from 8 years in digital marketing (customer acquisition, retention, campaign optimization, CLV, ROAS). That background shapes every analysis here. I'm not counting rows. I'm asking whether the numbers should change a business decision.
+I came to data analytics from 8 years in digital marketing (customer acquisition, retention, campaign optimization, CLV, ROAS). That background shapes every analysis here. The goal with each case study was to produce something a marketing director could actually use, not just technically correct output.
 
 ---
 
@@ -47,7 +46,7 @@ Three interactive views with cross-filtering:
 - **Customer Segmentation** — Value tier distribution, CLV scatter, cohort retention curves
 - **Genre Performance** — Revenue ranking with catalog efficiency, YoY trends, market share
 
-The dashboards connect the findings from all three SQL case studies and the Python retention analysis into one stakeholder-ready tool.
+The dashboards bring together the findings from all three SQL case studies and the Python retention analysis into one stakeholder-ready tool.
 
 **Tableau workbook + data:** [`03-Tableau-case-studies/`](03-Tableau-case-studies/)
 
@@ -61,11 +60,7 @@ The SQL case studies use the original Chinook database (59 customers, 24 countri
 
 ## AI Collaboration
 
-I used AI (Claude) as a collaborative tool throughout this project. The approach is documented and transparent:
-
-- CS1 shows the full cycle: structured prompt, raw AI output, my critical evaluation, iterative refinement, and final business insight
-- CS2 and CS3 show where I overruled the AI and why (tier thresholds, misleading benchmarks, silently excluded data)
-- The Python case study shows chart selection, audience reframing, and business context the AI didn't add on its own
+I used AI (Claude) as a collaborative tool throughout this project. CS1 shows the full cycle: structured prompt, raw AI output, my critical evaluation, iterative refinement, and the final business insight. In CS2 and CS3, the focus is on where I overruled the AI and why (tier thresholds, misleading benchmarks, silently excluded data). The Python case study adds chart selection, audience reframing, and business context that the AI didn't include on its own.
 
 Detailed log: [`04-AI-collaboration/ai_collaboration_log.md`](04-AI-collaboration/ai_collaboration_log.md)
 
