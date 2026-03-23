@@ -56,7 +56,7 @@ These thresholds are static but data-informed. A more dynamic alternative using 
 
 ## The Business Insight
 
-### 72% of Revenue in Silver Is a Pricing Story, Not a Segmentation Problem
+### Most of the Revenue Lives in One Tier Because the Price Points Are Too Close
 
 The most interesting finding here is that 72% of total revenue sits in Silver. That looks like a segmentation failure until you understand the product.
 
