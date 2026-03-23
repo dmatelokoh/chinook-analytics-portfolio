@@ -13,27 +13,25 @@ The goal is to understand catalog efficiency: which genres generate the most rev
 
 ---
 
-## What the AI Got Right — and Where I Overruled It
+## What the AI Got Right and Where I Overruled It
 
 By Case Study 3, the prompt library updates from Cases 1 and 2 had eliminated the recurring structural issues. The V1 output included ROW_NUMBER(), percentage of total, the CROSS JOIN pattern, and a full comment header block, all without being reminded. The context prime was paying off.
 
 But the V1 output had one critical flaw that required product domain knowledge to catch.
 
-**The misleading benchmark:** The AI created a "vs. Global Average" column labeling each genre as Above Average, Average, or Below Average based on revenue per track sold. The pattern was immediately obvious: every $0.99 music genre was "Below Average" and every $1.99 video genre was "Above Average." The label wasn't measuring genre popularity or catalog efficiency. It was measuring price point. The global average landed at $1.04, just above the $0.99 music floor, so almost every music genre automatically failed the benchmark regardless of how well it actually sold.
+**The misleading benchmark:** The AI created a "vs. Global Average" column labeling each genre as Above Average, Average, or Below Average based on revenue per track sold. The pattern was immediately obvious: every $0.99 music genre was "Below Average" and every $1.99 video genre was "Above Average." The label wasn't measuring genre popularity or catalog efficiency; it was measuring price point. The global average landed at $1.04, just above the $0.99 music floor, so almost every music genre automatically failed the benchmark regardless of how well it actually sold.
 
 A good report shouldn't have meaningless columns. I replaced the performance label with **revenue per unique catalog track**, which measures how much revenue each available track in the genre's catalog generates on average. A genre with 500 tracks generating $826 has very different economics than one with 10 tracks generating $826.
 
 **The Opera discovery:** The verification pass caught this one. I asked the AI to run a meta-verification check for silently excluded data. It recommended a LEFT JOIN check against InvoiceLine and found that Opera (1 catalog track, zero sales) was being dropped entirely by the INNER JOIN chain. The original report showed 24 genres; the database actually carries 25.
 
-I switched the InvoiceLine JOIN to LEFT JOIN and let Opera appear at the bottom with $0.00 values. For a report designed to inform catalog investment decisions, dead inventory should show up, not get silently excluded.
-
-**The prompt precision lesson:** When I told the AI to "replace" the old performance label with the new catalog efficiency metric, it added the new column but kept the old one too. I hadn't explicitly said "remove." AI executes instructions literally. If you want something gone, you have to say so. A small lesson that saved me from learning it on something bigger.
+I switched the InvoiceLine JOIN to LEFT JOIN and let Opera appear at the bottom with $0.00 values.
 
 ---
 
 ## The Results
 
-**Final Query Results — 25 Genres + TOTAL:**
+**Final Query Results: 25 Genres + TOTAL:**
 
 | Rank | Genre | Total Revenue | Tracks Sold | Avg Rev/Track | % of Total | Rev/Catalog Track |
 |------|-------|---------------|-------------|---------------|------------|-------------------|
