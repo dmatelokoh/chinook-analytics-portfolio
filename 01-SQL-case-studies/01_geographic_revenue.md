@@ -13,7 +13,7 @@ leadership needs to understand the geographic landscape of our revenue.
 **The core question:** Which geographic markets should Chinook prioritize for growth 
 and customer acquisition, and are we over-investing in markets where we're already saturated?
 
-This is not just a "show me a ranked list" request. The goal is to understand:
+This goes beyond a "show me a ranked list" request. The goal is to understand:
 - Where is revenue concentrated?
 - Which markets have high revenue but low customer counts (high value per customer)?
 - How dependent is the business on any single market?
@@ -175,11 +175,7 @@ total orders they placed. Orders-per-customer is a "loyalty signal". A country w
 5 customers and 35 orders is behaving very differently from one with 5 customers 
 and 6 orders. I added COUNT(i.InvoiceId) AS total_orders.
 
-**The bottom line:** The structured prompt got me to a strong 65% in a fraction of 
-the time it would have taken me to write from scratch. The remaining 35%, the ranking, 
-the percentage of total, the global benchmark CTE, the total orders column, the header 
-block, etc. That came from knowing what a marketing director actually needs to see. The AI 
-couldn't have added those without being told.
+The structured prompt got me to a strong 65% in a fraction of the time it would have taken me to write from scratch. The remaining 35% (the ranking, the percentage of total, the global benchmark CTE, the total orders column, the header block) came from knowing what a marketing director actually needs to see. The AI couldn't have added those without being told.
 
 ---
 
@@ -330,7 +326,7 @@ I also added a sixth question that applies meta-prompting to quality control:
 > perspective of a senior data analyst who needs to defend these numbers to a leadership team."*
 
 Asking the AI to reason about *how* to verify not just *whether* the numbers are correct
-surfaces checks I might not have thought to run myself.
+returns checks I might not have thought to run myself.
 
 ---
 
@@ -363,7 +359,7 @@ single high-value invoice moves the average significantly. No real anomalies det
 
 **🔬 Check 6 — Meta-Verification: What Else Should We Check?**
 
-The AI's response to the meta-prompt surfaced six additional checks a senior analyst 
+The AI's response to the meta-prompt returned six additional checks a senior analyst 
 would run before presenting to leadership. Two are worth highlighting:
 
 **Duplicate invoice guard:**
@@ -409,7 +405,7 @@ highest total revenue ($523.06). But the average revenue per customer ($40.24) i
 actually below the global average for mid-size markets like the Czech Republic ($45.12) 
 and Chile ($46.62). That's a flag.
 
-In digital marketing terms, this is a classic penetration vs. monetization problem. 
+This is a classic penetration vs. monetization problem. 
 We have the audience. We're not maximizing yield from it. Before spending another 
 dollar on US customer acquisition, I'd want to answer two questions:
 
@@ -423,7 +419,7 @@ dollar on US customer acquisition, I'd want to answer two questions:
    insight that makes regional marketing efficient.
 
 The next logical analysis from this query is a US-specific genre breakdown. This 
-is exactly what Case Study 3 addresses.
+is what Case Study 3 picks up later.
 
 ---
 
@@ -454,7 +450,7 @@ Whales deserve different treatment than average customers. Early access, loyalty
 perks, and direct relationship management.
 
 A follow-up query calculating `total_orders / unique_customers` per country and 
-flagging any market more than 1 standard deviation above the mean would surface 
+flagging any market more than 1 standard deviation above the mean would flag
 these markets immediately.
 
 ---

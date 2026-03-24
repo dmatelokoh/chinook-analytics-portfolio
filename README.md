@@ -30,7 +30,7 @@ I came to data analytics from 8 years in digital marketing (customer acquisition
 | [2](02-Python-case-studies/04_purchase_timing_frequency.md#part-2-testing-for-date-clustering-and-seasonal-patterns) | Seasonal Patterns & Growth | Are purchases driven by seasons? Is growth decelerating? |
 | [3](02-Python-case-studies/04_purchase_timing_frequency.md#part-3-do-customers-stick-around) | Cohort Retention | Do customers stick around, and where's the intervention window? |
 
-SQL Case Study 2 found that every customer made exactly 7 purchases. The Python case study investigates why, using an expanded synthetic dataset (~5,000 customers, ~54,000 invoices, 2019–2025).
+SQL Case Study 2 found that almost every customer made exactly 7 purchases. The Python case study investigates why, using an expanded synthetic dataset (~5,000 customers, ~54,000 invoices, 2019–2025).
 
 **Jupyter notebooks:** [`02-Python-case-studies/Python-Queries/`](02-Python-case-studies/Python-Queries/)
 
