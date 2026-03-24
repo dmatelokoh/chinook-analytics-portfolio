@@ -179,7 +179,7 @@ The structured prompt got me to a strong 65% in a fraction of the time it would 
 
 ---
 
-## Iterative Prompting — From V1 to V2
+## Iterative Prompting: From V1 to V2
 
 After completing my evaluation, I reformatted my notes as a structured feedback prompt 
 and fed them back to the AI, letting it incorporate my changes while preserving 
@@ -190,17 +190,17 @@ everything it already got right.
 > *"The query you returned was a strong first draft, but I have specific feedback I need 
 > you to incorporate. Please update the query with the following changes:*
 >
-> *1. **Add a ranking column** — Use ROW_NUMBER() OVER (ORDER BY revenue DESC) to add 
+> *1. **Add a ranking column**: Use ROW_NUMBER() OVER (ORDER BY revenue DESC) to add 
 > an explicit rank number as the first column.*
 >
-> *2. **Add percentage of total revenue** — Add a column showing each country's revenue 
+> *2. **Add percentage of total revenue**: Add a column showing each country's revenue 
 > as a percentage of total global revenue, rounded to 2 decimal places using ROUND(..., 2).*
 >
-> *3. **Add a global revenue benchmark CTE** — Add a second CTE that captures grand total 
+> *3. **Add a global revenue benchmark CTE**: Add a second CTE that captures grand total 
 > revenue using SUM(Total), then use a CROSS JOIN to make that value available in the 
 > final SELECT.*
 >
-> *4. **Add a total orders column** — Use COUNT(InvoiceId) to capture every order placed 
+> *4. **Add a total orders column**: Use COUNT(InvoiceId) to capture every order placed 
 > per country, including repeat purchases. Place it immediately after Unique Customers so 
 > readers can compare headcount vs. order volume directly.*
 >
@@ -213,7 +213,7 @@ everything it already got right.
 > -- Author: Daniel Matel-Okoh
 > -- ============================================
 > ```
-> *Do not change anything else about the query structure — keep the existing CTE, 
+> *Do not change anything else about the query structure, keep the existing CTE, 
 > join logic, aliases, and inline comments exactly as they are."*
 
 ---
@@ -277,7 +277,7 @@ ORDER BY
 | Inline comments | ✅ | ✅ |
 
 One thing worth noting: the AI added `100.0` instead of `100` in the percentage 
-calculation to force float division in SQLite — an edge case I didn't explicitly 
+calculation to force float division in SQLite, an edge case I didn't explicitly 
 specify, but my feedback prompt gave it enough context to reason through.
 
 ---
@@ -339,7 +339,7 @@ rounding each row to 2 decimal places display artifact, not a data error.
 **✅ Check 2: Global revenue back-calculation**
 Back-calculating from the USA's percentage: $523.06 ÷ 0.2246 = $2,328.84. The known Chinook 
 Invoice total is $2,328.60. The $0.24 variance is entirely explained by rounding the 
-percentage to 2 decimal places. Mathematically consistent.
+percentage to 2 decimal places.
 
 **✅ Check 3: USA average revenue per customer**
 $523.06 ÷ 13 customers = $40.2354... → formatted to $40.24. Exact match confirmed.
@@ -357,7 +357,7 @@ single high-value invoice moves the average significantly. No real anomalies det
 
 ---
 
-**🔬 Check 6 — Meta-Verification: What Else Should We Check?**
+**🔬 Check 6: Meta-Verification: What Else Should We Check?**
 
 The AI's response to the meta-prompt returned six additional checks a senior analyst 
 would run before presenting to leadership. Two are worth highlighting:
