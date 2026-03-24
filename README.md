@@ -60,7 +60,7 @@ The SQL case studies use the original Chinook database (59 customers, 24 countri
 
 ## AI Collaboration
 
-I used AI (Claude) as a collaborative tool throughout this project. CS1 shows the full cycle: structured prompt, raw AI output, my critical evaluation, iterative refinement, and the final business insight. In CS2 and CS3, the focus is on where I overruled the AI and why (tier thresholds, misleading benchmarks, silently excluded data). The Python case study adds chart selection, audience reframing, and business context that the AI didn't include on its own.
+I used AI as a deliberate part of my workflow throughout this project. It handled the technical execution (SQL, Python, formatting), which gave me more time to focus on the analysis, the business framing, and the judgment calls that make the output useful. The full process is documented, including structured prompts, critical evaluation, iterative refinement, and every place I overruled the AI and why.
 
 Detailed log: [`04-AI-collaboration/ai_collaboration_log.md`](04-AI-collaboration/ai_collaboration_log.md)
 
