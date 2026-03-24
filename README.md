@@ -66,6 +66,20 @@ Detailed log: [`04-AI-collaboration/ai_collaboration_log.md`](04-AI-collaboratio
 
 ---
 
+## Key Findings
+
+**Three markets carry the business, and that's a concentration risk.** The USA, Canada, and France account for 44% of total revenue across 24 countries. The bottom 15 markets each depend on a single customer. Losing one means that market goes to zero. The recommendation: grow mid-tier markets (Germany, UK, Brazil) to reduce geographic concentration.
+
+**Customer tiers are compressed because the product pricing is too narrow.** 72% of revenue sits in a single value tier (Silver). The cause is structural: with tracks priced at $0.99 and $1.99, there isn't enough price variance to create meaningful spend separation. Segmentation works, but upsell opportunities require product or pricing changes, not just marketing campaigns.
+
+**Four genres drive 73.5% of revenue. Whether that's a problem depends on trend direction.** Rock, Latin, Metal, and Alternative & Punk dominate the catalog. If those four are growing, concentration is fine. If they're flat or declining, there's no strong second tier to absorb the loss. Sci Fi & Fantasy leads in catalog efficiency ($1.53/track vs. $0.64 for Rock), which suggests unmet demand in a small but high-performing genre.
+
+**Customers buy on a ~32-day cycle, and the intervention window is narrow.** The median repurchase interval is 32 days with high natural variance. 57.6% of repeat purchases happen within 6 weeks. A proactive engagement campaign at 14-21 days and a win-back trigger at 40-100 days would cover the two highest-leverage windows in the customer lifecycle.
+
+**Retention follows the same curve regardless of when a customer joined.** Every quarterly cohort decays at the same rate (±7 percentage points across 26 cohorts over 6 years). The steepest drop is at Q+4. Half of all churn happens by Q+5. The YoY growth deceleration isn't a retention problem. It's an acquisition or product ceiling. Retention investment should target the first 12 months, where the highest share of churn is still preventable.
+
+---
+
 ## Skills Demonstrated
 
 **SQL:** CTEs, window functions (ROW_NUMBER, PERCENT_RANK), JOINs (INNER, LEFT, CROSS), GROUP BY, CASE WHEN, PRINTF, ROUND, COALESCE, NULLIF
