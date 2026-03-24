@@ -19,7 +19,7 @@ Using an expanded version of the Chinook database (~5,000 customers, ~54,000 inv
 
 - **Part 3: Do customers actually stick around?** A cohort retention analysis grouping customers by when they first purchased and tracking how many are still buying one, two, three years later. Parts 1 and 2 look at the *timing* of purchases. Part 3 looks at the *people*, and tells a marketing director whether to invest in acquiring new customers or keeping the ones they have.
 
-**The expanded data is synthetic. I built it to have realistic variance, seasonality, and churn patterns, not uniform behavior. The question isn't whether the data is "real" but whether the analytical framework would hold up against real data.**
+**"The expanded data is synthetic. I built it with realistic variance, seasonality, and churn patterns so the analytical framework would transfer directly to real data.**
 
 Together, the three parts close the investigation that SQL Case Study 2 opened. The answer shapes how a marketing team thinks about re-engagement timing, campaign cadence, and churn prediction.
 
@@ -27,9 +27,9 @@ Together, the three parts close the investigation that SQL Case Study 2 opened. 
 
 ## Why This Case Study Shows the Full Process
 
-The SQL case studies established a six-step AI collaboration workflow: prompt, output, verification, evaluation, iteration, business insight. This Python case study is the first time that workflow runs against a different toolset (Python instead of SQL), and the process itself changes in meaningful ways. Verification becomes executable code instead of a manual checklist, and the iteration cycle includes chart selection, not just query refinement.
+The SQL case studies established a six-step AI collaboration workflow: prompt, output, verification, evaluation, iteration, and business insight. This Python case study is the first time that workflow runs against a different toolset (Python instead of SQL), and the process itself changes in meaningful ways. Verification becomes executable code instead of a manual checklist, and the iteration cycle includes chart selection, not just query refinement.
 
-Parts 2 and 3 of this case study skip straight to findings and business insights. The methodology is the same; only the first pass needs to show the work.
+For the sake of time, parts 2 and 3 of this case study skip straight to findings and business insights like the SQL case study.
 
 ---
 
@@ -45,32 +45,32 @@ The prompt the AI helped me build:
 
 ---
 
-**🧠 Persona**
+**Persona**
 > Act as a senior data analyst who writes clean, well-commented Python code for business stakeholders. Code should be readable in a Jupyter notebook — not just functional, but structured so a non-technical reviewer can follow the logic.
 
-**🎯 Task**
+**Task**
 > Write Python code that pulls all invoice dates per customer from the database, calculates the inter-purchase interval (days between consecutive purchases) for each customer, and plots a frequency histogram showing the distribution of those intervals. Include summary statistics (mean, median, standard deviation) printed alongside the chart.
 
-**📋 Context**
+**Context**
 > I'm working with a SQLite database called `chinook_expanded.db` — an expanded version of the Chinook database with ~5,000 customers and invoices spanning several years. The relevant table is Invoice (columns: InvoiceId, CustomerId, InvoiceDate, Total). I'm using pandas, matplotlib, and sqlite3.
 >
 > I've attached the SQL Case Study this analysis builds on. That case study found suspiciously uniform purchase frequency across the original customer base and flagged three possibilities: the dates are clustered around external events, there's a seasonal pattern, or it's a data artifact. This Python analysis is the follow-up investigation.
 
-**🚧 Constraints**
+**Constraints**
 > - Use `pd.read_sql()` to pull data
 > - Calculate intervals using pandas `groupby` and `shift`, not SQL window functions
 > - Drop each customer's first invoice from the interval calculation (no previous date to compare against)
 
-**📐 Format**
+**Format**
 > Structure for a Jupyter notebook: markdown headers explaining each step, then the code, then the output. Follow clean visualization standards: title, axis labels, and a source note. Comments should explain *why*, not just *what*. Use descriptive variable names.
 
-**📎 References**
+**References**
 > Use the attached SQL Case Study 2 write-up and example prompt as style guides — match the analytical depth and business framing, not just the technical output.
 
-**👥 Audience**
+**Audience**
 > The output will be reviewed by a non-technical marketing director and their team. Column names, chart labels, and any printed summaries should be immediately understandable without a technical background.
 
-**✅ Evaluate**
+**Evaluate**
 > I'll check the first draft for: correct interval calculation (first invoice excluded, no off-by-one errors), a histogram that reveals the shape of the distribution, and whether the output actually helps answer the question — does this look organic, seasonal, or artificial?
 
 ---
@@ -120,9 +120,9 @@ The histogram extends to 600 days because one customer had a 584-day gap between
 
 The fix: cap the display at ~200 days and note how many intervals fall beyond that cutoff. The outliers aren't wrong data, they're just not where the insight lives.
 
-**2. The summary stats box isn't audience-appropriate**
+**2. The summary stats box doesn't mean anything to a non-technical reader**
 
-The stats box includes "CV = 0.86" and "Std Dev = 34.5 days" without explaining what those mean. A marketing director making campaign decisions almost certainly doesn't care about coefficient of variation without context. If a metric needs a footnote to be useful, it probably shouldn't be on the chart without one.
+The stats box includes "CV = 0.86" and "Std Dev = 34.5 days" without explaining what those mean. A marketing director making campaign decisions almost certainly doesn't care about coefficient of variation without context.
 
 The fix: keep all metrics on the chart but add plain-language parenthetical explanations, like "Std Dev = 34.5 days (how much gaps vary)" and "CV = 0.86 (high variance, not artificial)." The reader sees the number and immediately understands what it means.
 
@@ -208,7 +208,7 @@ The zones on the chart (proactive engagement at 14–21 days, win-back trigger a
 
 What matters is the framework: there's a window where a customer is likely to buy again naturally (the peak of the distribution), and there's a window where they're drifting toward churn (the tail). The exact boundaries get refined through testing, not analysis. Set a reasonable starting point, run the campaign, measure the lift, adjust.
 
-The more actionable insight is the LTV implication. If we know that customers who go X days without a purchase are Y% likely to churn, we want to extract as much revenue as possible before they reach that threshold. The engagement window isn't just about accelerating the next purchase alone. It's about maximizing lifetime value while the customer is still active. The win-back zone is the last opportunity before the customer goes from "inactive" to "gone."
+The more actionable insight is the LTV implication. If we know that customers who go X days without a purchase are Y% likely to churn, we want to extract as much revenue as possible before they reach that threshold. The engagement window is about getting as much revenue as possible while the customer is still buying, not just triggering one more purchase. The win-back zone is the last opportunity before the customer goes from "inactive" to "gone."
 
 Connecting this to Case Study 2: the CLV tiers we built in SQL assumed relatively uniform purchase behavior. This analysis shows that behavior isn't uniform at all. There are frequent buyers and drifters in every tier. A Platinum customer who hasn't bought in 50 days is a different retention conversation than a Platinum customer who bought last week, even though they're in the same segment. The next evolution of that segmentation should incorporate recency, not just total spend.
 
@@ -268,7 +268,7 @@ The next question is where the growth is coming from and where it has stalled. T
 
 ## Part 3: Do Customers Stick Around?
 
-Parts 1 and 2 looked at *timing*: how often customers buy and whether revenue follows seasonal patterns. Part 3 looks at the *people*. Specifically: if you group customers by the quarter they first purchased, what percentage of each cohort is still buying one year later? Two years? Three?
+Parts 1 and 2 looked at *timing*: how often customers buy and whether revenue follows seasonal patterns. Part 3 looks at the *people*. Specifically, if you group customers by the quarter they first purchased, what percentage of each cohort is still buying one year later? Two years? Three?
 
 This matters because the YoY growth deceleration from Part 2 has two possible explanations. Either Chinook is acquiring fewer new customers, or it's acquiring the same number but they're not sticking around long enough to sustain revenue growth. Cohort retention analysis separates those two forces.
 
@@ -296,11 +296,11 @@ This matters because the YoY growth deceleration from Part 2 has two possible ex
 
 ### Business Insights
 
-**This is a structural retention pattern, not a crisis.** Every cohort follows the same curve regardless of when they joined or whether revenue was growing at 75% or approaching 0%. Retention isn't getting worse. But it's also never gotten better. No product change, no pricing shift, nothing in six years of data moved the needle on customer stickiness. The business has a fixed customer lifecycle, and it hasn't been disrupted.
+**This is a structural retention pattern.** Every cohort follows the same curve regardless of when they joined or whether revenue was growing at 75% or approaching 0%. Retention isn't getting worse, but it's also never gotten better. No product change, no pricing shift, nothing in six years of data moved the needle on customer stickiness. The business has a fixed customer lifecycle, and it hasn't been disrupted.
 
 **The intervention window is Q+1 through Q+5.** If a marketing director had budget for one retention initiative, the drop-off analysis says to spend it early. Fifty percent of total churn happens in the first five quarters. By the time a customer reaches Q+8, they've either committed or they're gone. A loyalty program, a personalized re-engagement campaign, or a subscription offer would have the highest ROI if deployed within the first year of a customer's lifecycle, not as a win-back effort after they've already lapsed.
 
-**Combined with Part 2, this reframes the YoY deceleration.** Part 2 showed revenue growth slowing from ~75% to near-zero. Part 3 shows that the retention curve hasn't changed. That means the deceleration isn't a retention problem. It's an acquisition problem, a ceiling problem, or both. The business can't grow by keeping customers longer (the lifecycle is fixed). Growth has to come from acquiring more customers, increasing spend per customer during the active window, or expanding into new segments. The solution isn't a win-back email campaign. It's a top-of-funnel or product expansion strategy.
+**Combined with Part 2, this reframes the YoY deceleration.** Part 2 showed revenue growth slowing from ~75% to near-zero. Part 3 shows that the retention curve hasn't changed. That means the deceleration isn't a retention problem; it's an acquisition problem, a ceiling problem, or both. The business can't grow by keeping customers longer (the lifecycle is fixed). Growth has to come from acquiring more customers, increasing spend per customer during the active window, or expanding into new segments. 
 
 **In a real-world engagement, the next steps would be clear.** An exit survey deployed at Q+3, just before the steepest drop, would capture why customers leave while they're still engaged enough to respond. A small incentive (discount on next purchase, entry into a drawing) would boost response rates. Is it price? Catalog gaps? A competitor offering a better experience? The data tells us *when* they leave. Only qualitative research tells us *why*. Additionally, breaking this analysis down by country and by genre would reveal whether the uniform decay holds across segments or masks meaningful variation, a question the Tableau dashboard in the next phase is designed to answer.
 
