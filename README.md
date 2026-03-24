@@ -46,6 +46,8 @@ Three interactive views with cross-filtering:
 
 The dashboards bring together the findings from all three SQL case studies and the Python retention analysis into one stakeholder-ready tool.
 
+**[Dashboard walkthrough — why each view exists and how they connect](03-Tableau-case-studies/05_tableau_dashboard_walkthrough.md)**
+
 **Tableau workbook + data:** [`03-Tableau-case-studies/`](03-Tableau-case-studies/)
 
 ---
