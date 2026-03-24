@@ -41,30 +41,30 @@ That would return something, but not something presentable. Raw decimals, weak a
 
 ## The Refined Prompt
 
-**🧠 Persona**
+**Persona**
 > Act as a senior data analyst who writes clean, well-commented SQL for business stakeholders — not just code that runs, but code that can be read and maintained by others.
 
-**🎯 Task**
+**Task**
 > Write a SQL query that returns total revenue by country, number of unique customers per country, and average revenue per customer — sorted by total revenue descending.
 
-**📋 Context**
+**Context**
 > I'm working in the Chinook SQLite database. The relevant tables are Invoice (columns: InvoiceId, CustomerId, BillingCountry, Total) and Customer (column: CustomerId). Every invoice is tied to a customer via CustomerId.
 
-**🚧 Constraints**
+**Constraints**
 > - This is SQLite — do not use FORMAT(), TOP, or ISNULL. Use PRINTF(), LIMIT, and COALESCE instead.
 > - Use INNER JOIN, not LEFT JOIN — I only want countries where purchases actually occurred.
 > - Do not use reserved words like `avg` or `total` as aliases.
 
-**📐 Format**
+**Format**
 > Return a single clean SELECT statement. Use clear column aliases. Format all currency columns with PRINTF('$%.2f', ...). Add brief inline comments explaining key decisions.
 
-**📎 References**
+**References**
 > Follow the same CTE structure and alias style used in standard business intelligence reporting — readable top-to-bottom, with each logical step named.
 
-**👥 Audience**
+**Audience**
 > The output will be reviewed by a non-technical marketing director. Column names should be self-explanatory. No raw decimals. No cryptic aliases.
 
-**✅ Evaluate**
+**Evaluate**
 > I'll check the first draft for: correct join type, no SQLite-incompatible functions, readable aliases, formatted currency, and whether the output actually answers the business question — not just runs without errors.
 ---
 
@@ -349,7 +349,7 @@ Output has 24 rows. Chinook has customers from 24 countries with completed invoi
 The INNER JOIN correctly excluded registered customers with no purchase history without 
 silently dropping any active market.
 
-**⚠️ Check 5: Anomaly scan**
+**✅ Check 5: Anomaly scan**
 Chile ($46.62), the Czech Republic ($45.12), and Hungary ($45.62) show average revenue 
 per customer 14–18% above the global average of $39.47. These are not data errors but 
 small-sample effects. Each of those countries has only 1–2 customers, so a 
@@ -357,7 +357,7 @@ single high-value invoice moves the average significantly. No real anomalies det
 
 ---
 
-**🔬 Check 6: Meta-Verification: What Else Should We Check?**
+**✅ Check 6: Meta-Verification: What Else Should We Check?**
 
 The AI's response to the meta-prompt returned six additional checks a senior analyst 
 would run before presenting to leadership. Two are worth highlighting:
