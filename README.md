@@ -68,11 +68,11 @@ Detailed log: [`04-AI-collaboration/ai_collaboration_log.md`](04-AI-collaboratio
 
 ## Key Findings
 
-##Three markets carry the business.
+## Three markets carry the business.
 
 The USA, Canada, and France account for 44% of total revenue across 24 countries. The bottom 15 markets each depend on a single customer. Losing one means that market goes to zero. The recommendation: grow mid-tier markets (Germany, UK, Brazil) to reduce geographic concentration.
 
-##Customer tiers are compressed because the product pricing is too narrow.
+## Customer tiers are compressed because the product pricing is too narrow.
 
 72% of revenue sits in a single value tier (Silver). The cause is structural: with tracks priced at $0.99 and $1.99, there isn't enough price variance to create meaningful spend separation. Segmentation works, but upsell opportunities require product or pricing changes, not just marketing campaigns.
 
