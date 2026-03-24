@@ -5,9 +5,14 @@
 
 ## Overview
 
-This project was built with AI as a collaborator. Every query in this portfolio went through the same structured workflow: a context-primed prompt, a critical evaluation, an iterative feedback loop, a verification pass, and a business insight written from my own marketing experience. The AI handled syntax and structure. I handled judgment, domain knowledge, and business framing.
+This project was built with AI as a collaborator, and that was a deliberate choice.
+AI lets me work through more complex analysis in less time. That matters because the value I bring isn't writing SQL syntax from memory; it's knowing which questions to ask, when the output doesn't make business sense, and what a marketing team would actually do with the result. Using AI for the technical execution gave me more time to focus on that critical thinking, which is where the real insight comes from.
 
-What follows is a breakdown of the specific AI collaboration techniques demonstrated across the three case studies, with concrete examples from the actual work.
+It's also a practical skill. AI tools are becoming standard in analytics workflows, and knowing how to use them well (structured prompts, critical evaluation, iterative refinement) is something I want to demonstrate directly, not just list on a resume.
+
+Every query in this portfolio went through the same structured workflow: a context-primed prompt, a critical evaluation, an iterative feedback loop, a verification pass, and a business insight written from my own marketing experience. The AI handled syntax and structure. I handled judgment, domain knowledge, and business framing.
+
+What follows is a breakdown of the specific AI collaboration techniques demonstrated across the case studies, with concrete examples from the actual work.
 
 ---
 
