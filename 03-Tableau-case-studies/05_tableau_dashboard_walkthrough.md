@@ -19,6 +19,8 @@ The Tableau dashboards take the key findings from every prior phase and put them
 
 ![Geographic Performance Dashboard](images/geographic_performance.png)
 
+[Open Geographic Performance on Tableau Public](https://public.tableau.com/app/profile/daniel.matel.okoh/viz/ChinookExecutiveDashboards/GeographicPerformance)
+
 **What it shows:** Country-level revenue distribution, the top markets ranked by total spend, and the genre mix within each country.
 
 **Why it exists:** SQL Case Study 1 found that the top 5 countries account for a disproportionate share of total revenue. That finding is useful on its own, but the natural follow-up is "what are people buying in those markets?" This view answers that. Click a country on the map, and the genre breakdown updates to show what's selling there.
@@ -35,6 +37,8 @@ The Tableau dashboards take the key findings from every prior phase and put them
 ### View 2: Customer Segmentation
 
 ![Customer Segmentation Dashboard](images/customer_segmentation.png)
+
+[Open Customer Segmentation on Tableau Public](https://public.tableau.com/app/profile/daniel.matel.okoh/viz/ChinookExecutiveDashboards/CustomerSegmentation)
 
 **What it shows:** How customers distribute across value tiers (Bronze, Silver, Gold, Platinum), a scatter plot of individual customer lifetime value vs. purchase count, and cohort retention curves by signup year.
 
@@ -53,6 +57,8 @@ The Tableau dashboards take the key findings from every prior phase and put them
 ### View 3: Genre Performance
 
 ![Genre Performance Dashboard](images/genre_performance.png)
+
+[Open Genre Performance on Tableau Public](https://public.tableau.com/app/profile/daniel.matel.okoh/viz/ChinookExecutiveDashboards/GenrePerformance)
 
 **What it shows:** All 25 genres ranked by revenue with catalog efficiency encoded as color, year-over-year revenue trends for the top 5 genres, and market share over time as a stacked area chart.
 
