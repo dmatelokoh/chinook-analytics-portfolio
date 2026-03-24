@@ -176,7 +176,7 @@ total orders they placed. Orders-per-customer is a "loyalty signal". A country w
 and 6 orders. I added COUNT(i.InvoiceId) AS total_orders.
 
 **The bottom line:** The structured prompt got me to a strong 65% in a fraction of 
-the time it would have taken me to write from scratch. The remaining 35% — the ranking, 
+the time it would have taken me to write from scratch. The remaining 35%, the ranking, 
 the percentage of total, the global benchmark CTE, the total orders column, the header 
 block, etc. That came from knowing what a marketing director actually needs to see. The AI 
 couldn't have added those without being told.
