@@ -17,7 +17,7 @@ The goal is to understand where revenue is concentrated, which customers deserve
 
 The V1 query was structurally sound. The AI calculated lifetime spend from InvoiceLine (UnitPrice × Quantity), used NULLIF() to guard against division by zero in the AOV calculation, and applied the full CTE structure and comment block from the context prime. Two iterations, mostly clean.
 
-But the tier thresholds were wrong, and no prompt can prevent that.
+But the tier thresholds were wrong.
 
 **The tier recalibration:** The AI set Platinum at ≥$45, Gold at ≥$35, Silver at ≥$25. Reasonable guesses, but I checked the actual spend distribution before accepting them. The data showed a dense cluster at $37.62, a small group above $40, and only 5 customers above $45. With the AI's thresholds, the vast majority of customers would have landed in Gold or Silver, making the tiers statistically meaningless.
 
@@ -82,4 +82,4 @@ The retention strategy by tier: Platinum gets white-glove treatment (early acces
 
 The USA is our #1 market by revenue. But our top 5 customers, every Platinum customer, come from five different countries: Czech Republic, USA, Chile, Hungary, and Ireland. Canada is our #2 market overall but doesn't appear in the customer rankings until #16.
 
-Country-level revenue analysis and customer-level value analysis tell different stories and should inform different decisions. One is a media buying conversation (where to spend acquisition budget). The other is a CRM conversation (who to protect and develop).
+Country-level revenue analysis and customer-level value analysis tell different stories and should inform different decisions. One is a media buying-focused (where to spend acquisition budget), the other is a CRM centered decision (who to protect and develop).
