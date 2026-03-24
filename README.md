@@ -2,7 +2,7 @@
 **Daniel Matel-Okoh**
 ---
 
-**[Executive Summary of the key findings from the case study (PDF)](executive_summary.pdf)**
+**[Executive Summary: Key Findings From The Case Study (PDF)](executive_summary.pdf)**
 
 ## What This Is
 
