@@ -2,6 +2,8 @@
 **Daniel Matel-Okoh**
 ---
 
+**[Executive Summary (PDF)](executive_summary.pdf)**
+
 ## What This Is
 
 An end-to-end analytics portfolio built on the Chinook digital media database. Three SQL case studies, one multi-part Python investigation, and an interactive Tableau dashboard. Each phase builds on the last, and the through-line is a practical one: where should a marketing team focus its budget?
