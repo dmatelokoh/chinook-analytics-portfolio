@@ -6,11 +6,14 @@
 ## Overview
 
 This project was built with AI as a collaborator, and that was a deliberate choice.
-AI lets me work through more complex analysis in less time. That matters because the value I bring isn't writing SQL syntax from memory; it's knowing which questions to ask, when the output doesn't make business sense, and what a marketing team would actually do with the result. Using AI for the technical execution gave me more time to focus on that critical thinking, which is where the real insight comes from.
 
-It's also a practical skill. AI tools are becoming standard in analytics workflows, and knowing how to use them well (structured prompts, critical evaluation, iterative refinement) is something I want to demonstrate directly, not just list on a resume.
+Using AI for the technical execution (writing SQL, building Python scripts, formatting output) freed up my time to focus on the part that matters most: deciding what questions to ask, catching when the numbers don't add up, and translating results into something a marketing team can act on. 
 
-Every query in this portfolio went through the same structured workflow: a context-primed prompt, a critical evaluation, an iterative feedback loop, a verification pass, and a business insight written from my own marketing experience. The AI handled syntax and structure. I handled judgment, domain knowledge, and business framing.
+It let me take on more complex analysis than I could have completed in the same timeframe working solo, without sacrificing the critical thinking that makes the output useful.
+
+AI tools are also becoming standard in analytics workflows. I wanted to demonstrate that I know how to use them well, not just that I've used them, so this portfolio documents the full process: structured prompts, critical evaluation, iterative refinement, and the judgment calls I made along the way.
+
+Every query went through the same workflow: a context-primed prompt, a critical evaluation, an iterative feedback loop, a verification pass, and a business insight written from my own marketing experience. The AI handled syntax and structure. I handled judgment, domain knowledge, and business framing.
 
 What follows is a breakdown of the specific AI collaboration techniques demonstrated across the case studies, with concrete examples from the actual work.
 
