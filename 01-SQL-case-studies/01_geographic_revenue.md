@@ -470,3 +470,4 @@ The strategic recommendation isn't to abandon the US. It's to deliberately inves
 in growing the mid-tier markets (Germany, UK, Brazil), where there are already 
 multiple customers and a foundation to build on, reducing dependency on any single 
 geography over time.
+
