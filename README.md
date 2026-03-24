@@ -1,4 +1,4 @@
-# Chinook Digital Media — Customer & Revenue Analytics
+# Chinook Digital Media: Customer & Revenue Analytics
 **Daniel Matel-Okoh**
 ---
 
