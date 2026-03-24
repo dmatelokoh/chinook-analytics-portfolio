@@ -6,7 +6,7 @@
 
 ## What This Is
 
-An end-to-end analytics portfolio built on the Chinook digital media database. Three SQL case studies, one multi-part Python investigation, and an interactive Tableau dashboard. Every analysis comes back to the same question: where should a marketing team focus its budget?
+An end-to-end analytics portfolio built on the Chinook digital media database. Three SQL case studies, one multi-part Python investigation, and an interactive Tableau dashboard. Each phase builds on the last. Every analysis comes back to the same question: where should a marketing team focus its budget?
 
 I came to data analytics from 8 years in digital marketing (customer acquisition, retention, campaign optimization, budget management, CLV, ROAS). That background shapes every analysis here. The goal with each case study was to produce something a marketing director could actually use, not just technically correct output.
 
