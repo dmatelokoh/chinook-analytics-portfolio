@@ -93,20 +93,6 @@ Every gap caught in evaluation became a prompt library update. Every verificatio
 
 ---
 
-## 9. Tool Selection — Using the Right AI for the Right Job
-
-Not all AI models are equal, and not all tasks benefit from the same tool. Part of working effectively with AI is matching the tool to the task. More capable models consume more tokens per request. Using the most expensive model for every task wastes budget on work that doesn't need it.
-
-For this project I used two different Claude models at two distinct stages:
-
-**Claude Sonnet** handled the technical execution: SQL generation, iterative refinement, verification passes, and structured output. Sonnet is fast, efficient, and well-suited for tasks with clear inputs and measurable outputs. When the job is "write a CTE that calculates lifetime spend per customer and formats it correctly for SQLite," speed and precision matter more than depth of reasoning, and Sonnet's lower token cost means more iterations for the same budget.
-
-**Claude Opus** handled the editorial review: reading the completed project end-to-end and flagging passages that sounded robotic, transitions that felt abrupt, and phrasing that didn't match the voice of a confident marketing professional. Opus is better suited for tasks that require judgment about nuance, tone, and coherence across a large body of work. When the job is "does this read like a person wrote it," depth of reasoning matters more than speed, and that's where the higher token cost is justified.
-
-**The broader principle:** AI tool selection is a skill. Knowing that a faster model is the right choice for structured technical tasks, and that a more reasoning-capable model is the right choice for open-ended qualitative review, is workflow judgment that improves with practice.
-
----
-
 ## Summary
 
 | Dimension | Where Demonstrated |
@@ -119,4 +105,3 @@ For this project I used two different Claude models at two distinct stages:
 | Prompt Precision | Explicit removal instruction after contradictory feedback (CS3) |
 | AI Self-Verification | Opera silent exclusion caught by meta-prompt (CS3) |
 | Adaptability | Threshold recalibration (CS2), catalog efficiency metric (CS3) |
-| Tool Selection | Sonnet for SQL execution, Opus for editorial review |
