@@ -5,7 +5,7 @@
 
 ---
 
-## What the Dashboards Are For
+## How Tableau Fits In
 
 The SQL case studies answered specific questions: which countries drive revenue, how customers segment by lifetime value, and which genres over- or under-perform their catalog size. The Python case study went deeper into purchase timing, seasonality, and whether customers stick around. But the output of each analysis was a table or a chart in a notebook. None of it was something you could hand to a marketing director and say "here, explore this yourself."
 
@@ -79,5 +79,3 @@ The filter actions are designed so that clicking one chart updates the others on
 ## A Note on Embedding
 
 GitHub's markdown renderer strips out iframes and embedded HTML for security reasons, so the interactive dashboard can't be embedded directly in this page. The link at the top opens it on Tableau Public, where all three views are fully interactive.
-
-If you'd prefer a live embedded version, the repo could be extended with GitHub Pages to host the Tableau embed code. For now, the link is the most reliable way to access it.
